@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="robots" content="noindex,nofollow">
+<title>신상명 Q&amp;A 게시판</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@400;600;700&display=swap">
+<style>
+/* 문제은행 사이트와 같은 결: 검은 내비 바, 왼쪽으로 기운 넓은 여백, 가는 선과 옅은 회색 면.
+   질문·답변 본문만 시험지 명조. 라이트 단일 테마. */
+:root{color-scheme:light;
+ --paper:#fff;--soft:#f7f7f6;--soft-2:#f0f0ee;--ink:#1c1c1c;--muted:#888;--muted-2:#aaa;--line:#e9e9e9;--line-strong:#d5d5d5;
+ --bar:#111;--bar-ink:#f6f6f6;--bar-muted:#bcbcbc;--bar-line:#2a2a2a;
+ --mark:#c0384c;--mark-soft:#f9e9ec;--warn:#93600f;--warn-soft:#f6efe2;--ok:#3d7a62;--ok-soft:#eef6ef;
+ --grad:linear-gradient(90deg,#b4a2e5 0%,#b9d8e5 48%,#9bcbb5 100%);
+ --ui:Arial,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+ --exam:"Noto Serif KR","AppleMyungjo","Batang",serif;
+ --gl:clamp(24px,5.7vw,96px);--gr:clamp(24px,7vw,140px)}
+*{box-sizing:border-box;min-width:0}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.6 var(--ui);-webkit-font-smoothing:antialiased;overflow-x:clip}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid #8b82c6;outline-offset:3px}
+h1,h2,h3,h4{text-wrap:balance;margin:0;font-weight:400}
+.gut{padding-left:var(--gl);padding-right:var(--gr)}
+@media(max-width:700px){:root{--gl:20px;--gr:20px}}
+.top{position:sticky;top:0;z-index:5;background:var(--bar);color:var(--bar-ink);border-bottom:1px solid var(--bar-line);min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:10px 24px;flex-wrap:wrap;padding-block:10px}
+.brand{display:flex;align-items:baseline;gap:14px;color:var(--bar-ink);text-decoration:none}
+.brand b{font-size:29px;font-weight:500;letter-spacing:-1.7px;color:#fff}
+.brand small{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--bar-muted)}
+.tabs{display:flex;gap:clamp(16px,2vw,30px);overflow-x:auto;max-width:100%;scrollbar-width:none}
+.tabs a{padding:10px 0;text-decoration:none;color:var(--bar-muted);white-space:nowrap;font-size:14.5px;border-bottom:1px solid transparent}
+.tabs a:hover{color:#fff}
+.tabs a[aria-current=page]{color:#fff;border-bottom-color:#fff}
+.tabs .badge{display:inline-block;min-width:18px;padding:0 5px;margin-left:6px;border-radius:9px;background:#fff;color:#111;font-size:11px;line-height:18px;text-align:center;vertical-align:2px}
+@media(max-width:900px){.top{min-height:68px}.brand b{font-size:26px}.tabs{gap:22px;width:100%}}
+.intro{padding-block:72px 52px;border-bottom:1px solid var(--line)}
+.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8b8b8b}
+.intro h2{font-size:clamp(46px,6.4vw,92px);line-height:1.02;letter-spacing:-.065em;margin:18px 0 0}
+.accent-line{width:64px;height:2px;background:var(--grad);margin:26px 0 22px}
+.intro p{margin:0;max-width:560px;color:#777;font-size:15px;line-height:2}
+.stats{display:flex;flex-wrap:wrap;gap:12px 48px;margin-top:30px}
+.stats b{display:block;font-size:34px;font-weight:400;letter-spacing:-.05em;line-height:1.1;font-variant-numeric:tabular-nums}
+.stats span{font-size:11px;letter-spacing:1.6px;color:#999}
+@media(max-width:700px){.intro{padding-block:48px 34px}}
+.banner{margin-top:22px;padding:14px 18px;background:var(--warn-soft);color:var(--warn);font-size:13px}
+main{padding-block:44px 110px}
+.btn{border:1px solid #dedede;background:#fff;border-radius:40px;padding:9px 18px;min-height:40px;white-space:nowrap;font-size:13px;color:#222;transition:background .2s,border-color .2s}
+.btn:hover{background:#f3f3f3;border-color:#cfcfcf}
+.btn.primary{background:#111;border-color:#111;color:#fff}.btn.primary:hover{background:#333}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}.btn.ghost:hover{color:var(--ink);background:var(--soft)}
+.btn.danger{color:var(--mark);border-color:#e7b9c1}
+.btn.ok{color:var(--ok);border-color:#bcd6c1}
+.btn.sm{padding:5px 12px;min-height:32px;font-size:12px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+input[type=text],input[type=search],select,textarea{border:1px solid #e3e3e3;background:#fff;border-radius:0;padding:10px 12px;width:100%;font-size:16px}
+input:focus,select:focus,textarea:focus{border-color:#111;outline:none}
+textarea{resize:vertical;line-height:1.7;min-height:130px}
+.f{display:grid;gap:7px;font-size:10.5px;color:#999;letter-spacing:1.2px}
+.seg{display:inline-flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1px solid #dedede;background:transparent;border-radius:40px;padding:7px 14px;min-height:36px;color:#777;font-size:13px;letter-spacing:0}
+.seg button:hover{border-color:#aaa;color:#111}
+.seg button[aria-pressed=true]{background:#111;border-color:#111;color:#fff}
+.tag{display:inline-flex;align-items:center;font-size:11px;padding:3px 10px;border-radius:30px;color:#888;border:1px solid #e2e2e0;white-space:nowrap}
+.tag.subj{color:var(--ink);border-color:#cfcfcf}
+.tag.wait{color:var(--mark);border-color:#e7b9c1;background:var(--mark-soft)}
+.tag.done{color:var(--ok);border-color:#bcd6c1;background:var(--ok-soft)}
+.tag.solved{color:#777;background:var(--soft-2);border-color:transparent}
+.tag.pin{background:#111;color:#fff;border-color:#111}
+.tag.t{background:#111;color:#fff;border-color:#111}
+.panel{background:var(--soft);padding:clamp(22px,3vw,36px)}
+.sectitle{font-size:10.5px;letter-spacing:1.6px;color:#999;margin-bottom:12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stack{display:grid;gap:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+.empty{padding:64px 28px;background:var(--soft)}
+.empty h2{font-size:clamp(26px,3.2vw,38px);letter-spacing:-.05em;margin-bottom:10px}
+.empty p{color:#888;margin:0;line-height:1.9;max-width:520px}
+.bank{display:grid;grid-template-columns:220px minmax(0,1fr);gap:clamp(28px,4vw,64px);align-items:start}
+.side{position:sticky;top:100px;display:grid;gap:30px}
+.tree{display:grid;border-top:1px solid var(--line)}
+.tree button{display:flex;justify-content:space-between;gap:8px;text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;padding:11px 2px;color:#555;font-size:13px;transition:padding .2s,background .2s}
+.tree button:hover{padding-left:8px;background:#fafafa;color:#111}
+.tree button[aria-pressed=true]{color:#111;font-weight:600;padding-left:8px;box-shadow:inset 2px 0 0 #111}
+.tree .n{font-variant-numeric:tabular-nums;color:var(--muted-2);font-size:12px;font-weight:400}
+@media(max-width:860px){.bank{grid-template-columns:1fr}.side{position:static;gap:16px}.tree{display:flex;overflow-x:auto;border:0;gap:6px}.tree button{flex:none;border:1px solid #dedede;border-radius:40px;padding:7px 14px}.tree button:hover{padding-left:14px}.tree button[aria-pressed=true]{background:#111;color:#fff;box-shadow:none;padding-left:14px}.tree button[aria-pressed=true] .n{color:#ccc}}
+.listbar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:26px}
+.listbar input[type=search]{flex:1 1 240px;width:auto;border:0;border-bottom:1px solid #222;padding:12px 2px;font-size:15px}
+.listbar input[type=search]:focus{border-bottom-width:2px;padding-bottom:11px}
+.qlist{display:grid;gap:18px}
+.qcard{background:#fff;border:1px solid var(--line);transition:border-color .2s;display:block;width:100%;text-align:left;padding:0}
+button.qcard:hover{border-color:#cfcfcf}
+.qcard.pinned{border-color:#111;box-shadow:inset 3px 0 0 #111}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:14px 22px;border-bottom:1px solid var(--line)}
+.qmeta .sp{flex:1}
+.qmeta time,.qmeta .who{font-size:12px;color:var(--muted)}
+.sheet{font-family:var(--exam);font-size:15px;line-height:1.85;color:#141414;padding:22px 26px}
+.sheet h3{font-family:var(--exam);font-weight:600;font-size:17px;line-height:1.5;margin-bottom:6px;overflow-wrap:anywhere;word-break:keep-all}
+.pv{margin:0;color:#555;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.qact{display:flex;gap:8px 14px;flex-wrap:wrap;align-items:center;padding:12px 22px;border-top:1px solid var(--line);background:var(--soft);font-size:12.5px;color:#777}
+.qact .sp{flex:1}
+.detail h2{font-family:var(--exam);font-weight:600;font-size:clamp(21px,2.6vw,27px);letter-spacing:-.02em;line-height:1.45;margin-bottom:14px;overflow-wrap:anywhere;word-break:keep-all}
+.body{white-space:pre-wrap;overflow-wrap:anywhere;word-break:keep-all;margin:0}
+.imgs{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.imgs button{padding:0;border:1px solid var(--line);background:none}
+.imgs img{display:block;width:150px;height:112px;object-fit:cover}
+.answers{margin-top:40px}
+.ans{border:1px solid var(--line);margin-top:14px}
+.ans.t{border-color:#111}
+.ans.t .qmeta{background:#111;color:#fff;border-color:#111}.ans.t .qmeta time{color:#bbb}
+.ans .who{font-size:13px;color:inherit;font-weight:600}
+.composer{margin-top:22px}
+.files{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:12px;color:#999}
+.thumb{position:relative}.thumb img{width:70px;height:70px;object-fit:cover;border:1px solid var(--line);display:block}
+.thumb button{position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;border:0;background:#111;color:#fff;font-size:13px;line-height:1}
+.chk{display:flex;gap:8px;align-items:center;font-size:13px;color:#555}
+.chk input{width:18px;height:18px;accent-color:#111}
+.err{color:var(--mark);font-size:13px;min-height:1em}
+.ov{position:fixed;inset:0;z-index:20;background:#000a;display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:5vh 14px}
+.ov.on{display:flex}
+.modal{background:#fff;width:min(680px,100%);padding:clamp(22px,3vw,38px)}
+.modal h2{font-size:30px;letter-spacing:-.05em}
+.lb img{max-width:100%;max-height:88vh;display:block;margin:auto}
+table.mt{width:100%;border-collapse:collapse;font-size:13px}
+.mt th,.mt td{border-bottom:1px solid var(--line);padding:11px 8px;text-align:left;vertical-align:middle}
+.mt th{font-weight:500;color:#999;font-size:10.5px;letter-spacing:1px}
+.mt td.c{white-space:nowrap;color:#888;font-variant-numeric:tabular-nums}
+.reqs{display:grid;gap:14px}
+.req{border:1px solid var(--line);background:#fff}
+.req .sheet{font-family:var(--ui);font-size:14px;padding:16px 22px}
+.req b{font-size:17px;font-weight:500;letter-spacing:-.03em}
+.gate{max-width:640px}
+.small{font-size:12.5px;color:#888;line-height:1.8}
+@media(max-width:600px){.mt{font-size:13px}.stk thead{display:none}.stk tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.stk td{display:flow-root;border:0;padding:3px 0;padding-inline-start:7em}.stk td::before{content:attr(data-l);float:inline-start;width:6.5em;margin-inline-start:-7em;color:#999;font-size:11px}.imgs img{width:104px;height:84px}}
+.code{font:600 22px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.18em;background:#fff;border:1px solid var(--line-strong);padding:14px 18px;display:inline-block}
+.topr{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.who-top{font-size:12px;color:var(--bar-muted)}
+.btn.bar{background:transparent;border-color:#444;color:#ddd}.btn.bar:hover{background:#222}
+.gbtn{display:inline-flex;align-items:center;gap:10px}
+</style>
+</head>
+<body>
+<header class="top gut">
+  <a class="brand" href="#board"><b>신상명</b><small>Q&amp;A Board</small></a>
+  <div class="topr"><nav class="tabs" id="tabs" aria-label="메뉴"></nav><span class="who-top" id="whotop"></span><button class="btn bar sm" id="logout" hidden>로그아웃</button></div>
+</header>
+<div id="app"><section class="intro gut"><div class="eyebrow">Loading</div><h2>불러오는 중</h2><div class="accent-line"></div><p>잠시만 기다려 주세요.</p></section></div>
+
+<div class="ov" id="compose" role="dialog" aria-modal="true" aria-labelledby="ct">
+  <div class="modal stack">
+    <div class="row" style="justify-content:space-between"><h2 id="ct">질문 올리기</h2><button class="btn ghost" data-close>닫기</button></div>
+    <form class="stack" id="qf">
+      <div class="f">과목<div class="seg" id="fsubj"></div></div>
+      <div class="f">질문 유형<div class="seg" id="fkind"></div></div>
+      <label class="f">제목<input type="text" id="ft" maxlength="80" placeholder="예: 수요·공급 곡선 이동이 헷갈려요" required></label>
+      <label class="f">내용<textarea id="fb" maxlength="4000" placeholder="교재 이름·쪽수, 문제 번호, 내가 생각한 풀이를 같이 적으면 더 빨리 답할 수 있어요." required></textarea></label>
+      <div class="files" id="ffiles"></div>
+      <label class="chk"><input type="checkbox" id="fanon"> 다른 학생에게 이름 숨기기 (선생님에게는 보여요)</label>
+      <div class="err" id="ferr"></div>
+      <div class="row"><button class="btn primary" type="submit" id="fsend">질문 등록</button></div>
+    </form>
+  </div>
+</div>
+<div class="ov lb" id="lb"><img alt="첨부 사진 크게 보기"></div>
+<input type="file" id="pick" accept="image/*" multiple hidden>
+
+<script type="module">
+import { firebaseConfig, TEACHER_EMAIL, TEACHER_NAME } from "./firebase-config.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const SUBJ=["고1 통합사회","고1 한국사","고3 수능 통합사회"];
+const KIND=["개념 질문","문제 풀이","공부법·시험","기타"];
+const CLS=["학원","과외"];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ms=t=>t&&typeof t.toMillis==="function"?t.toMillis():Date.now();
+
+let app0,auth,db;
+try{app0=initializeApp(firebaseConfig);auth=getAuth(app0);db=getFirestore(app0)}catch(e){}
+
+let me=null,isTeacher=false,ready=false,qLoaded=false,busy=false;
+let myMember=undefined,myReq=undefined,members={},reqs=[],qs=[],answers=[],entry=null,imgCache={};
+let page="board",openId=null,armed=null;
+let subs=[],qUnsub=null,ansUnsub=null;
+const f={subj:"all",st:"all",q:""};
+const form={subj:0,kind:0,files:[],target:"q"};
+
+const ago=t=>{const d=(Date.now()-ms(t))/1000;if(d<60)return"방금";if(d<3600)return Math.floor(d/60)+"분 전";if(d<86400)return Math.floor(d/3600)+"시간 전";if(d<604800)return Math.floor(d/86400)+"일 전";const x=new Date(ms(t));return (x.getMonth()+1)+"월 "+x.getDate()+"일"};
+const day=t=>{const x=new Date(ms(t));return x.getFullYear()+"."+String(x.getMonth()+1).padStart(2,"0")+"."+String(x.getDate()).padStart(2,"0")};
+const nameOf=(o)=>{let n=o.authorName||"학생";if(o.anon&&isTeacher&&members[o.authorId])n=members[o.authorId].name+" (익명)";if(me&&o.authorId===me.uid)n+=" (나)";return n};
+const stOf=q=>q.solved?["solved","해결 완료"]:q.status==="answered"?["done","답변 완료"]:["wait","답변 대기"];
+const intro=(eb,h,p,extra="")=>`<section class="intro gut"><div class="eyebrow">${eb}</div><h2>${h}</h2><div class="accent-line"></div><p>${p}</p>${extra}</section>`;
+const imgs=ids=>(ids||[]).length?`<div class="imgs">${ids.map(i=>`<button data-img="${esc(i)}" aria-label="사진 크게 보기"><img data-iid="${esc(i)}" alt="첨부 사진"></button>`).join("")}</div>`:"";
+const okData=s=>typeof s==="string"&&s.startsWith("data:image/jpeg;base64,");
+
+/* ---------- 상태 판정 ---------- */
+function gate(){
+  if(!db)return"config";
+  if(!ready)return"loading";
+  if(!me)return"signin";
+  if(isTeacher)return"teacher";
+  if(myMember===undefined||myReq===undefined)return"loading";
+  if(myMember&&myMember.status==="approved")return"approved";
+  if(myMember&&myMember.status==="rejected"&&(!myReq||ms(myReq.at)<=ms(myMember.at)))return"rejected";
+  return myReq?"pending":"none";
+}
+const inside=()=>{const g=gate();return g==="teacher"||g==="approved"};
+const pendingReqs=()=>reqs.filter(r=>{const m=members[r.id];return !m||(m.status!=="approved"&&ms(r.at)>ms(m.at))});
+
+/* ---------- 입장 화면 ---------- */
+function gateView(g){
+  if(g==="config")return intro("Setup","설정이 필요해요","firebase-config.js 에 Firebase 프로젝트 값을 넣어 주세요. 안내서(README)를 참고하세요.");
+  if(g==="loading")return intro("Loading","불러오는 중","잠시만 기다려 주세요.");
+  if(g==="signin")return intro("Members only","로그인해 주세요","신상명 선생님 수업 학생 전용 질문 게시판이에요. 구글 계정으로 로그인한 뒤, 입장 코드로 승인을 신청하세요.")+
+    `<main class="gut"><div class="panel gate stack"><div class="row"><button class="btn primary gbtn" data-login>Google 계정으로 로그인</button></div><div class="err" id="lerr"></div><p class="small" style="margin:0">로그인하면 이름·이메일이 선생님께만 전달돼요. 다른 학생에게는 보이지 않아요.</p></div></main>`;
+  if(g==="pending")return intro("Waiting","승인 기다리는 중",`<b style="color:#111">${esc(myReq.name)}</b> 학생의 입장 요청이 선생님께 전달됐어요. 승인되면 이 화면이 바로 게시판으로 바뀌어요.`,`<p class="small" style="margin-top:14px">${esc(myReq.school)} · ${esc(CLS[myReq.cls|0])} · ${esc(me.email||"")}</p>`);
+  const rej=g==="rejected";
+  return intro("Members only",rej?"승인되지 않았어요":"입장 승인 신청",rej?"선생님이 요청을 승인하지 않았어요. 정보를 확인해 다시 신청하거나 선생님께 직접 문의해 주세요.":"수업 시간에 받은 입장 코드를 넣어야 신청할 수 있어요. 선생님이 확인 후 승인해 드려요.")+
+  `<main class="gut"><form class="panel stack gate" id="rf" autocomplete="off">
+    <label class="f">입장 코드<input type="text" id="rcode" maxlength="40" required placeholder="선생님께 받은 코드" autocapitalize="characters" spellcheck="false"></label>
+    <div class="grid2"><label class="f">이름 (실명)<input type="text" id="rn" maxlength="20" required placeholder="홍길동"></label>
+    <label class="f">학교 · 학년<input type="text" id="rs" maxlength="30" required placeholder="○○고 1학년"></label></div>
+    <div class="f">수업<div class="seg" id="rc">${CLS.map((c,i)=>`<button type="button" data-rc="${i}" aria-pressed="${i===0}">${c}</button>`).join("")}</div></div>
+    <label class="f">선생님께 한마디 (선택)<input type="text" id="rm" maxlength="80" placeholder="예: 화목반 / 토요일 과외"></label>
+    <div class="err" id="rerr"></div>
+    <div class="row"><button class="btn primary" type="submit">승인 신청 보내기</button></div>
+    <p class="small" style="margin:0">${esc(me.email||"")} 계정으로 신청해요. 보낸 정보는 선생님만 볼 수 있어요.</p>
+  </form></main>`;
+}
+
+/* ---------- 게시판 ---------- */
+function filtered(base){
+  const k=f.q.trim().toLowerCase();
+  const r=base.filter(q=>(f.subj==="all"||String(q.subject)===f.subj)&&(f.st==="all"||stOf(q)[0]===f.st)&&(!k||((q.title||"")+" "+(q.body||"")).toLowerCase().includes(k)));
+  return [...r.filter(q=>q.pinned),...r.filter(q=>!q.pinned)];
+}
+function boardView(mode){
+  const base=mode==="mine"?qs.filter(q=>q.authorId===me.uid):qs,wk=Date.now()-7*864e5;
+  const cnt=fn=>base.filter(fn).length;
+  const stats=`<div class="stats">${[[base.length,"전체 질문"],[cnt(q=>stOf(q)[0]==="wait"),"답변 대기"],[cnt(q=>ms(q.createdAt)>wk),"이번 주"]].map(([n,l])=>`<div><b>${n}</b><span>${l}</span></div>`).join("")}</div>`;
+  const tree=(items,key)=>`<div class="tree">${items.map(([v,l,n])=>`<button data-${key}="${v}" aria-pressed="${f[key]===v}"><span>${l}</span><span class="n">${n}</span></button>`).join("")}</div>`;
+  const list=filtered(base);
+  let body;
+  if(!qLoaded)body=`<div class="empty"><h2>불러오는 중</h2></div>`;
+  else if(!base.length)body=`<div class="empty"><h2>${mode==="mine"?"아직 올린 질문이 없어요":"아직 질문이 없어요"}</h2><p>${isTeacher?"학생들이 질문을 올리면 여기에 쌓여요.":"모르는 건 그날 바로 물어보세요. 사소한 질문도 환영이에요."}</p></div>`;
+  else if(!list.length)body=`<div class="empty"><h2>조건에 맞는 질문이 없어요</h2><p>과목이나 상태, 검색어를 바꿔 보세요.</p></div>`;
+  else body=`<div class="qlist">${list.map(q=>{const[sc,sl]=stOf(q);return `<button class="qcard${q.pinned?" pinned":""}" data-open="${esc(q.id)}">
+    <div class="qmeta">${q.pinned?'<span class="tag pin">고정</span>':""}<span class="tag subj">${esc(SUBJ[q.subject|0])}</span><span class="tag">${esc(KIND[q.kind|0])}</span><span class="tag ${sc}">${sl}</span><span class="sp"></span><time>${ago(q.createdAt)}</time></div>
+    <div class="sheet"><h3>${esc(q.title)}</h3><p class="pv">${esc(q.body)}</p></div>
+    <div class="qact"><span>${esc(nameOf(q))}</span><span class="sp"></span><span>답변 ${q.answerCount|0}</span>${(q.imageIds||[]).length?`<span>사진 ${q.imageIds.length}</span>`:""}</div></button>`}).join("")}</div>`;
+  return intro(mode==="mine"?"My questions":"Q&amp;A Board",mode==="mine"?"내 질문":"질문 게시판",mode==="mine"?"내가 올린 질문과 답변 상태를 한눈에 확인해요.":"고1 내신 통합사회·한국사, 고3 수능 통합사회. 모르는 건 그날 바로 물어보고, 선생님 답변으로 정리해요.",stats)+
+  `<main class="gut"><div class="bank"><aside class="side">
+    <div><div class="sectitle">과목</div>${tree([["all","전체",base.length],...SUBJ.map((s,i)=>[String(i),s,cnt(q=>q.subject===i)])],"subj")}</div>
+    <div><div class="sectitle">상태</div>${tree([["all","모든 질문",base.length],["wait","답변 대기",cnt(q=>stOf(q)[0]==="wait")],["done","답변 완료",cnt(q=>stOf(q)[0]==="done")],["solved","해결 완료",cnt(q=>stOf(q)[0]==="solved")]],"st")}</div>
+  </aside><div><div class="listbar"><input type="search" id="q" placeholder="제목·내용 검색 (예: 시장 실패, 흥선 대원군)" aria-label="검색" value="${esc(f.q)}">${isTeacher?"":'<button class="btn primary" data-ask>질문하기</button>'}</div>${body}</div></div></main>`;
+}
+function detailView(q){
+  const[sc,sl]=stOf(q),mine=q.authorId===me.uid;
+  const del=key=>armed===key?`<button class="btn danger sm" data-del="${key}">정말 삭제할까요?</button>`:`<button class="btn ghost sm" data-arm="${key}">삭제</button>`;
+  return `<main class="gut detail" style="max-width:980px"><button class="btn" data-back style="margin-bottom:22px">← 목록으로</button>
+  <article class="qcard${q.pinned?" pinned":""}">
+    <div class="qmeta">${q.pinned?'<span class="tag pin">고정</span>':""}<span class="tag subj">${esc(SUBJ[q.subject|0])}</span><span class="tag">${esc(KIND[q.kind|0])}</span><span class="tag ${sc}">${sl}</span><span class="sp"></span><span class="who">${esc(nameOf(q))}</span><time>${ago(q.createdAt)}</time></div>
+    <div class="sheet"><h2>${esc(q.title)}</h2><p class="body">${esc(q.body)}</p>${imgs(q.imageIds)}</div>
+    ${isTeacher||mine?`<div class="qact"><button class="btn sm" data-solve>${q.solved?"해결 표시 취소":"해결됐어요"}</button>${isTeacher?`<button class="btn sm" data-pin>${q.pinned?"고정 해제":"맨 위에 고정"}</button>`:""}<span class="sp"></span>${del("q")}</div>`:""}
+  </article>
+  <section class="answers"><div class="sectitle">답변 ${answers.length}</div>
+  ${answers.length?answers.map(a=>`<div class="ans${a.teacher?" t":""}"><div class="qmeta"><span class="who">${esc(a.teacher?TEACHER_NAME:nameOf(a))}</span><span class="sp"></span><time>${ago(a.createdAt)}</time></div>
+    <div class="sheet"><p class="body">${esc(a.body)}</p>${imgs(a.imageIds)}</div>${isTeacher||a.authorId===me.uid?`<div class="qact"><span class="sp"></span>${del("a:"+esc(a.id))}</div>`:""}</div>`).join(""):`<div class="empty" style="padding:36px 28px"><p>${isTeacher?"아직 답변이 없어요. 아래에서 답변을 달아 주세요.":"선생님이 확인하면 여기에 답변이 달려요."}</p></div>`}
+  <form class="panel stack composer" id="af"><label class="f">${isTeacher?"선생님 답변":"추가 질문 · 댓글"}<textarea id="ab" maxlength="4000" placeholder="${isTeacher?"핵심 개념 → 풀이 순서 → 비슷한 기출 포인트":"이해 안 되는 부분을 더 물어보거나, 고맙다는 말도 좋아요"}" required></textarea></label>
+    <div class="files" id="afiles"></div><div class="err" id="aerr"></div><div class="row"><button class="btn primary" type="submit">${isTeacher?"답변 등록":"댓글 등록"}</button></div></form>
+  </section></main>`;
+}
+
+/* ---------- 승인 관리 ---------- */
+function adminView(){
+  const pend=pendingReqs(),all=Object.entries(members),approved=all.filter(([,m])=>m.status==="approved"),rej=all.filter(([,m])=>m.status==="rejected");
+  const qn=id=>qs.filter(q=>q.authorId===id).length;
+  const code=entry&&entry.code;
+  return intro("Members","입장 승인 관리","입장 코드를 아는 학생만 신청할 수 있고, 선생님이 승인한 학생만 게시판을 볼 수 있어요. 코드 검사와 승인 확인은 서버 보안 규칙이 하기 때문에 화면을 조작해도 우회되지 않아요.",`<div class="stats">${[[pend.length,"승인 대기"],[approved.length,"승인된 학생"],[rej.length,"거절·취소"]].map(([n,l])=>`<div><b>${n}</b><span>${l}</span></div>`).join("")}</div>`)+
+  `<main class="gut stack" style="gap:48px">
+  <section class="panel stack"><div class="sectitle" style="margin:0">입장 코드</div>
+    ${code?`<div class="row"><span class="code">${esc(code)}</span><button class="btn sm" data-copy>복사</button></div>`:`<p style="margin:0;color:var(--mark)">아직 입장 코드가 없어요. 코드를 만들기 전에는 아무도 신청할 수 없어요.</p>`}
+    <div class="row"><button class="btn primary sm" data-newcode>${code?"새 코드로 바꾸기":"코드 만들기"}</button><input type="text" id="mycode" maxlength="40" placeholder="직접 정하기 (8자 이상)" style="max-width:240px"><button class="btn sm" data-setcode>저장</button></div>
+    <div class="err" id="cerr"></div>
+    <p class="small" style="margin:0">코드가 퍼졌다면 바로 바꾸세요. 이미 승인된 학생은 영향 없고, 새로 신청하는 학생만 새 코드가 필요해요.</p></section>
+  <section><div class="sectitle">승인 대기</div>${pend.length?`<div class="reqs">${pend.map(r=>`<div class="req"><div class="qmeta"><span class="tag subj">${esc(CLS[r.cls|0])}</span>${members[r.id]?'<span class="tag wait">재신청</span>':""}<span class="sp"></span><time>${ago(r.at)}</time></div>
+    <div class="sheet"><b>${esc(r.name)}</b> <span class="small">· ${esc(r.school)}</span><p class="small" style="margin:4px 0 0">${esc(r.email)}</p>${r.msg?`<p class="small" style="margin:6px 0 0;color:#555">“${esc(r.msg)}”</p>`:""}</div>
+    <div class="qact"><button class="btn primary sm" data-approve="${esc(r.id)}">승인</button><button class="btn danger sm" data-reject="${esc(r.id)}">거절</button></div></div>`).join("")}</div>`:`<div class="empty" style="padding:36px 28px"><p>새 입장 신청이 없어요.</p></div>`}</section>
+  <section><div class="sectitle">승인된 학생 ${approved.length}</div>${approved.length?`<table class="mt stk"><thead><tr><th>이름</th><th>학교 · 학년</th><th>수업</th><th>이메일</th><th>승인일</th><th>질문</th><th></th></tr></thead><tbody>${approved.map(([id,m])=>`<tr><td data-l="이름">${esc(m.name)}</td><td data-l="학교·학년">${esc(m.school)}</td><td data-l="수업">${esc(CLS[m.cls|0])}</td><td data-l="이메일">${esc(m.email)}</td><td class="c" data-l="승인일">${day(m.at)}</td><td class="c" data-l="질문">${qn(id)}</td><td style="text-align:right">${armed==="x:"+id?`<button class="btn danger sm" data-revoke="${esc(id)}">정말 취소할까요?</button>`:`<button class="btn ghost sm" data-arm="x:${esc(id)}">승인 취소</button>`}</td></tr>`).join("")}</tbody></table>`:`<div class="empty" style="padding:36px 28px"><p>아직 승인한 학생이 없어요.</p></div>`}</section>
+  ${rej.length?`<section><div class="sectitle">거절 · 취소 ${rej.length}</div><table class="mt stk"><thead><tr><th>이름</th><th>학교 · 학년</th><th>이메일</th><th>처리일</th><th></th></tr></thead><tbody>${rej.map(([id,m])=>`<tr><td data-l="이름">${esc(m.name)}</td><td data-l="학교·학년">${esc(m.school)}</td><td data-l="이메일">${esc(m.email)}</td><td class="c" data-l="처리일">${day(m.at)}</td><td style="text-align:right"><button class="btn ok sm" data-approve="${esc(id)}">다시 승인</button></td></tr>`).join("")}</tbody></table></section>`:""}
+  </main>`;
+}
+
+/* ---------- 그리기 ---------- */
+function tabs(){
+  const t=$("#tabs");$("#logout").hidden=!me;$("#whotop").textContent=me?(isTeacher?TEACHER_NAME:(myMember&&myMember.name)||me.email||""):"";
+  if(!inside()){t.innerHTML="";return}
+  const n=isTeacher?pendingReqs().length:0;
+  const items=[["board","질문 게시판"]];
+  if(isTeacher)items.push(["admin","승인 관리"+(n?`<span class="badge">${n}</span>`:"")]);else items.push(["mine","내 질문"]);
+  t.innerHTML=items.map(([k,l])=>`<a href="#${k}" ${page===k?'aria-current="page"':""}>${l}</a>`).join("");
+}
+function render(){
+  tabs();const g=gate(),app=$("#app"),ae=document.activeElement;
+  if(!inside()){if(!(ae&&ae.closest&&ae.closest("#rf")))app.innerHTML=gateView(g);return}
+  const keepA=ae&&ae.id==="ab"?ae.value:null,keepQ=ae&&ae.id==="q",keepC=ae&&ae.id==="mycode"?ae.value:null;
+  if(page==="admin"&&isTeacher)app.innerHTML=adminView();
+  else if(page==="q"){const q=qs.find(x=>x.id===openId);app.innerHTML=q?detailView(q):(qLoaded?`<main class="gut"><button class="btn" data-back>← 목록으로</button><div class="empty" style="margin-top:22px"><h2>삭제됐거나 없는 질문이에요</h2></div></main>`:intro("Loading","불러오는 중",""));
+    if(q){files("#afiles","a");fillImgs();if(keepA!==null){$("#ab").value=keepA;$("#ab").focus()}}}
+  else app.innerHTML=boardView(page==="mine"&&!isTeacher?"mine":"all");
+  if(keepQ){const i=$("#q");if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}}
+  if(keepC!==null){const i=$("#mycode");if(i){i.value=keepC;i.focus()}}
+}
+async function fillImgs(){
+  for(const el of document.querySelectorAll("img[data-iid]")){
+    const id=el.dataset.iid;
+    if(!(id in imgCache)){imgCache[id]=null;try{const s=await getDoc(doc(db,"images",id));const v=s.exists()?s.data().data:null;imgCache[id]=okData(v)?v:""}catch(e){imgCache[id]=""}}
+    const v=imgCache[id];if(v)document.querySelectorAll(`img[data-iid="${CSS.escape(id)}"]`).forEach(x=>{if(x.src!==v)x.src=v});
+  }
+}
+function files(sel,target){
+  const el=$(sel);if(!el)return;
+  const list=form.target===target?form.files:[];
+  el.innerHTML=list.map((x,i)=>`<span class="thumb"><img src="${x}" alt="첨부 미리보기"><button type="button" data-rm="${i}" aria-label="사진 빼기">×</button></span>`).join("")+(list.length<3?`<button type="button" class="btn sm" data-attach="${target}">사진 첨부</button><span>문제 사진 최대 3장</span>`:"");
+}
+async function toJpeg(file){
+  const b=await createImageBitmap(file);let side=1400,qual=.8,out="";
+  for(let i=0;i<6;i++){
+    const k=Math.min(1,side/Math.max(b.width,b.height)),c=document.createElement("canvas");
+    c.width=Math.round(b.width*k);c.height=Math.round(b.height*k);const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(b,0,0,c.width,c.height);
+    out=c.toDataURL("image/jpeg",qual);if(out.length<880000)return out;side=Math.round(side*.8);qual=Math.max(.55,qual-.08);
+  }
+  return out.length<880000?out:null;
+}
+async function uploadAll(list){const ids=[];for(const data of list){const r=await addDoc(collection(db,"images"),{data,ownerId:me.uid,at:serverTimestamp()});ids.push(r.id)}return ids}
+const errMsg=(e,el)=>{const x=$(el);if(x)x.textContent=e&&e.code==="permission-denied"?"권한이 없어 저장하지 못했어요. (승인이 취소됐거나 입력값이 규칙에 맞지 않아요)":"저장하지 못했어요. 잠시 후 다시 시도해 주세요."};
+
+/* ---------- 데이터 구독 ---------- */
+function clearSubs(){subs.forEach(u=>u());subs=[];if(qUnsub){qUnsub();qUnsub=null}if(ansUnsub){ansUnsub();ansUnsub=null}qs=[];answers=[];members={};reqs=[];entry=null;qLoaded=false;myMember=undefined;myReq=undefined;imgCache={}}
+function startBoard(){
+  if(qUnsub)return;
+  qUnsub=onSnapshot(query(collection(db,"questions"),orderBy("createdAt","desc"),limit(500)),s=>{qs=s.docs.map(d=>({id:d.id,...d.data()}));qLoaded=true;render()},()=>{qLoaded=true;render()});
+  watchAnswers();
+}
+function stopBoard(){if(qUnsub){qUnsub();qUnsub=null}if(ansUnsub){ansUnsub();ansUnsub=null}qs=[];answers=[];qLoaded=false}
+function sync(){if(inside())startBoard();else stopBoard();render()}
+function watchAnswers(){
+  if(ansUnsub){ansUnsub();ansUnsub=null}answers=[];
+  if(openId&&inside())ansUnsub=onSnapshot(query(collection(db,"questions",openId,"answers"),orderBy("createdAt","asc")),s=>{answers=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{});
+}
+function route(){
+  const h=location.hash.slice(1),m=/^q-([A-Za-z0-9]{1,40})$/.exec(h);
+  const np=m?"q":(["board","mine","admin"].includes(h)?h:"board"),nid=m?m[1]:null;
+  if(np===page&&nid===openId){render();return}
+  page=np;openId=nid;armed=null;if(form.target==="a")form.files=[];
+  watchAnswers();render();window.scrollTo(0,0);
+}
+window.addEventListener("hashchange",route);
+
+if(auth){
+  getRedirectResult(auth).catch(()=>{});
+  onAuthStateChanged(auth,u=>{
+    clearSubs();me=u;isTeacher=!!(u&&u.emailVerified&&u.email&&u.email.toLowerCase()===TEACHER_EMAIL.toLowerCase());ready=true;
+    if(!u){render();return}
+    if(isTeacher){
+      subs.push(onSnapshot(collection(db,"members"),s=>{members={};s.docs.forEach(d=>members[d.id]=d.data());render()},()=>{}));
+      subs.push(onSnapshot(query(collection(db,"requests"),orderBy("at","desc")),s=>{reqs=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{}));
+      subs.push(onSnapshot(doc(db,"secret","entry"),s=>{entry=s.exists()?s.data():null;render()},()=>{}));
+      sync();
+    }else{
+      subs.push(onSnapshot(doc(db,"members",u.uid),s=>{myMember=s.exists()?s.data():null;sync()},()=>{myMember=null;sync()}));
+      subs.push(onSnapshot(doc(db,"requests",u.uid),s=>{myReq=s.exists()?s.data():null;sync()},()=>{myReq=null;sync()}));
+    }
+    route();
+  });
+}else render();
+
+/* ---------- 질문 작성 ---------- */
+function segs(){
+  $("#fsubj").innerHTML=SUBJ.map((s,i)=>`<button type="button" data-fs="${i}" aria-pressed="${form.subj===i}">${s}</button>`).join("");
+  $("#fkind").innerHTML=KIND.map((s,i)=>`<button type="button" data-fk="${i}" aria-pressed="${form.kind===i}">${s}</button>`).join("");
+}
+function openCompose(){
+  form.target="q";form.files=[];
+  try{const d=JSON.parse(localStorage.getItem("qa-draft")||"{}");$("#ft").value=d.t||"";$("#fb").value=d.b||"";form.subj=d.s|0;form.kind=d.k|0}catch(e){}
+  if(f.subj!=="all")form.subj=+f.subj;
+  segs();files("#ffiles","q");$("#ferr").textContent="";$("#compose").classList.add("on");setTimeout(()=>$("#ft").focus(),30);
+}
+const saveDraft=()=>{try{localStorage.setItem("qa-draft",JSON.stringify({t:$("#ft").value,b:$("#fb").value,s:form.subj,k:form.kind}))}catch(e){}};
+$("#ft").addEventListener("input",saveDraft);$("#fb").addEventListener("input",saveDraft);
+const close=()=>{$("#compose").classList.remove("on");$("#lb").classList.remove("on");if(form.target==="q")form.files=[]};
+const randCode=()=>{const a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",r=crypto.getRandomValues(new Uint32Array(8));return [...r].map(x=>a[x%a.length]).join("")};
+
+$("#qf").addEventListener("submit",async e=>{
+  e.preventDefault();if(busy)return;const t=$("#ft").value.trim(),b=$("#fb").value.trim();
+  if(!t||!b){$("#ferr").textContent="제목과 내용을 모두 적어 주세요.";return}
+  busy=true;$("#fsend").disabled=true;$("#fsend").textContent="올리는 중…";
+  try{
+    const anon=$("#fanon").checked,ids=await uploadAll(form.files);
+    await addDoc(collection(db,"questions"),{title:t,body:b,subject:form.subj,kind:form.kind,authorId:me.uid,authorName:anon?"익명 학생":(isTeacher?TEACHER_NAME:myMember.name),anon,imageIds:ids,createdAt:serverTimestamp(),status:"wait",solved:false,pinned:false,answerCount:0});
+    try{localStorage.removeItem("qa-draft")}catch(_){}
+    $("#ft").value="";$("#fb").value="";$("#fanon").checked=false;close();
+  }catch(err){errMsg(err,"#ferr")}
+  busy=false;$("#fsend").disabled=false;$("#fsend").textContent="질문 등록";
+});
+
+document.addEventListener("submit",async e=>{
+  if(e.target.id==="rf"){
+    e.preventDefault();if(busy)return;
+    const code=$("#rcode").value.trim().toUpperCase(),name=$("#rn").value.trim(),school=$("#rs").value.trim(),msg=$("#rm").value.trim();
+    const cls=+((document.querySelector("#rc [aria-pressed=true]")||{dataset:{rc:0}}).dataset.rc);
+    if(!code||!name||!school){$("#rerr").textContent="입장 코드, 이름, 학교·학년을 모두 적어 주세요.";return}
+    busy=true;
+    try{await setDoc(doc(db,"requests",me.uid),{code,name,school,cls,msg,email:me.email,at:serverTimestamp()});document.activeElement&&document.activeElement.blur();render()}
+    catch(err){$("#rerr").textContent=err&&err.code==="permission-denied"?"입장 코드가 맞지 않아요. 선생님께 받은 코드를 다시 확인해 주세요.":"신청하지 못했어요. 잠시 후 다시 시도해 주세요."}
+    busy=false;return;
+  }
+  if(e.target.id!=="af")return;e.preventDefault();if(busy)return;
+  const b=$("#ab").value.trim(),q=qs.find(x=>x.id===openId);if(!b||!q)return;
+  busy=true;e.target.querySelector("[type=submit]").disabled=true;
+  try{
+    const anon=!isTeacher&&q.authorId===me.uid&&!!q.anon,ids=await uploadAll(form.target==="a"?form.files:[]);
+    await addDoc(collection(db,"questions",q.id,"answers"),{body:b,authorId:me.uid,authorName:anon?"익명 학생":(isTeacher?TEACHER_NAME:myMember.name),teacher:isTeacher,anon,imageIds:ids,createdAt:serverTimestamp()});
+    const up={answerCount:increment(1),lastAt:serverTimestamp()};if(isTeacher&&q.status!=="answered")up.status="answered";
+    await updateDoc(doc(db,"questions",q.id),up);
+    form.files=[];$("#ab").value="";$("#ab").blur();render();
+  }catch(err){errMsg(err,"#aerr")}
+  busy=false;const s=document.querySelector("#af [type=submit]");if(s)s.disabled=false;
+});
+
+async function setCode(code){
+  const x=$("#cerr");
+  if(!/^[A-Z0-9]{8,40}$/.test(code)){x.textContent="코드는 영문 대문자·숫자 8자 이상으로 정해 주세요.";return}
+  try{await setDoc(doc(db,"secret","entry"),{code,at:serverTimestamp()});x.textContent=""}catch(e){x.textContent="저장하지 못했어요."}
+}
+
+document.addEventListener("click",async e=>{
+  const t=e.target.closest("button,.ov");if(!t)return;const d=t.dataset;
+  if(t.classList.contains("ov")){if(e.target===t||t.id==="lb")close();return}
+  if(d.login!==undefined){
+    try{await signInWithPopup(auth,new GoogleAuthProvider())}
+    catch(err){if(err&&(err.code==="auth/popup-blocked"||err.code==="auth/operation-not-supported-in-this-environment"))signInWithRedirect(auth,new GoogleAuthProvider());else if(err&&err.code!=="auth/popup-closed-by-user"){const x=$("#lerr");if(x)x.textContent="로그인하지 못했어요. 다시 시도해 주세요."}}
+  }
+  else if(d.subj!==undefined){f.subj=d.subj;render()}
+  else if(d.st!==undefined){f.st=d.st;render()}
+  else if(d.open){location.hash="q-"+d.open}
+  else if(d.back!==undefined){location.hash="board"}
+  else if(d.ask!==undefined)openCompose();
+  else if(d.close!==undefined)close();
+  else if(d.rc!==undefined){document.querySelectorAll("#rc button").forEach(b=>b.setAttribute("aria-pressed",b===t))}
+  else if(d.fs!==undefined){form.subj=+d.fs;segs();saveDraft()}
+  else if(d.fk!==undefined){form.kind=+d.fk;segs();saveDraft()}
+  else if(d.img){const v=imgCache[d.img];if(v){const lb=$("#lb");lb.querySelector("img").src=v;lb.classList.add("on")}}
+  else if(d.attach){if(form.target!==d.attach){form.target=d.attach;form.files=[]}$("#pick").click()}
+  else if(d.rm!==undefined){form.files.splice(+d.rm,1);files(form.target==="q"?"#ffiles":"#afiles",form.target)}
+  else if(d.arm){armed=d.arm;render()}
+  else if(d.newcode!==undefined)setCode(randCode());
+  else if(d.setcode!==undefined)setCode(($("#mycode").value||"").trim().toUpperCase());
+  else if(d.copy!==undefined){try{await navigator.clipboard.writeText(entry.code);t.textContent="복사됨"}catch(_){}}
+  else if(d.approve||d.reject||d.revoke){
+    const id=d.approve||d.reject||d.revoke,r=reqs.find(x=>x.id===id)||{},old=members[id]||{};armed=null;t.disabled=true;
+    try{await setDoc(doc(db,"members",id),{status:d.approve?"approved":"rejected",name:r.name||old.name||"학생",school:r.school||old.school||"",cls:(r.cls??old.cls??0)|0,email:r.email||old.email||"",at:serverTimestamp()})}catch(err){t.disabled=false}
+  }
+  else if(d.del){
+    const q=qs.find(x=>x.id===openId);armed=null;if(!q)return;
+    try{
+      if(d.del==="q"){await deleteDoc(doc(db,"questions",q.id));for(const i of q.imageIds||[])deleteDoc(doc(db,"images",i)).catch(()=>{});location.hash="board"}
+      else{const aid=d.del.slice(2),a=answers.find(x=>x.id===aid);await deleteDoc(doc(db,"questions",q.id,"answers",aid));
+        const up={answerCount:increment(-1)};if(isTeacher)up.status=answers.some(x=>x.id!==aid&&x.teacher)?"answered":"wait";
+        await updateDoc(doc(db,"questions",q.id),up).catch(()=>{});for(const i of (a&&a.imageIds)||[])deleteDoc(doc(db,"images",i)).catch(()=>{})}
+    }catch(err){render()}
+  }
+  else if(d.solve!==undefined||d.pin!==undefined){
+    const q=qs.find(x=>x.id===openId);if(!q)return;
+    try{await updateDoc(doc(db,"questions",q.id),d.solve!==undefined?{solved:!q.solved}:{pinned:!q.pinned})}catch(err){}
+  }
+});
+$("#logout").addEventListener("click",()=>signOut(auth));
+document.addEventListener("input",e=>{if(e.target.id==="q"){f.q=e.target.value;render()}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+$("#pick").addEventListener("change",async e=>{
+  const fl=[...e.target.files].slice(0,3-form.files.length);e.target.value="";
+  for(const x of fl){if(!x.type.startsWith("image/"))continue;try{const v=await toJpeg(x);if(v)form.files.push(v)}catch(_){}}
+  files(form.target==="q"?"#ffiles":"#afiles",form.target);
+});
+</script>
+</body>
+</html>
