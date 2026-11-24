@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-n4U3M8G30km1ksSe9uB9zXeG56MUQqSryyinX/VzVuI=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://shinsmedu-qa.firebaseapp.com https://www.gstatic.com; frame-src https://shinsmedu-qa.firebaseapp.com https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="robots" content="noindex,nofollow">
 <title>신상명 Q&amp;A 게시판</title>
@@ -300,6 +301,7 @@ body:not([data-th=""]) .intro::before{background:radial-gradient(closest-side,va
 .tag.kl.k0{background:var(--s0-soft);color:var(--s0)}.tag.kl.k1{background:var(--s1-soft);color:var(--s1)}.tag.kl.k2{background:var(--s2-soft);color:var(--s2)}
 .bulk select{max-width:220px;padding:8px 10px;font-size:14px;border-radius:10px}
 .bsep{width:1px;height:22px;background:#444;margin:0 4px}
+.gone{margin-top:16px}.gone summary{cursor:pointer;font-size:13px;color:#777;padding:6px 0}
 /* 학교 검색 */
 .sbox{position:relative}
 .slist{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:8;background:#fff;border:1px solid #e3e3e3;border-radius:14px;box-shadow:0 14px 40px #0000001f;padding:6px;max-height:320px;overflow:auto}
@@ -339,8 +341,10 @@ body:not([data-th=""]) .intro::before{background:radial-gradient(closest-side,va
 import { firebaseConfig, TEACHER_EMAIL, TEACHER_NAME } from "./firebase-config.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, limit, serverTimestamp, increment, deleteField } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, getDocs, query, where, orderBy, limit, serverTimestamp, increment, deleteField } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+/* ---------- 보안: 다른 사이트에 몰래 끼워 넣기(클릭재킹) 방지 ---------- */
+if(window.top!==window.self){try{window.top.location.replace(window.self.location.href)}catch(_){document.documentElement.innerHTML=""}throw new Error("framed")}
 const SUBJ=["고1 통합사회","고1 한국사","수능 통합사회"];
 const KIND=["개념 질문","문제 풀이","공부법·시험","기타"];
 const CLS=["학원","과외"];
@@ -360,7 +364,7 @@ let app0,auth,db;
 try{app0=initializeApp(firebaseConfig);auth=getAuth(app0);db=getFirestore(app0)}catch(e){}
 
 let me=null,isTeacher=false,ready=false,qLoaded=false,busy=false;
-let myMember=undefined,myReq=undefined,members={},reqs=[],qs=[],answers=[],entry=null,imgCache={};
+let myBlocked=undefined,blockedList={},myMember=undefined,myReq=undefined,members={},reqs=[],qs=[],answers=[],entry=null,imgCache={};
 let page="board",openId=null,armed=null;
 let subs=[],qUnsub=null,ansUnsub=null,drafts={},qPub=[],qMine=[];
 let students={},klasses={},prog=[],progUnsub=null,openSid=null;const sf={cls:"all",q:"",st:"on",fold:"all",k:"all"};
@@ -381,7 +385,8 @@ function gate(){
   if(!ready)return"loading";
   if(!me)return"signin";
   if(isTeacher)return"teacher";
-  if(myMember===undefined||myReq===undefined)return"loading";
+  if(myMember===undefined||myReq===undefined||myBlocked===undefined)return"loading";
+  if(myBlocked||(myMember&&myMember.status==="banned"))return"banned";
   if(myMember&&myMember.status==="approved")return"approved";
   if(myMember&&myMember.status==="rejected"&&(!myReq||ms(myReq.at)<=ms(myMember.at)))return"rejected";
   return myReq?"pending":"none";
@@ -395,6 +400,7 @@ function gateView(g){
   if(g==="loading")return intro("Loading","불러오는 중","잠시만 기다려 주세요.");
   if(g==="signin")return intro("Members only","로그인해 주세요","신상명 선생님 수업 학생 전용 질문 게시판이에요. 구글 계정으로 로그인한 뒤, 입장 코드로 승인을 신청하세요.")+
     `<main class="gut"><div class="panel gate stack">${/KAKAOTALK|Instagram|FBAN|FBAV|NAVER|Line\/|DaumApps|everytimeApp/i.test(navigator.userAgent)?`<div class="banner" style="margin:0">지금은 앱 안의 브라우저로 열려 있어서 구글 로그인이 막혀요. 오른쪽 위 메뉴(⋮ 또는 공유)에서 <b>다른 브라우저로 열기</b>를 눌러 크롬이나 사파리에서 열어 주세요.</div>`:""}<div class="row"><button class="btn primary gbtn" data-login>Google 계정으로 로그인</button></div><div class="err" id="lerr"></div><p class="small" style="margin:0">로그인하면 이름·이메일이 선생님께만 전달돼요. 다른 학생에게는 보이지 않아요.</p></div></main>`;
+  if(g==="banned")return intro("Restricted","이용이 제한됐어요","이 계정은 선생님이 게시판 이용을 제한했어요. 문의할 내용이 있으면 선생님께 직접 연락해 주세요.");
   if(g==="pending")return intro("Waiting","승인 기다리는 중",`<b style="color:#111">${esc(myReq.name)}</b> 학생의 입장 요청이 선생님께 전달됐어요. 승인되면 이 화면이 바로 게시판으로 바뀌어요.`,`<p class="small" style="margin-top:14px">${esc(CLS[myReq.cls|0])} · ${esc(who(myReq))} · ${esc(me.email||"")}</p>`);
   const rej=g==="rejected";
   return intro("Members only",rej?"승인되지 않았어요":"입장 승인 신청",rej?"선생님이 요청을 승인하지 않았어요. 정보를 확인해 다시 신청하거나 선생님께 직접 문의해 주세요.":"수업 시간에 받은 입장 코드를 넣어야 신청할 수 있어요. 선생님이 확인 후 승인해 드려요.")+
@@ -458,10 +464,11 @@ function detailView(q){
 
 /* ---------- 승인 관리 ---------- */
 function adminView(){
-  const pend=pendingReqs(),all=Object.entries(members),approved=all.filter(([,m])=>m.status==="approved"),rej=all.filter(([,m])=>m.status==="rejected");
+  const pend=pendingReqs(),all=Object.entries(members),approved=all.filter(([,m])=>m.status==="approved"),rej=all.filter(([,m])=>m.status==="rejected"),ban=all.filter(([,m])=>m.status==="banned"),gone=Object.entries(blockedList);
+  const banBtn=id=>armed==="b:"+id?`<button class="btn danger sm" data-ban="${esc(id)}">정말 차단할까요?</button>`:`<button class="btn ghost sm" data-arm="b:${esc(id)}">차단</button>`;
   const qn=id=>qs.filter(q=>q.authorId===id).length;
   const code=entry&&entry.code;
-  return intro("Members","입장 승인 관리","입장 코드를 아는 학생만 신청할 수 있고, 선생님이 승인한 학생만 게시판을 볼 수 있어요. 코드 검사와 승인 확인은 서버 보안 규칙이 하기 때문에 화면을 조작해도 우회되지 않아요.",`<div class="stats">${[[pend.length,"승인 대기"],[approved.length,"승인된 학생"],[rej.length,"거절·취소"]].map(([n,l])=>`<div><b>${n}</b><span>${l}</span></div>`).join("")}</div>`)+
+  return intro("Members","입장 승인 관리","입장 코드를 아는 학생만 신청할 수 있고, 선생님이 승인한 학생만 게시판을 볼 수 있어요. 코드 검사와 승인 확인은 서버 보안 규칙이 하기 때문에 화면을 조작해도 우회되지 않아요.",`<div class="stats">${[[pend.length,"승인 대기"],[approved.length,"승인된 학생"],[rej.length,"거절·취소"],[ban.length,"차단"]].map(([n,l])=>`<div><b>${n}</b><span>${l}</span></div>`).join("")}</div>`)+
   `<main class="gut stack" style="gap:48px">
   <section class="panel stack"><div class="sectitle" style="margin:0">입장 코드</div>
     ${code?`<div class="row"><span class="code">${esc(code)}</span><button class="btn sm" data-copy>복사</button></div>`:`<p style="margin:0;color:var(--mark)">아직 입장 코드가 없어요. 코드를 만들기 전에는 아무도 신청할 수 없어요.</p>`}
@@ -470,9 +477,13 @@ function adminView(){
     <p class="small" style="margin:0">코드가 퍼졌다면 바로 바꾸세요. 이미 승인된 학생은 영향 없고, 새로 신청하는 학생만 새 코드가 필요해요.</p></section>
   <section><div class="sectitle">승인 대기</div>${pend.length?`<div class="reqs">${pend.map(r=>`<div class="req"><div class="qmeta"><span class="tag subj">${esc(CLS[r.cls|0])}</span>${members[r.id]?'<span class="tag wait">재신청</span>':""}<span class="sp"></span><time>${ago(r.at)}</time></div>
     <div class="sheet"><b>${esc(r.name)}</b> <span class="small">· ${esc(who(r))}${r.region?" ("+esc(r.region)+")":""}</span><p class="small" style="margin:4px 0 0">${esc(r.email)}${r.phone?" · 학생 "+esc(r.phone):""}${r.parent?" · 학부모 "+esc(r.parent):""}</p>${r.msg?`<p class="small" style="margin:6px 0 0;color:#555">“${esc(r.msg)}”</p>`:""}</div>
-    <div class="qact"><button class="btn primary sm" data-approve="${esc(r.id)}">승인</button><button class="btn danger sm" data-reject="${esc(r.id)}">거절</button></div></div>`).join("")}</div>`:`<div class="empty" style="padding:36px 28px"><p>새 입장 신청이 없어요.</p></div>`}</section>
-  <section><div class="sectitle">승인된 학생 ${approved.length}</div>${approved.length?`<table class="mt stk"><thead><tr><th>이름</th><th>학교 · 학년</th><th>수업</th><th>이메일</th><th>승인일</th><th>질문</th><th></th></tr></thead><tbody>${approved.map(([id,m])=>`<tr><td data-l="이름">${esc(m.name)}</td><td data-l="학교·학년">${esc(who(m))}</td><td data-l="수업">${esc(CLS[m.cls|0])}</td><td data-l="이메일">${esc(m.email)}</td><td class="c" data-l="승인일">${day(m.at)}</td><td class="c" data-l="질문">${qn(id)}</td><td style="text-align:right">${armed==="x:"+id?`<button class="btn danger sm" data-revoke="${esc(id)}">정말 취소할까요?</button>`:`<button class="btn ghost sm" data-arm="x:${esc(id)}">승인 취소</button>`}</td></tr>`).join("")}</tbody></table>`:`<div class="empty" style="padding:36px 28px"><p>아직 승인한 학생이 없어요.</p></div>`}</section>
-  ${rej.length?`<section><div class="sectitle">거절 · 취소 ${rej.length}</div><table class="mt stk"><thead><tr><th>이름</th><th>학교 · 학년</th><th>이메일</th><th>처리일</th><th></th></tr></thead><tbody>${rej.map(([id,m])=>`<tr><td data-l="이름">${esc(m.name)}</td><td data-l="학교·학년">${esc(who(m))}</td><td data-l="이메일">${esc(m.email)}</td><td class="c" data-l="처리일">${day(m.at)}</td><td style="text-align:right"><button class="btn ok sm" data-approve="${esc(id)}">다시 승인</button></td></tr>`).join("")}</tbody></table></section>`:""}
+    <div class="qact"><button class="btn primary sm" data-approve="${esc(r.id)}">승인</button><button class="btn danger sm" data-reject="${esc(r.id)}">거절</button><span class="sp"></span>${banBtn(r.id)}</div></div>`).join("")}</div>`:`<div class="empty" style="padding:36px 28px"><p>새 입장 신청이 없어요.</p></div>`}</section>
+  <section><div class="sectitle">승인된 학생 ${approved.length}</div>${approved.length?`<table class="mt stk"><thead><tr><th>이름</th><th>학교 · 학년</th><th>수업</th><th>이메일</th><th>승인일</th><th>질문</th><th></th></tr></thead><tbody>${approved.map(([id,m])=>`<tr><td data-l="이름">${esc(m.name)}</td><td data-l="학교·학년">${esc(who(m))}</td><td data-l="수업">${esc(CLS[m.cls|0])}</td><td data-l="이메일">${esc(m.email)}</td><td class="c" data-l="승인일">${day(m.at)}</td><td class="c" data-l="질문">${qn(id)}</td><td style="text-align:right">${armed==="x:"+id?`<button class="btn danger sm" data-revoke="${esc(id)}">정말 취소할까요?</button>`:`<button class="btn ghost sm" data-arm="x:${esc(id)}">승인 취소</button>`} ${banBtn(id)}</td></tr>`).join("")}</tbody></table>`:`<div class="empty" style="padding:36px 28px"><p>아직 승인한 학생이 없어요.</p></div>`}</section>
+  ${rej.length?`<section><div class="sectitle">거절 · 취소 ${rej.length}</div><table class="mt stk"><thead><tr><th>이름</th><th>학교 · 학년</th><th>이메일</th><th>처리일</th><th></th></tr></thead><tbody>${rej.map(([id,m])=>`<tr><td data-l="이름">${esc(m.name)}</td><td data-l="학교·학년">${esc(who(m))}</td><td data-l="이메일">${esc(m.email)}</td><td class="c" data-l="처리일">${day(m.at)}</td><td style="text-align:right"><button class="btn ok sm" data-approve="${esc(id)}">다시 승인</button> ${banBtn(id)}</td></tr>`).join("")}</tbody></table></section>`:""}
+  <section><div class="sectitle">차단된 사람 ${ban.length}</div>${ban.length?`<table class="mt stk"><thead><tr><th>이름</th><th>학교 · 학년</th><th>이메일</th><th>차단일</th><th></th></tr></thead><tbody>${ban.map(([id,m])=>`<tr><td data-l="이름">${esc(m.name)}</td><td data-l="학교·학년">${esc(who(m))}</td><td data-l="이메일">${esc(m.email)}</td><td class="c" data-l="차단일">${day(m.at)}</td><td style="text-align:right;white-space:nowrap"><button class="btn sm" data-unban="${esc(id)}">차단 해제</button> ${armed==="d:"+id?`<button class="btn danger sm" data-purge="${esc(id)}">질문·기록까지 모두 지울까요?</button>`:`<button class="btn ghost sm" data-arm="d:${esc(id)}">완전 삭제</button>`}</td></tr>`).join("")}</tbody></table>`:`<div class="empty" style="padding:36px 28px"><p>차단한 사람이 없어요. 문제가 있는 사람은 위 목록에서 ‘차단’을 누르면 바로 게시판에서 막히고, 다시 신청할 수도 없어요.</p></div>`}
+    <div class="err" id="berr"></div>
+    <p class="small" style="margin:10px 0 0">차단 해제하면 ‘거절·취소’로 옮겨지고 다시 승인할 수 있어요. 완전 삭제하면 그 사람의 질문·답변·사진·학생 관리 기록이 모두 지워지고 목록에서도 사라져요. 같은 구글 계정으로 다시 가입하는 것은 계속 막혀요.</p>
+    ${gone.length?`<details class="gone"><summary>완전 삭제한 계정 ${gone.length}명 (재가입 차단 중)</summary><table class="mt stk"><tbody>${gone.map(([id,b])=>`<tr><td data-l="이름">${esc(b.name||"(이름 없음)")}</td><td data-l="이메일">${esc(b.email||"")}</td><td class="c" data-l="삭제일">${day(b.at)}</td><td style="text-align:right">${armed==="u:"+id?`<button class="btn sm" data-unblock="${esc(id)}">재가입을 허용할까요?</button>`:`<button class="btn ghost sm" data-arm="u:${esc(id)}">재가입 허용</button>`}</td></tr>`).join("")}</tbody></table></details>`:""}</section>
   </main>`;
 }
 
@@ -656,7 +667,7 @@ async function uploadAll(list,priv,viewer){const ids=[];for(const data of list){
 const errMsg=(e,el)=>{const x=$(el);if(x)x.textContent=e&&e.code==="permission-denied"?"권한이 없어 저장하지 못했어요. (승인이 취소됐거나 입력값이 규칙에 맞지 않아요)":"저장하지 못했어요. 잠시 후 다시 시도해 주세요."};
 
 /* ---------- 데이터 구독 ---------- */
-function clearSubs(){subs.forEach(u=>u());subs=[];if(progUnsub){progUnsub();progUnsub=null}students={};klasses={};prog=[];if(qUnsub){qUnsub();qUnsub=null}if(ansUnsub){ansUnsub();ansUnsub=null}qs=[];qPub=[];qMine=[];drafts={};answers=[];members={};reqs=[];entry=null;qLoaded=false;myMember=undefined;myReq=undefined;imgCache={}}
+function clearSubs(){subs.forEach(u=>u());subs=[];if(progUnsub){progUnsub();progUnsub=null}students={};klasses={};prog=[];if(qUnsub){qUnsub();qUnsub=null}if(ansUnsub){ansUnsub();ansUnsub=null}qs=[];qPub=[];qMine=[];drafts={};answers=[];members={};reqs=[];entry=null;qLoaded=false;myMember=undefined;myReq=undefined;myBlocked=undefined;blockedList={};imgCache={}}
 function startBoard(){
   if(qUnsub)return;
   const sortQ=()=>{const m=new Map();for(const x of [...qPub,...qMine])m.set(x.id,x);qs=[...m.values()].sort((a,b)=>ms(b.createdAt)-ms(a.createdAt));qLoaded=true;render()};
@@ -693,11 +704,13 @@ if(auth){
       subs.push(onSnapshot(query(collection(db,"requests"),orderBy("at","desc")),s=>{reqs=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{}));
       subs.push(onSnapshot(doc(db,"secret","entry"),s=>{entry=s.exists()?s.data():null;render()},()=>{}));
       subs.push(onSnapshot(collection(db,"students"),s=>{students={};s.docs.forEach(d=>students[d.id]=d.data());render()},()=>{}));
+      subs.push(onSnapshot(collection(db,"blocked"),s=>{blockedList={};s.docs.forEach(d=>blockedList[d.id]=d.data());render()},()=>{}));
       subs.push(onSnapshot(collection(db,"classes"),s=>{klasses={};s.docs.forEach(d=>klasses[d.id]=d.data());render()},()=>{}));
       sync();
     }else{
       subs.push(onSnapshot(doc(db,"members",u.uid),s=>{myMember=s.exists()?s.data():null;sync()},()=>{myMember=null;sync()}));
       subs.push(onSnapshot(doc(db,"requests",u.uid),s=>{myReq=s.exists()?s.data():null;sync()},()=>{myReq=null;sync()}));
+      subs.push(onSnapshot(doc(db,"blocked",u.uid),s=>{myBlocked=s.exists();sync()},()=>{myBlocked=false;sync()}));
     }
     route();
   });
@@ -873,9 +886,24 @@ document.addEventListener("click",async e=>{
   else if(d.newcode!==undefined)setCode(randCode());
   else if(d.setcode!==undefined)setCode(($("#mycode").value||"").trim().toUpperCase());
   else if(d.copy!==undefined){try{await navigator.clipboard.writeText(entry.code);t.textContent="복사됨"}catch(_){}}
-  else if(d.approve||d.reject||d.revoke){
-    const id=d.approve||d.reject||d.revoke,r=reqs.find(x=>x.id===id)||{},old=members[id]||{};armed=null;t.disabled=true;
-    try{await setDoc(doc(db,"members",id),{status:d.approve?"approved":"rejected",name:r.name||old.name||"학생",school:r.school||old.school||"",grade:(r.grade??old.grade??0)|0,region:r.region||old.region||"",cls:(r.cls??old.cls??0)|0,email:r.email||old.email||"",at:serverTimestamp()});
+  else if(d.purge){const id=d.purge;armed=null;t.disabled=true;$("#berr").textContent="지우는 중…";
+    try{
+      const m=members[id]||{},r=reqs.find(x=>x.id===id)||{};
+      await setDoc(doc(db,"blocked",id),{name:m.name||r.name||"",email:m.email||r.email||"",at:serverTimestamp()});
+      for(const q of qs.filter(x=>x.authorId===id)){
+        const as=await getDocs(collection(db,"questions",q.id,"answers"));
+        for(const a of as.docs){for(const i of a.data().imageIds||[])await deleteDoc(doc(db,"images",i)).catch(()=>{});await deleteDoc(a.ref)}
+        for(const i of q.imageIds||[])await deleteDoc(doc(db,"images",i)).catch(()=>{});
+        await deleteDoc(doc(db,"drafts",q.id)).catch(()=>{});await deleteDoc(doc(db,"questions",q.id));
+      }
+      const pg=await getDocs(collection(db,"students",id,"progress"));for(const g of pg.docs)await deleteDoc(g.ref);
+      await deleteDoc(doc(db,"students",id)).catch(()=>{});await deleteDoc(doc(db,"requests",id)).catch(()=>{});await deleteDoc(doc(db,"members",id));
+      $("#berr").textContent="";
+    }catch(err){t.disabled=false;errMsg(err,"#berr")}}
+  else if(d.unblock){const id=d.unblock;armed=null;try{await deleteDoc(doc(db,"blocked",id))}catch(err){render()}}
+  else if(d.approve||d.reject||d.revoke||d.ban||d.unban){
+    const id=d.approve||d.reject||d.revoke||d.ban||d.unban,r=reqs.find(x=>x.id===id)||{},old=members[id]||{};armed=null;t.disabled=true;
+    try{await setDoc(doc(db,"members",id),{status:d.approve?"approved":d.ban?"banned":"rejected",name:r.name||old.name||"학생",school:r.school||old.school||"",grade:(r.grade??old.grade??0)|0,region:r.region||old.region||"",cls:(r.cls??old.cls??0)|0,email:r.email||old.email||"",at:serverTimestamp()});
       if(d.approve&&(r.phone||r.parent)){const st=students[id]||{};await setDoc(doc(db,"students",id),{phone:st.phone||r.phone||"",parent:st.parent||r.parent||"",at:serverTimestamp()},{merge:true})}}catch(err){t.disabled=false}
   }
   else if(d.del){
@@ -893,6 +921,9 @@ document.addEventListener("click",async e=>{
   }
 });
 $("#logout").addEventListener("click",()=>signOut(auth));
+/* ---------- 보안: 선생님 계정은 2시간 동안 아무 조작이 없으면 자동 로그아웃 ---------- */
+let lastAct=Date.now();["pointerdown","keydown","scroll","touchstart"].forEach(ev=>addEventListener(ev,()=>{lastAct=Date.now()},{passive:true}));
+setInterval(()=>{if(isTeacher&&auth&&Date.now()-lastAct>2*3600e3){lastAct=Date.now();signOut(auth)}},60e3);
 document.addEventListener("input",async e=>{if(e.target.id==="q"){f.q=e.target.value;render()}
   else if(e.target.id==="sq"){sf.q=e.target.value;render()}
   else if(e.target.id==="rs"){schoolPick=null;$("#shint").textContent="전국 고등학교 2,401곳에서 찾아요. 목록에 없으면 그대로 입력해도 돼요.";await loadSchools();const v=e.target.value,r=findSchools(v),L=$("#slist");window.__slast=r;
