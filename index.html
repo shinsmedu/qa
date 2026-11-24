@@ -173,7 +173,7 @@ table.mt{width:100%;border-collapse:collapse;font-size:13px}
 <script type="module">
 import { firebaseConfig, TEACHER_EMAIL, TEACHER_NAME } from "./firebase-config.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const SUBJ=["고1 통합사회","고1 한국사","고3 수능 통합사회"];
@@ -220,7 +220,7 @@ function gateView(g){
   if(g==="config")return intro("Setup","설정이 필요해요","firebase-config.js 에 Firebase 프로젝트 값을 넣어 주세요. 안내서(README)를 참고하세요.");
   if(g==="loading")return intro("Loading","불러오는 중","잠시만 기다려 주세요.");
   if(g==="signin")return intro("Members only","로그인해 주세요","신상명 선생님 수업 학생 전용 질문 게시판이에요. 구글 계정으로 로그인한 뒤, 입장 코드로 승인을 신청하세요.")+
-    `<main class="gut"><div class="panel gate stack"><div class="row"><button class="btn primary gbtn" data-login>Google 계정으로 로그인</button></div><div class="err" id="lerr"></div><p class="small" style="margin:0">로그인하면 이름·이메일이 선생님께만 전달돼요. 다른 학생에게는 보이지 않아요.</p></div></main>`;
+    `<main class="gut"><div class="panel gate stack">${/KAKAOTALK|Instagram|FBAN|FBAV|NAVER|Line\/|DaumApps|everytimeApp/i.test(navigator.userAgent)?`<div class="banner" style="margin:0">지금은 앱 안의 브라우저로 열려 있어서 구글 로그인이 막혀요. 오른쪽 위 메뉴(⋮ 또는 공유)에서 <b>다른 브라우저로 열기</b>를 눌러 크롬이나 사파리에서 열어 주세요.</div>`:""}<div class="row"><button class="btn primary gbtn" data-login>Google 계정으로 로그인</button></div><div class="err" id="lerr"></div><p class="small" style="margin:0">로그인하면 이름·이메일이 선생님께만 전달돼요. 다른 학생에게는 보이지 않아요.</p></div></main>`;
   if(g==="pending")return intro("Waiting","승인 기다리는 중",`<b style="color:#111">${esc(myReq.name)}</b> 학생의 입장 요청이 선생님께 전달됐어요. 승인되면 이 화면이 바로 게시판으로 바뀌어요.`,`<p class="small" style="margin-top:14px">${esc(myReq.school)} · ${esc(CLS[myReq.cls|0])} · ${esc(me.email||"")}</p>`);
   const rej=g==="rejected";
   return intro("Members only",rej?"승인되지 않았어요":"입장 승인 신청",rej?"선생님이 요청을 승인하지 않았어요. 정보를 확인해 다시 신청하거나 선생님께 직접 문의해 주세요.":"수업 시간에 받은 입장 코드를 넣어야 신청할 수 있어요. 선생님이 확인 후 승인해 드려요.")+
@@ -366,7 +366,6 @@ function route(){
 window.addEventListener("hashchange",route);
 
 if(auth){
-  getRedirectResult(auth).catch(()=>{});
   onAuthStateChanged(auth,u=>{
     clearSubs();me=u;isTeacher=!!(u&&u.emailVerified&&u.email&&u.email.toLowerCase()===TEACHER_EMAIL.toLowerCase());ready=true;
     if(!u){render();return}
@@ -446,8 +445,10 @@ document.addEventListener("click",async e=>{
   const t=e.target.closest("button,.ov");if(!t)return;const d=t.dataset;
   if(t.classList.contains("ov")){if(e.target===t||t.id==="lb")close();return}
   if(d.login!==undefined){
-    try{await signInWithPopup(auth,new GoogleAuthProvider())}
-    catch(err){if(err&&(err.code==="auth/popup-blocked"||err.code==="auth/operation-not-supported-in-this-environment"))signInWithRedirect(auth,new GoogleAuthProvider());else if(err&&err.code!=="auth/popup-closed-by-user"){const x=$("#lerr");if(x)x.textContent="로그인하지 못했어요. 다시 시도해 주세요."}}
+    const x=$("#lerr");if(x)x.textContent="";
+    try{const p=new GoogleAuthProvider();p.setCustomParameters({prompt:"select_account"});await signInWithPopup(auth,p)}
+    catch(err){const c=err&&err.code;if(!x||c==="auth/cancelled-popup-request")return;
+      x.textContent=c==="auth/popup-blocked"?"로그인 창(팝업)이 막혔어요. 주소창 오른쪽의 팝업 차단 표시를 눌러 '항상 허용'으로 바꾼 뒤 다시 눌러 주세요.":c==="auth/popup-closed-by-user"?"로그인 창이 닫혔어요. 다시 눌러 주세요.":"로그인하지 못했어요. 카카오톡·인스타그램 안에서 열었다면 오른쪽 위 메뉴에서 '다른 브라우저로 열기'(크롬·사파리)를 눌러 주세요."}
   }
   else if(d.subj!==undefined){f.subj=d.subj;render()}
   else if(d.st!==undefined){f.st=d.st;render()}
