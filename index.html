@@ -58,8 +58,9 @@ main{padding-block:44px 110px}
 .btn.ok{color:var(--ok);border-color:#bcd6c1}
 .btn.sm{padding:5px 12px;min-height:32px;font-size:12px}
 .btn:disabled{opacity:.4;cursor:not-allowed}
-input[type=text],input[type=search],select,textarea{border:1px solid #e3e3e3;background:#fff;border-radius:0;padding:10px 12px;width:100%;font-size:16px}
+input[type=text],input[type=search],input[type=tel],input[type=number],input[type=date],select,textarea{border:1px solid #e3e3e3;background:#fff;border-radius:0;padding:10px 12px;width:100%;font-size:16px;color:#222;letter-spacing:0}
 input:focus,select:focus,textarea:focus{border-color:#111;outline:none}
+input::placeholder,textarea::placeholder{color:#b3b3b3}
 textarea{resize:vertical;line-height:1.7;min-height:130px}
 .f{display:grid;gap:7px;font-size:10.5px;color:#999;letter-spacing:1.2px}
 .seg{display:inline-flex;flex-wrap:wrap;gap:6px}
@@ -163,7 +164,8 @@ body{background:#fafaf8}
 .panel{border-radius:var(--radius)}
 .empty{border-radius:var(--radius);text-align:left;position:relative;overflow:hidden}
 .empty::after{content:"?";position:absolute;right:28px;top:50%;transform:translateY(-50%);font:600 120px/1 var(--exam);color:#0000000a}
-input[type=text],input[type=search],select,textarea{border-radius:12px}
+input[type=text],input[type=search],input[type=tel],input[type=number],input[type=date],select,textarea{border-radius:12px}
+input[type=date]{min-height:44px;color:#222;-webkit-appearance:none;appearance:none}
 .listbar input[type=search]{border-radius:0}
 .tag{font-weight:500}
 .tag.subj{border-color:transparent}
@@ -225,6 +227,79 @@ html[data-h=a] .who-top{color:#999}
 html[data-h=a] .btn.bar{border-color:#dedede;color:#555}html[data-h=a] .btn.bar:hover{background:#f3f3f3}
 @media(max-width:600px){.brand small{display:none}.brand .bt b,.brand .bt em{font-size:19px}}
 
+/* 학생 관리 */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.chips button{border:1px solid #e3e3e3;background:#fff;border-radius:999px;padding:8px 14px;font-size:13.5px;color:#555;letter-spacing:0}
+.chips button[aria-pressed=true]{background:#111;color:#fff;border-color:#111}
+.chips .n{margin-left:6px;opacity:.6;font-size:12px}
+.lnk{border:0;background:none;padding:0;font:inherit;font-weight:600;color:#111;text-decoration:underline;text-decoration-color:#ccc;text-underline-offset:3px;cursor:pointer}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+.mt.pay input{width:100%;min-width:0;padding:8px 10px;font-size:14px}
+.mt.pay td{vertical-align:middle}
+.plist{display:grid;gap:12px;margin-top:16px}
+.pitem{background:#fff;border:1px solid #ececea;border-radius:var(--radius);overflow:hidden}
+.pitem .sheet{padding:10px 20px 4px}.pitem .qmeta{padding:14px 20px 0}.pitem .qact{padding:6px 20px 12px}
+.stabs{display:flex;gap:4px;margin:0 0 14px;border-bottom:1px solid #e6e6e4}
+.stabs button{border:0;background:none;padding:10px 4px;margin-right:18px;font-size:15px;color:#999;border-bottom:2px solid transparent;margin-bottom:-1px;letter-spacing:0}
+.stabs button[aria-pressed=true]{color:#111;border-bottom-color:#111;font-weight:600}
+.stabs .n{font-size:12px;opacity:.6}
+.tag.grp.g1{background:#eef6ff;color:#2f5f9a;border-color:#d6e6f8}
+.tag.grp.g3{background:#effaf4;color:#237a52;border-color:#cfeedd}
+.tag.grp.g2{background:#f4f1fb;color:#5b4b8a;border-color:#e2dcf3}
+/* 화면별 홀로그램 변주 */
+.intro::after,.intro::before{transition:all .6s ease}
+body[data-pg=students] .intro::after{right:200px;top:-280px;background:radial-gradient(closest-side,#4fbf8b55,#86d3b130 50%,#a6d4e31a 75%,transparent)}
+body[data-pg=students] .intro::before{right:-150px;bottom:-210px;background:radial-gradient(closest-side,#b4a2e538,#a6d4e322 60%,transparent)}
+body[data-pg=stu] .intro::after{right:-60px;top:-230px;width:640px;height:640px;background:radial-gradient(closest-side,#a6d4e355,#86d3b136 50%,#4fbf8b1a 75%,transparent)}
+body[data-pg=stu] .intro::before{right:360px;bottom:-230px;background:radial-gradient(closest-side,#4fbf8b33,#b4a2e51a 60%,transparent)}
+body[data-pg=admin] .intro::after{right:-100px;top:-160px;background:radial-gradient(closest-side,#b4a2e548,#a6d4e32a 50%,#86d3b11a 75%,transparent)}
+body[data-pg=admin] .intro::before{right:60px;bottom:-220px;background:radial-gradient(closest-side,#4fbf8b44,#86d3b122 60%,transparent)}
+body[data-pg=gate] .intro::after{right:-220px;top:-40px;background:radial-gradient(closest-side,#86d3b14d,#a6d4e333 50%,#b4a2e526 75%,transparent)}
+body[data-pg=gate] .intro::before{right:280px;bottom:-140px;background:radial-gradient(closest-side,#b4a2e533,#a6d4e31a 60%,transparent)}
+@media(max-width:700px){body[data-pg] .intro::after{width:360px;height:360px;right:-160px}body[data-pg=students] .intro::after{right:-60px;top:-200px}}
+/* ===== 컬러 테마: 기본 모노(블랙·그레이·화이트), 과목별 메인 컬러 ===== */
+:root{--s0:#6d4fd0;--s0-soft:#f1edfc;--s1:#b0602a;--s1-soft:#fbefe5;--s2:#23845a;--s2-soft:#e8f6ee;
+  --h1:#1f1f1f1a;--h2:#8f8f8f1f;--h3:#cfcfcf26;--grad:linear-gradient(90deg,#111 0%,#7d7d7d 50%,#d9d9d9 100%)}
+body[data-th="0"]{--h1:#8e6cf04d;--h2:#c9b8ff38;--h3:#e6defd26;--grad:linear-gradient(90deg,#dcd1fd 0%,#a68bf5 45%,#6d4fd0 100%)}
+body[data-th="1"]{--h1:#e08a4a4a;--h2:#f6c58f38;--h3:#a8643a1f;--grad:linear-gradient(90deg,#f7d6ad 0%,#e08a4a 50%,#8f4f25 100%)}
+body[data-th="2"]{--h1:#56c48f4d;--h2:#b8ecd038;--h3:#24865a1f;--grad:linear-gradient(90deg,#c9f1db 0%,#56c48f 50%,#1f7a51 100%)}
+body .intro::after{background:radial-gradient(closest-side,var(--h1),var(--h2) 50%,var(--h3) 75%,transparent)!important}
+body .intro::before{background:radial-gradient(closest-side,var(--h2),var(--h3) 60%,transparent)!important}
+body:not([data-th=""]) .intro::before{background:radial-gradient(closest-side,var(--h1),var(--h3) 60%,transparent)!important}
+.tag.grp.g1{background:var(--s0-soft);color:var(--s0);border-color:transparent}
+.tag.grp.g3{background:var(--s2-soft);color:var(--s2);border-color:transparent}
+.tag.grp.g2{background:#f1f1f0;color:#555;border-color:transparent}
+.tree button .dot{box-shadow:0 0 0 3px #fff}
+/* 수료 폴더 */
+.folds{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:0 0 20px}
+.fold{display:flex;align-items:center;gap:10px;text-align:left;border:1px solid #e6e6e4;background:#fff;border-radius:14px;padding:14px 16px;font-size:14px;color:#222;letter-spacing:0}
+.fold b{font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fold .n{font-size:12px;color:#999}
+.fold .fi{width:22px;height:16px;border-radius:3px;background:#d9d9d9;position:relative;flex:none}
+.fold .fi::before{content:"";position:absolute;left:0;top:-4px;width:10px;height:5px;border-radius:2px 2px 0 0;background:#d9d9d9}
+.fold[aria-pressed=true]{border-color:#111;box-shadow:0 0 0 1px #111}
+.fold[aria-pressed=true] .fi,.fold[aria-pressed=true] .fi::before{background:#111}
+.bulk{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:#111;color:#fff;border-radius:14px;padding:12px 16px;margin:0 0 16px}
+.bulk .small{color:#aaa}.bulk input{max-width:240px;padding:8px 10px;font-size:14px;border-radius:10px}
+.bulk .btn.primary{background:#fff;color:#111;border-color:#fff}.bulk .btn.ghost{color:#ccc}
+.mt .ck{width:34px;text-align:center}.mt .ck input{width:17px;height:17px;accent-color:#111}
+/* 개설 반 */
+.klasses{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 12px}
+.kchip{border:1px solid #e3e3e3;background:#fff;border-radius:10px;padding:8px 12px;font-size:13.5px;color:#333;letter-spacing:0;display:inline-flex;align-items:center;gap:6px}
+.kchip::before{content:"";width:8px;height:8px;border-radius:2px;background:#bbb}
+.kchip.k0::before{background:var(--s0)}.kchip.k1::before{background:var(--s1)}.kchip.k2::before{background:var(--s2)}
+.kchip.add::before,.kchip[data-sk=all]::before{display:none}
+.kchip.add{border-style:dashed;color:#777}
+.kchip[aria-pressed=true]{background:#111;color:#fff;border-color:#111}
+.kchip .n{font-size:12px;opacity:.6}
+.kinfo,.kform{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:#fff;border:1px solid #ececea;border-radius:14px;padding:12px 16px;margin:0 0 14px}
+.kform input,.kform select{max-width:260px;padding:8px 10px;font-size:14px;border-radius:10px}
+.kform.add input{max-width:180px}
+.tag.kl{background:#f3f3f2;color:#444;border-color:transparent}
+.tag.kl.k0{background:var(--s0-soft);color:var(--s0)}.tag.kl.k1{background:var(--s1-soft);color:var(--s1)}.tag.kl.k2{background:var(--s2-soft);color:var(--s2)}
+.bulk select{max-width:220px;padding:8px 10px;font-size:14px;border-radius:10px}
+.bsep{width:1px;height:22px;background:#444;margin:0 4px}
 /* 학교 검색 */
 .sbox{position:relative}
 .slist{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:8;background:#fff;border:1px solid #e3e3e3;border-radius:14px;box-shadow:0 14px 40px #0000001f;padding:6px;max-height:320px;overflow:auto}
@@ -237,7 +312,7 @@ html[data-h=a] .btn.bar{border-color:#dedede;color:#555}html[data-h=a] .btn.bar:
 </head>
 <body>
 <header class="top gut">
-  <a class="brand" href="#board" aria-label="신상명 Q&amp;A 홈"><span class="mark" aria-hidden="true">Q</span><span class="bt"><b>신상명</b><em>Q&amp;A</em></span><small>수험생 질문방</small></a>
+  <a class="brand" href="#board" aria-label="신상명 Q&amp;A 홈"><span class="mark" aria-hidden="true">Q</span><span class="bt"><b>신상명</b><em>Q&amp;A</em></span></a>
   <div class="topr"><nav class="tabs" id="tabs" aria-label="메뉴"></nav><span class="who-top" id="whotop"></span><button class="btn bar sm" id="logout" hidden>로그아웃</button></div>
 </header>
 <div id="app"><section class="intro gut"><div class="eyebrow">Loading</div><h2>불러오는 중</h2><div class="accent-line"></div><p>잠시만 기다려 주세요.</p></section></div>
@@ -264,12 +339,15 @@ html[data-h=a] .btn.bar{border-color:#dedede;color:#555}html[data-h=a] .btn.bar:
 import { firebaseConfig, TEACHER_EMAIL, TEACHER_NAME } from "./firebase-config.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, limit, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, limit, serverTimestamp, increment, deleteField } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const SUBJ=["고1 통합사회","고1 한국사","고3 수능 통합사회"];
+const SUBJ=["고1 통합사회","고1 한국사","수능 통합사회"];
 const KIND=["개념 질문","문제 풀이","공부법·시험","기타"];
 const CLS=["학원","과외"];
 const GRADE=["","1학년","2학년","3학년","졸업생(N수)"];
+const subjFor=g=>g===1?[0,1]:(g===3||g===4)?[2]:[0,1,2];
+const grpOf=g=>g===1?"고1 내신":(g===3||g===4)?"수능 대비":g===2?"고2":"";
+const mySubj=()=>isTeacher?[0,1,2]:subjFor((myMember&&myMember.grade)|0);
 const who=m=>[m.school,GRADE[m.grade|0]].filter(Boolean).join(" · ");
 let SCHOOLS=null,schoolPick=null,schoolLoad=null;
 function loadSchools(){if(SCHOOLS||schoolLoad)return schoolLoad;schoolLoad=(window.__SCHOOLS_TXT?Promise.resolve(window.__SCHOOLS_TXT):fetch("schools.txt").then(r=>r.ok?r.text():"")).then(t=>{SCHOOLS=[];for(const line of t.split("\n")){const i=line.indexOf(":");if(i<0)continue;const [sido,gu]=line.slice(0,i).split("/");for(const n of line.slice(i+1).split(",")){if(!n)continue;const full=n[0]==="!"?n.slice(1):n+"고등학교";SCHOOLS.push({n:full,b:n[0]==="!"?full:n,r:(sido+" "+(gu||"")).trim()})}}}).catch(()=>{SCHOOLS=[]});return schoolLoad}
@@ -285,6 +363,7 @@ let me=null,isTeacher=false,ready=false,qLoaded=false,busy=false;
 let myMember=undefined,myReq=undefined,members={},reqs=[],qs=[],answers=[],entry=null,imgCache={};
 let page="board",openId=null,armed=null;
 let subs=[],qUnsub=null,ansUnsub=null,drafts={},qPub=[],qMine=[];
+let students={},klasses={},prog=[],progUnsub=null,openSid=null;const sf={cls:"all",q:"",st:"on",fold:"all",k:"all"};
 const f={subj:"all",st:"all",q:""};
 const form={subj:0,kind:0,files:[],target:"q"};
 
@@ -325,6 +404,8 @@ function gateView(g){
     <div class="f">학교<div class="sbox"><input type="text" id="rs" maxlength="40" required placeholder="학교 이름 검색 (예: 한빛고)" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="slist"><div class="slist" id="slist" role="listbox" hidden></div></div><span class="hint" id="shint">전국 고등학교 2,401곳에서 찾아요. 목록에 없으면 그대로 입력해도 돼요.</span></div>
     <div class="f">학년<div class="seg" id="rg">${[1,2,3,4].map(g=>`<button type="button" data-rg="${g}" aria-pressed="false">${GRADE[g]}</button>`).join("")}</div></div>
     <label class="f">이름 (실명)<input type="text" id="rn" maxlength="20" required placeholder="홍길동"></label>
+    <label class="f">학생 전화번호<input type="tel" id="rp" maxlength="20" required inputmode="tel" autocomplete="tel" placeholder="010-0000-0000"></label>
+    <label class="f">학부모 전화번호<input type="tel" id="rpp" maxlength="20" required inputmode="tel" placeholder="010-0000-0000"></label>
     <div class="err" id="rerr"></div>
     <div class="row"><button class="btn primary" type="submit">승인 신청 보내기</button></div>
     <p class="small" style="margin:0">${esc(me.email||"")} 계정으로 신청해요. 보낸 정보는 선생님만 볼 수 있어요.</p>
@@ -351,9 +432,9 @@ function boardView(mode){
     <div class="qmeta">${q.pinned?'<span class="tag pin">고정</span>':""}<span class="tag subj s${q.subject|0}">${esc(SUBJ[q.subject|0])}</span><span class="tag">${esc(KIND[q.kind|0])}</span><span class="tag ${sc}">${sl}</span>${isTeacher&&drafts[q.id]&&sc==="wait"?'<span class="tag ai">Claude 초안 있음</span>':""}<span class="sp"></span><time>${ago(q.createdAt)}</time></div>
     <div class="sheet"><h3>${esc(q.title)}</h3><p class="pv">${esc(q.body)}</p></div>
     <div class="qact"><span>${esc(nameOf(q))}</span><span class="sp"></span><span>답변 ${q.answerCount|0}</span>${(q.imageIds||[]).length?`<span>사진 ${q.imageIds.length}</span>`:""}</div></button>`}).join("")}</div>`;
-  return intro("Q&amp;A",isTeacher?"질문 게시판":"내 질문",isTeacher?"고1 내신 통합사회·한국사, 고3 수능 통합사회":"고1 내신 통합사회·한국사, 고3 수능 통합사회<br>내 질문과 답변은 선생님과 나만 볼 수 있어요.",stats)+
+  return intro("Q&amp;A",isTeacher?"질문 게시판":"내 질문",isTeacher?"고1 내신 통합사회·한국사, 수능 통합사회":({"0,1":"고1 내신 통합사회·한국사","2":"수능 통합사회"}[mySubj().join()]||"고1 내신 통합사회·한국사, 수능 통합사회")+"<br>내 질문과 답변은 선생님과 나만 볼 수 있어요.",stats)+
   `<main class="gut"><div class="bank"><aside class="side">
-    <div><div class="sectitle">과목</div>${tree([["all","전체",base.length],...SUBJ.map((s,i)=>[String(i),s,cnt(q=>q.subject===i)])],"subj")}</div>
+    <div><div class="sectitle">과목</div>${tree([["all","전체",base.length],...(isTeacher?[0,1,2]:mySubj()).map(i=>[String(i),SUBJ[i],cnt(q=>q.subject===i)])],"subj")}</div>
     <div><div class="sectitle">상태</div>${tree([["all","모든 질문",base.length],["wait","답변 대기",cnt(q=>stOf(q)[0]==="wait")],["done","답변 완료",cnt(q=>stOf(q)[0]==="done")],["solved","해결 완료",cnt(q=>stOf(q)[0]==="solved")]],"st")}</div>
   </aside><div><div class="listbar"><input type="search" id="q" placeholder="제목·내용 검색 (예: 시장 실패, 흥선 대원군)" aria-label="검색" value="${esc(f.q)}">${isTeacher?"":'<button class="btn primary" data-ask>질문하기</button>'}</div>${body}</div></div></main>`;
 }
@@ -388,10 +469,133 @@ function adminView(){
     <div class="err" id="cerr"></div>
     <p class="small" style="margin:0">코드가 퍼졌다면 바로 바꾸세요. 이미 승인된 학생은 영향 없고, 새로 신청하는 학생만 새 코드가 필요해요.</p></section>
   <section><div class="sectitle">승인 대기</div>${pend.length?`<div class="reqs">${pend.map(r=>`<div class="req"><div class="qmeta"><span class="tag subj">${esc(CLS[r.cls|0])}</span>${members[r.id]?'<span class="tag wait">재신청</span>':""}<span class="sp"></span><time>${ago(r.at)}</time></div>
-    <div class="sheet"><b>${esc(r.name)}</b> <span class="small">· ${esc(who(r))}${r.region?" ("+esc(r.region)+")":""}</span><p class="small" style="margin:4px 0 0">${esc(r.email)}</p>${r.msg?`<p class="small" style="margin:6px 0 0;color:#555">“${esc(r.msg)}”</p>`:""}</div>
+    <div class="sheet"><b>${esc(r.name)}</b> <span class="small">· ${esc(who(r))}${r.region?" ("+esc(r.region)+")":""}</span><p class="small" style="margin:4px 0 0">${esc(r.email)}${r.phone?" · 학생 "+esc(r.phone):""}${r.parent?" · 학부모 "+esc(r.parent):""}</p>${r.msg?`<p class="small" style="margin:6px 0 0;color:#555">“${esc(r.msg)}”</p>`:""}</div>
     <div class="qact"><button class="btn primary sm" data-approve="${esc(r.id)}">승인</button><button class="btn danger sm" data-reject="${esc(r.id)}">거절</button></div></div>`).join("")}</div>`:`<div class="empty" style="padding:36px 28px"><p>새 입장 신청이 없어요.</p></div>`}</section>
   <section><div class="sectitle">승인된 학생 ${approved.length}</div>${approved.length?`<table class="mt stk"><thead><tr><th>이름</th><th>학교 · 학년</th><th>수업</th><th>이메일</th><th>승인일</th><th>질문</th><th></th></tr></thead><tbody>${approved.map(([id,m])=>`<tr><td data-l="이름">${esc(m.name)}</td><td data-l="학교·학년">${esc(who(m))}</td><td data-l="수업">${esc(CLS[m.cls|0])}</td><td data-l="이메일">${esc(m.email)}</td><td class="c" data-l="승인일">${day(m.at)}</td><td class="c" data-l="질문">${qn(id)}</td><td style="text-align:right">${armed==="x:"+id?`<button class="btn danger sm" data-revoke="${esc(id)}">정말 취소할까요?</button>`:`<button class="btn ghost sm" data-arm="x:${esc(id)}">승인 취소</button>`}</td></tr>`).join("")}</tbody></table>`:`<div class="empty" style="padding:36px 28px"><p>아직 승인한 학생이 없어요.</p></div>`}</section>
   ${rej.length?`<section><div class="sectitle">거절 · 취소 ${rej.length}</div><table class="mt stk"><thead><tr><th>이름</th><th>학교 · 학년</th><th>이메일</th><th>처리일</th><th></th></tr></thead><tbody>${rej.map(([id,m])=>`<tr><td data-l="이름">${esc(m.name)}</td><td data-l="학교·학년">${esc(who(m))}</td><td data-l="이메일">${esc(m.email)}</td><td class="c" data-l="처리일">${day(m.at)}</td><td style="text-align:right"><button class="btn ok sm" data-approve="${esc(id)}">다시 승인</button></td></tr>`).join("")}</tbody></table></section>`:""}
+  </main>`;
+}
+
+/* ---------- 학생 관리 (선생님 전용) ---------- */
+const pad2=n=>String(n).padStart(2,"0");
+const ymOf=d=>d.getFullYear()+"-"+pad2(d.getMonth()+1);
+const todayStr=()=>{const d=new Date();return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate())};
+const won=n=>(Number(n)||0).toLocaleString("ko-KR")+"원";
+const months=k=>{const d=new Date(),r=[];for(let i=0;i<k;i++){r.push(ymOf(new Date(d.getFullYear(),d.getMonth()-i,1)))}return r};
+const ymLabel=ym=>{const[y,m]=ym.split("-");return y+"년 "+(+m)+"월"};
+const dotDate=s=>s?s.replace(/-/g,"."):"";
+const paidIn=(st,ym)=>!!(st&&st.pay&&st.pay[ym]&&st.pay[ym].date);
+const shortSchool=n=>(n||"").replace(/고등학교$/,"고");
+function sugFolder(xs){
+  const d=new Date(),Y=d.getFullYear(),M=d.getMonth()+1;
+  if(xs.length&&xs.every(x=>((x.m||x).grade|0)>=3))return `${M>=3?Y+1:Y}학년도 수능 통사`;
+  const sch=[...new Set(xs.map(x=>shortSchool((x.m||x).school)))];
+  const cl=[...new Set(xs.map(x=>(x.m||x).cls|0))];
+  return `${M>=3?Y:Y-1} ${sch.length===1&&sch[0]?sch[0]:cl.length===1?CLS[cl[0]]:"학원"}`;
+}
+const allFolders=()=>[...new Set(Object.values(students).filter(x=>x.state==="done"&&x.folder).map(x=>x.folder))].sort((a,b)=>b.localeCompare(a,"ko"));
+const folderList=id=>`<datalist id="${id}">${allFolders().map(f=>`<option value="${esc(f)}"></option>`).join("")}</datalist>`;
+const pick=new Set();
+const personOf=id=>{const m=members[id];if(m&&m.status==="approved")return m;const s=students[id];return s&&s.manual?{name:s.name||"학생",school:s.school||"",grade:s.grade|0,cls:s.cls|0,region:"",email:"",manual:true}:null};
+const kList=()=>Object.entries(klasses).sort((a,b)=>(a[1].name||"").localeCompare(b[1].name||"","ko"));
+const kTags=s=>(s.classes||[]).filter(k=>klasses[k]).map(k=>`<span class="tag kl k${klasses[k].subj??-1}">${esc(klasses[k].name)}</span>`).join(" ");
+function klassBar(act){
+  const cnt=id=>act.filter(x=>(x.s.classes||[]).includes(id)).length;
+  const kb=(v,l,n,cls="")=>`<button class="kchip ${cls}" data-sk="${esc(v)}" aria-pressed="${sf.k===v}">${l}<span class="n">${n}</span></button>`;
+  const cur=sf.k!=="all"&&klasses[sf.k];
+  let form="";
+  if(armed==="newk")form=`<form class="kform" id="kf" data-keep autocomplete="off"><input type="text" id="kname" maxlength="40" required placeholder="반 이름 (예: 2026 겨울 고1 통사 A반)"><select id="ksubj" aria-label="과목"><option value="-1">과목 공통</option>${SUBJ.map((x,i)=>`<option value="${i}">${x}</option>`).join("")}</select><button class="btn primary sm" type="submit">반 만들기</button><button class="btn ghost sm" type="button" data-arm="">취소</button></form>`;
+  else if(armed==="addst")form=`<form class="kform add" id="nf" data-keep autocomplete="off"><input type="text" id="nname" maxlength="20" required placeholder="이름"><input type="text" id="nschool" maxlength="40" placeholder="학교 (예: 한빛고등학교)"><select id="ngrade" aria-label="학년">${[1,2,3,4].map(g=>`<option value="${g}">${GRADE[g]}</option>`).join("")}</select><select id="ncls" aria-label="수업">${CLS.map((c,i)=>`<option value="${i}">${c}</option>`).join("")}</select>${kList().length?`<select id="nk" aria-label="반"><option value="">반 없음</option>${kList().map(([id,k])=>`<option value="${esc(id)}" ${sf.k===id?"selected":""}>${esc(k.name)}</option>`).join("")}</select>`:""}<button class="btn primary sm" type="submit">학생 추가</button><button class="btn ghost sm" type="button" data-arm="">취소</button><p class="small" style="margin:0;flex-basis:100%">사이트에 가입하지 않은 학생(예: 과외만 하는 학생)도 진도·납부를 관리할 수 있어요. 게시판 질문은 가입해야 쓸 수 있어요.</p></form>`;
+  else if(cur&&armed==="editk")form=`<form class="kform" id="kef" data-keep autocomplete="off"><input type="text" id="kename" maxlength="40" required value="${esc(cur.name)}"><select id="kesubj" aria-label="과목"><option value="-1">과목 공통</option>${SUBJ.map((x,i)=>`<option value="${i}" ${(cur.subj??-1)===i?"selected":""}>${x}</option>`).join("")}</select><button class="btn primary sm" type="submit">저장</button><button class="btn ghost sm" type="button" data-arm="">취소</button></form>`;
+  return `<div class="klasses"><span class="small" style="margin-right:4px">반</span>${kb("all","전체",act.length)}${kList().map(([id,k])=>kb(id,esc(k.name),cnt(id),"k"+(k.subj??-1))).join("")}<button class="kchip add" data-arm="newk">+ 반 만들기</button><span class="sp" style="flex:1"></span><button class="btn sm" data-arm="addst">+ 학생 직접 추가</button></div>
+  ${cur&&armed!=="editk"?`<div class="kinfo"><b>${esc(cur.name)}</b><span class="small">${cur.subj>=0?esc(SUBJ[cur.subj]):"과목 공통"} · ${cnt(sf.k)}명</span><span class="sp" style="flex:1"></span><span class="small">학생을 체크하고 위 바에서 ‘반에 넣기’로 추가해요</span><button class="btn ghost sm" data-arm="editk">이름 바꾸기</button>${armed==="delk"?`<button class="btn danger sm" data-kdel>반을 삭제할까요? (학생 기록은 그대로)</button>`:`<button class="btn ghost sm" data-arm="delk">반 삭제</button>`}</div>`:""}
+  ${form}`;
+}
+function studentsView(){
+  const ym=ymOf(new Date()),mon=(new Date().getMonth()+1)+"월";
+  const ids=new Set([...Object.keys(members),...Object.keys(students)]);
+  const every=[...ids].map(id=>({id,m:personOf(id),s:students[id]||{}})).filter(x=>x.m).sort((a,b)=>a.m.name.localeCompare(b.m.name,"ko"));
+  const isDone=x=>x.s.state==="done",act=every.filter(x=>!isDone(x)),fin=every.filter(isDone);
+  if(sf.k!=="all"&&!klasses[sf.k])sf.k="all";
+  const inK=x=>sf.k==="all"||(x.s.classes||[]).includes(sf.k);
+  const all=(sf.st==="done"?fin:act).filter(inK);
+  for(const id of [...pick])if(!act.some(x=>x.id===id))pick.delete(id);
+  const due=x=>!isDone(x)&&(x.s.fee|0)>0&&!paidIn(x.s,ym);
+  const unpaid=act.filter(due),sum=every.reduce((a,x)=>a+(paidIn(x.s,ym)?(x.s.pay[ym].amt|0):0),0);
+  const k=sf.q.trim().toLowerCase(),g=x=>x.m.grade|0;
+  const pass=x=>sf.cls==="all"||(sf.cls==="due"?due(x):sf.cls==="g1"?g(x)===1:sf.cls==="g3"?(g(x)===3||g(x)===4):String(x.m.cls|0)===sf.cls);
+  const passF=x=>sf.st!=="done"||sf.fold==="all"||(sf.fold===""?!x.s.folder:x.s.folder===sf.fold);
+  const list=all.filter(x=>pass(x)&&passF(x)&&(!k||(x.m.name+" "+(x.m.school||"")+" "+(x.s.folder||"")).toLowerCase().includes(k)));
+  const chip=(v,l,n)=>`<button data-sf="${v}" aria-pressed="${sf.cls===v}">${l}<span class="n">${n}</span></button>`;
+  const stab=(v,l,n)=>`<button data-sst="${v}" aria-pressed="${sf.st===v}">${l} <span class="n">${n}</span></button>`;
+  const grpTag=x=>grpOf(g(x))?`<span class="tag grp g${g(x)>=3?3:g(x)}">${grpOf(g(x))}</span>`:"-";
+  const doneTab=sf.st==="done";
+  let top="";
+  if(doneTab){
+    const folds=allFolders(),none=fin.filter(x=>!x.s.folder).length;
+    const fc=(v,l,n)=>`<button class="fold" data-sfold="${esc(v)}" aria-pressed="${sf.fold===v}"><span class="fi" aria-hidden="true"></span><b>${esc(l)}</b><span class="n">${n}명</span></button>`;
+    top=`<div class="folds">${fc("all","전체 수료생",fin.length)}${folds.map(f=>fc(f,f,fin.filter(x=>x.s.folder===f).length)).join("")}${none?fc("","미분류",none):""}</div>`;
+  }else{
+    const sel=act.filter(x=>pick.has(x.id));
+    top=`<div class="chips">${chip("all","전체",all.length)}${chip("g1","고1 내신",all.filter(x=>g(x)===1).length)}${chip("g3","수능 대비",all.filter(x=>g(x)===3||g(x)===4).length)}${chip("0","학원",all.filter(x=>(x.m.cls|0)===0).length)}${chip("1","과외",all.filter(x=>(x.m.cls|0)===1).length)}${chip("due",mon+" 미납",unpaid.length)}</div>`+
+    (sel.length?`<div class="bulk" data-keep><b>${sel.length}명 선택</b><span class="small">수료 폴더</span><input type="text" id="bfold" list="bfl" maxlength="40" value="${esc(sugFolder(sel))}">${folderList("bfl")}<button class="btn primary sm" data-bulkdone>선택한 학생 수료 처리</button>${kList().length?`<span class="bsep"></span><select id="bk" aria-label="넣을 반">${kList().map(([id,k])=>`<option value="${esc(id)}" ${sf.k===id?"selected":""}>${esc(k.name)}</option>`).join("")}</select><button class="btn sm" data-bkin>반에 넣기</button>${sf.k!=="all"?`<button class="btn sm" data-bkout>이 반에서 빼기</button>`:""}`:""}<button class="btn ghost sm" data-pickclr>선택 해제</button></div>`:"");
+  }
+  const rows=list.map(x=>{const p=x.s.pay&&x.s.pay[ym],l=x.s.last;
+    const st=isDone(x)?`<span class="small">${dotDate(x.s.doneAt||"").slice(2)}</span>`:(x.s.fee|0)<=0&&!p?'<span class="tag">수강료 미설정</span>':paidIn(x.s,ym)?`<span class="tag done">납부 ${dotDate(p.date).slice(5)}</span>`:'<span class="tag wait">미납</span>';
+    return `<tr>${doneTab?"":`<td class="ck"><input type="checkbox" data-pick="${esc(x.id)}" ${pick.has(x.id)?"checked":""} aria-label="${esc(x.m.name)} 선택"></td>`}<td data-l="이름"><button class="lnk" data-sopen="${esc(x.id)}">${esc(x.m.name)}</button>${x.m.manual?' <span class="small" title="사이트에 가입하지 않고 직접 추가한 학생">직접 추가</span>':""}</td><td data-l="학교·학년">${esc(who(x.m))}</td><td data-l="과정 · 반">${grpTag(x)} ${kTags(x.s)}</td>${doneTab?`<td data-l="폴더">${x.s.folder?`<span class="tag">${esc(x.s.folder)}</span>`:'<span class="small">미분류</span>'}</td>`:`<td class="c" data-l="수업">${esc(CLS[x.m.cls|0])}</td><td class="c" data-l="월 수강료">${(x.s.fee|0)>0?won(x.s.fee):"-"}</td>`}<td class="c" data-l="${doneTab?"수료일":mon+" 납부"}">${st}</td><td data-l="최근 진도">${l?`<span class="small">${dotDate(l.date).slice(5)}</span> ${esc(l.range)}`:'<span class="small">기록 없음</span>'}</td><td style="text-align:right"><button class="btn sm" data-sopen="${esc(x.id)}">관리</button></td></tr>`}).join("");
+  const allPicked=list.length&&list.every(x=>pick.has(x.id));
+  return intro("Students","학생 관리","진도, 수강료 납부, 연락처와 메모를 관리해요. 끝까지 마친 학생은 체크해서 수료 폴더로 옮기고, 중간에 그만둔 학생은 삭제하면 돼요. 이 기록은 선생님만 볼 수 있어요.",
+    `<div class="stats">${[[act.length,"수강 중"],[unpaid.length,mon+" 미납"],[won(sum),mon+" 납부 합계"],[fin.length,"수료생"]].map(([n,l])=>`<div><b>${n}</b><span>${l}</span></div>`).join("")}</div>`)+
+  `<main class="gut"><div class="listbar"><input type="search" id="sq" placeholder="${doneTab?"이름·학교·폴더 검색":"이름·학교 검색"}" aria-label="학생 검색" value="${esc(sf.q)}"></div>
+  <div class="stabs">${stab("on","수강 중",act.length)}${stab("done","수료생",fin.length)}</div>
+  ${doneTab?"":klassBar(act)}
+  ${top}
+  ${!all.length?(doneTab?`<div class="empty"><h2>아직 수료생이 없어요</h2><p>수강 중 목록에서 끝까지 마친 학생을 체크하고 ‘수료 처리’를 누르면, 정한 폴더(예: 2027학년도 수능 통사)로 옮겨져 기록이 계속 남아요.</p></div>`:`<div class="empty"><h2>아직 수강 중인 학생이 없어요</h2><p>승인 관리에서 학생을 승인하면 여기에 나타나요.</p></div>`):!list.length?`<div class="empty"><h2>조건에 맞는 학생이 없어요</h2></div>`:
+  `<table class="mt stk"><thead><tr>${doneTab?"":`<th class="ck"><input type="checkbox" data-pickall ${allPicked?"checked":""} aria-label="모두 선택"></th>`}<th>이름</th><th>학교 · 학년</th><th>과정 · 반</th>${doneTab?"<th>폴더</th>":"<th>수업</th><th>월 수강료</th>"}<th>${doneTab?"수료일":mon+" 납부"}</th><th>최근 진도</th><th></th></tr></thead><tbody>${rows}</tbody></table>`}</main>`;
+}
+function studentView(id){
+  const m=personOf(id);
+  if(!m)return `<main class="gut"><button class="btn" data-sback>← 학생 목록</button><div class="empty" style="margin-top:22px"><h2>학생을 찾을 수 없어요</h2></div></main>`;
+  const s=students[id]||{},pay=s.pay||{},fee=s.fee|0,done=s.state==="done",gr=m.grade|0;
+  const payRows=months(6).map(ym=>{const p=pay[ym]||{},paid=!!p.date;
+    return `<tr data-row="${ym}"><td data-l="월"><b>${ymLabel(ym)}</b></td><td class="c" data-l="상태">${paid?'<span class="tag done">납부 완료</span>':fee>0?'<span class="tag wait">미납</span>':'<span class="tag">-</span>'}</td>
+    <td data-l="금액"><input type="number" class="pamt" min="0" step="1000" inputmode="numeric" value="${p.amt??(fee||"")}" placeholder="금액"></td>
+    <td data-l="납부일"><input type="date" class="pdate" value="${esc(p.date||"")}"></td>
+    <td data-l="메모"><input type="text" class="pmemo" maxlength="60" value="${esc(p.memo||"")}" placeholder="계좌이체, 현금 등"></td>
+    <td style="text-align:right;white-space:nowrap">${paid?"":`<button class="btn primary sm" data-ptoday="${ym}">오늘 납부</button> `}<button class="btn sm" data-psave="${ym}">저장</button>${paid?(armed==="p:"+ym?` <button class="btn danger sm" data-pclear="${ym}">정말 지울까요?</button>`:` <button class="btn ghost sm" data-arm="p:${ym}">지우기</button>`):""}</td></tr>`}).join("");
+  const progList=prog.length?`<div class="plist">${prog.map(g=>`<div class="pitem"><div class="qmeta"><span class="tag subj s${g.subj|0}">${esc(SUBJ[g.subj|0])}</span><span class="sp"></span><time>${dotDate(g.date)}</time></div><div class="sheet"><b>${esc(g.range)}</b>${g.memo?`<p class="body" style="margin-top:6px">${esc(g.memo)}</p>`:""}</div><div class="qact"><span class="sp"></span>${armed==="g:"+g.id?`<button class="btn danger sm" data-gdel="${esc(g.id)}">정말 삭제할까요?</button>`:`<button class="btn ghost sm" data-arm="g:${esc(g.id)}">삭제</button>`}</div></div>`).join("")}</div>`:`<div class="empty" style="padding:36px 28px"><p>아직 진도 기록이 없어요. 위에서 첫 수업을 기록해 보세요.</p></div>`;
+  return intro(done?"Graduate · 수료생":"Student",esc(m.name),`${grpOf(gr)?esc(grpOf(gr))+" · ":""}${esc(CLS[m.cls|0])} · ${esc(who(m))}${m.region?" ("+esc(m.region)+")":""}<br><span class="small">${m.manual?"직접 추가한 학생 · 사이트 미가입":esc(m.email||"")}</span>`,
+    `<div class="stats">${[[fee>0?won(fee):"-","월 수강료"],done?[dotDate(s.doneAt||"").slice(2)||"-","수료일"]:[paidIn(s,ymOf(new Date()))?"납부":"미납",(new Date().getMonth()+1)+"월 납부"],[prog.length,"진도 기록"]].map(([n,l])=>`<div><b>${n}</b><span>${l}</span></div>`).join("")}</div>`)+
+  `<main class="gut stack" style="gap:48px"><div><button class="btn" data-sback>← 학생 목록</button></div>
+  <section><div class="sectitle">학년 · 상태</div>
+    <div class="panel stack">
+      <div class="f">학년 <span style="letter-spacing:0">(학년에 따라 질문 과목이 정해져요: 1학년은 고1 통합사회·한국사, 3학년·N수는 수능 통합사회)</span><div class="seg">${[1,2,3,4].map(x=>`<button type="button" data-sgr="${x}" aria-pressed="${gr===x}">${GRADE[x]}</button>`).join("")}</div></div>
+      ${kList().length?`<div class="f">반<div class="seg">${kList().map(([kid,k])=>`<button type="button" data-kt="${esc(kid)}" aria-pressed="${(s.classes||[]).includes(kid)}">${esc(k.name)}</button>`).join("")}</div></div>`:`<p class="small" style="margin:0">학생 관리 목록에서 ‘+ 반 만들기’로 반을 만들면 여기서 반을 지정할 수 있어요.</p>`}
+      <div class="row" style="gap:10px" data-keep>${done?`<span class="tag done">수료 ${dotDate(s.doneAt||"")}</span><span class="small">폴더</span><input type="text" id="sfold" list="sfl" maxlength="40" value="${esc(s.folder||"")}" placeholder="미분류" style="max-width:240px">${folderList("sfl")}<button class="btn sm" data-foldsave>폴더 저장</button><button class="btn ghost sm" data-sstate="on">다시 수강 중으로</button>`:(armed==="done"?`<span class="small">수료 폴더</span><input type="text" id="sfold" list="sfl" maxlength="40" value="${esc(sugFolder([m]))}" style="max-width:240px">${folderList("sfl")}<button class="btn primary sm" data-sstate="done">이 폴더로 수료 처리</button><button class="btn ghost sm" data-arm="">취소</button>`:`<button class="btn sm" data-arm="done">수료 처리 (끝까지 마침)</button>`)}
+      <span class="sp" style="flex:1"></span>${armed==="kill"?`<button class="btn danger sm" data-skill>정말 삭제할까요? 기록이 모두 지워져요</button><button class="btn ghost sm" data-arm="">취소</button>`:`<button class="btn ghost sm" data-arm="kill">학생 삭제 (그만둔 학생)</button>`}</div>
+      <div class="err" id="xerr"></div>
+      <p class="small" style="margin:0">수료생은 정한 폴더(예: 2027학년도 수능 통사, 2026 한빛고)로 묶여 ‘수료생’ 탭에 남고 진도·납부 기록이 그대로 남아요. 삭제하면 이 학생의 관리 기록이 모두 지워지고${m.manual?"":" 게시판 승인도 취소돼요. 다시 들어오려면 새로 신청해야 해요"}.</p>
+    </div></section>
+  <section><div class="sectitle">진도 기록</div>
+    <form class="panel stack" id="pf" data-keep autocomplete="off">
+      <div class="grid2"><label class="f">수업 날짜<input type="date" id="gdate" value="${todayStr()}" required></label>
+      <div class="f">과목<div class="seg" id="gsubj">${SUBJ.map((x,i)=>`<button type="button" data-gs="${i}" aria-pressed="${i===(prog[0]?prog[0].subj|0:subjFor(gr)[0])}">${x}</button>`).join("")}</div></div></div>
+      <label class="f">진도 범위<input type="text" id="grange" maxlength="200" required placeholder="예: 2단원 시장 경제와 금융 ~ 교재 84쪽"></label>
+      <label class="f">메모 (선택)<textarea id="gmemo" maxlength="2000" placeholder="숙제, 이해도, 다음 수업에 할 것"></textarea></label>
+      <div class="err" id="gerr"></div><div class="row"><button class="btn primary" type="submit">진도 기록 추가</button></div>
+    </form>${progList}</section>
+  <section><div class="sectitle">수강료 납부</div>
+    <div data-keep><table class="mt stk pay"><thead><tr><th>월</th><th>상태</th><th>금액</th><th>납부일</th><th>메모</th><th></th></tr></thead><tbody>${payRows}</tbody></table></div>
+    <div class="err" id="perr"></div>
+    <p class="small" style="margin:10px 0 0">납부일을 넣고 저장하면 납부 완료로 표시돼요. 금액 기본값은 아래 기본 정보의 월 수강료예요.</p></section>
+  <section><div class="sectitle">기본 정보 · 메모</div>
+    <form class="panel stack" id="sinfo" data-keep autocomplete="off">
+      <div class="grid2"><label class="f">학생 연락처<input type="tel" id="sphone" maxlength="30" value="${esc(s.phone||"")}" placeholder="010-0000-0000"></label>
+      <label class="f">학부모 연락처<input type="tel" id="sparent" maxlength="30" value="${esc(s.parent||"")}" placeholder="010-0000-0000"></label></div>
+      <label class="f">월 수강료 (원)<input type="number" id="sfee" min="0" step="1000" inputmode="numeric" value="${fee||""}" placeholder="예: 300000"></label>
+      <label class="f">메모<textarea id="smemo" maxlength="4000" placeholder="성적, 목표 대학, 특이사항, 상담 내용 등">${esc(s.memo||"")}</textarea></label>
+      <div class="err" id="serr"></div><div class="row"><button class="btn primary" type="submit">저장</button><span class="small" id="sok"></span></div>
+    </form></section>
   </main>`;
 }
 
@@ -401,18 +605,30 @@ function tabs(){
   if(!inside()){t.innerHTML="";return}
   const n=isTeacher?pendingReqs().length:0;
   const items=[["board","질문 게시판"]];
-  if(isTeacher)items.push(["admin","승인 관리"+(n?`<span class="badge">${n}</span>`:"")]);else items[0]=["board","내 질문"];
-  t.innerHTML=items.map(([k,l])=>`<a href="#${k}" ${page===k?'aria-current="page"':""}>${l}</a>`).join("");
+  if(isTeacher)items.push(["students","학생 관리"],["admin","승인 관리"+(n?`<span class="badge">${n}</span>`:"")]);else items[0]=["board","내 질문"];
+  t.innerHTML=items.map(([k,l])=>`<a href="#${k}" ${page===k||(k==="students"&&page==="stu")?'aria-current="page"':""}>${l}</a>`).join("");
+}
+function themeNow(){
+  if(!inside())return "";
+  if($("#compose").classList.contains("on"))return String(form.subj);
+  if(page==="q"){const q=qs.find(x=>x.id===openId);return q?String(q.subject|0):""}
+  if(page==="board"){if(f.subj!=="all")return f.subj;if(!isTeacher){const o=mySubj();if(o.length===1)return String(o[0])}return ""}
+  if(page==="stu"){const m=personOf(openSid),g=m?m.grade|0:0;return g===1?"0":g>=3?"2":""}
+  if(page==="students"){const k=sf.k!=="all"&&klasses[sf.k];if(k&&k.subj>=0)return String(k.subj);return sf.cls==="g1"?"0":sf.cls==="g3"?"2":""}
+  return "";
 }
 function render(){
-  tabs();const g=gate(),app=$("#app"),ae=document.activeElement;
+  tabs();const g=gate(),app=$("#app"),ae=document.activeElement;document.body.dataset.pg=inside()?page:"gate";document.body.dataset.th=themeNow();
   if(!inside()){if(!(ae&&ae.closest&&ae.closest("#rf")))app.innerHTML=gateView(g);return}
-  const keepA=ae&&ae.id==="ab"?ae.value:null,keepQ=ae&&ae.id==="q",keepC=ae&&ae.id==="mycode"?ae.value:null;
+  const keepA=ae&&ae.id==="ab"?ae.value:null,keepQ=ae&&(ae.id==="q"||ae.id==="sq"),keepQid=ae&&ae.id,keepC=ae&&ae.id==="mycode"?ae.value:null;
+  if(ae&&ae.closest&&ae.closest("[data-keep]")&&ae.tagName!=="BUTTON")return;
   if(page==="admin"&&isTeacher)app.innerHTML=adminView();
+  else if(page==="students"&&isTeacher)app.innerHTML=studentsView();
+  else if(page==="stu"&&isTeacher)app.innerHTML=studentView(openSid);
   else if(page==="q"){const q=qs.find(x=>x.id===openId);app.innerHTML=q?detailView(q):(qLoaded?`<main class="gut"><button class="btn" data-back>← 목록으로</button><div class="empty" style="margin-top:22px"><h2>삭제됐거나 없는 질문이에요</h2></div></main>`:intro("Loading","불러오는 중",""));
     if(q){files("#afiles","a");fillImgs();if(keepA!==null){$("#ab").value=keepA;$("#ab").focus()}}}
   else app.innerHTML=boardView("all");
-  if(keepQ){const i=$("#q");if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}}
+  if(keepQ){const i=$("#"+keepQid);if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}}
   if(keepC!==null){const i=$("#mycode");if(i){i.value=keepC;i.focus()}}
 }
 async function fillImgs(){
@@ -440,7 +656,7 @@ async function uploadAll(list,priv,viewer){const ids=[];for(const data of list){
 const errMsg=(e,el)=>{const x=$(el);if(x)x.textContent=e&&e.code==="permission-denied"?"권한이 없어 저장하지 못했어요. (승인이 취소됐거나 입력값이 규칙에 맞지 않아요)":"저장하지 못했어요. 잠시 후 다시 시도해 주세요."};
 
 /* ---------- 데이터 구독 ---------- */
-function clearSubs(){subs.forEach(u=>u());subs=[];if(qUnsub){qUnsub();qUnsub=null}if(ansUnsub){ansUnsub();ansUnsub=null}qs=[];qPub=[];qMine=[];drafts={};answers=[];members={};reqs=[];entry=null;qLoaded=false;myMember=undefined;myReq=undefined;imgCache={}}
+function clearSubs(){subs.forEach(u=>u());subs=[];if(progUnsub){progUnsub();progUnsub=null}students={};klasses={};prog=[];if(qUnsub){qUnsub();qUnsub=null}if(ansUnsub){ansUnsub();ansUnsub=null}qs=[];qPub=[];qMine=[];drafts={};answers=[];members={};reqs=[];entry=null;qLoaded=false;myMember=undefined;myReq=undefined;imgCache={}}
 function startBoard(){
   if(qUnsub)return;
   const sortQ=()=>{const m=new Map();for(const x of [...qPub,...qMine])m.set(x.id,x);qs=[...m.values()].sort((a,b)=>ms(b.createdAt)-ms(a.createdAt));qLoaded=true;render()};
@@ -455,12 +671,16 @@ function watchAnswers(){
   if(ansUnsub){ansUnsub();ansUnsub=null}answers=[];
   if(openId&&inside())ansUnsub=onSnapshot(query(collection(db,"questions",openId,"answers"),orderBy("createdAt","asc")),s=>{answers=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{});
 }
+function watchProg(){
+  if(progUnsub){progUnsub();progUnsub=null}prog=[];
+  if(page==="stu"&&openSid&&isTeacher)progUnsub=onSnapshot(query(collection(db,"students",openSid,"progress"),orderBy("date","desc"),limit(300)),s=>{prog=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{});
+}
 function route(){
-  const h=location.hash.slice(1),m=/^q-([A-Za-z0-9]{1,40})$/.exec(h);
-  const np=m?"q":(["board","mine","admin"].includes(h)?h:"board"),nid=m?m[1]:null;
-  if(np===page&&nid===openId){render();return}
-  page=np;openId=nid;armed=null;if(form.target==="a")form.files=[];
-  watchAnswers();render();window.scrollTo(0,0);
+  const h=location.hash.slice(1),m=/^q-([A-Za-z0-9]{1,40})$/.exec(h),ms2=/^s-([A-Za-z0-9]{1,128})$/.exec(h);
+  const np=m?"q":ms2?"stu":(["board","mine","admin","students"].includes(h)?h:"board"),nid=m?m[1]:null,sid=ms2?ms2[1]:null;
+  if(np===page&&nid===openId&&sid===openSid){render();return}
+  page=np;openId=nid;openSid=sid;armed=null;if(form.target==="a")form.files=[];
+  watchAnswers();watchProg();render();window.scrollTo(0,0);
 }
 window.addEventListener("hashchange",route);
 
@@ -472,6 +692,8 @@ if(auth){
       subs.push(onSnapshot(collection(db,"members"),s=>{members={};s.docs.forEach(d=>members[d.id]=d.data());render()},()=>{}));
       subs.push(onSnapshot(query(collection(db,"requests"),orderBy("at","desc")),s=>{reqs=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{}));
       subs.push(onSnapshot(doc(db,"secret","entry"),s=>{entry=s.exists()?s.data():null;render()},()=>{}));
+      subs.push(onSnapshot(collection(db,"students"),s=>{students={};s.docs.forEach(d=>students[d.id]=d.data());render()},()=>{}));
+      subs.push(onSnapshot(collection(db,"classes"),s=>{klasses={};s.docs.forEach(d=>klasses[d.id]=d.data());render()},()=>{}));
       sync();
     }else{
       subs.push(onSnapshot(doc(db,"members",u.uid),s=>{myMember=s.exists()?s.data():null;sync()},()=>{myMember=null;sync()}));
@@ -483,7 +705,9 @@ if(auth){
 
 /* ---------- 질문 작성 ---------- */
 function segs(){
-  $("#fsubj").innerHTML=SUBJ.map((s,i)=>`<button type="button" data-fs="${i}" aria-pressed="${form.subj===i}">${s}</button>`).join("");
+  const ok=mySubj();if(!ok.includes(form.subj))form.subj=ok[0];
+  $("#fsubj").innerHTML=ok.map(i=>`<button type="button" data-fs="${i}" aria-pressed="${form.subj===i}">${SUBJ[i]}</button>`).join("");
+  document.body.dataset.th=String(form.subj);
   $("#fkind").innerHTML=KIND.map((s,i)=>`<button type="button" data-fk="${i}" aria-pressed="${form.kind===i}">${s}</button>`).join("");
 }
 function openCompose(){
@@ -494,7 +718,7 @@ function openCompose(){
 }
 const saveDraft=()=>{try{localStorage.setItem("qa-draft",JSON.stringify({t:$("#ft").value,b:$("#fb").value,s:form.subj,k:form.kind}))}catch(e){}};
 $("#ft").addEventListener("input",saveDraft);$("#fb").addEventListener("input",saveDraft);
-const close=()=>{$("#compose").classList.remove("on");$("#lb").classList.remove("on");if(form.target==="q")form.files=[]};
+const close=()=>{$("#compose").classList.remove("on");$("#lb").classList.remove("on");if(form.target==="q")form.files=[];document.body.dataset.th=themeNow()};
 const randCode=()=>{const a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",r=crypto.getRandomValues(new Uint32Array(8));return [...r].map(x=>a[x%a.length]).join("")};
 
 $("#qf").addEventListener("submit",async e=>{
@@ -511,6 +735,36 @@ $("#qf").addEventListener("submit",async e=>{
 });
 
 document.addEventListener("submit",async e=>{
+  if(["kf","kef","nf"].includes(e.target.id)){
+    e.preventDefault();if(busy||!isTeacher)return;busy=true;const id=e.target.id;
+    try{
+      if(id==="kf"){const name=$("#kname").value.trim(),subj=+$("#ksubj").value;if(name){const r=await addDoc(collection(db,"classes"),{name,subj,at:serverTimestamp()});sf.k=r.id}}
+      else if(id==="kef"){const name=$("#kename").value.trim(),subj=+$("#kesubj").value;if(name&&klasses[sf.k])await setDoc(doc(db,"classes",sf.k),{name,subj,at:serverTimestamp()},{merge:true})}
+      else{const name=$("#nname").value.trim();if(name){const k=$("#nk")?$("#nk").value:"";
+        await addDoc(collection(db,"students"),{manual:true,name,school:$("#nschool").value.trim(),grade:+$("#ngrade").value,cls:+$("#ncls").value,classes:k?[k]:[],state:"on",at:serverTimestamp()})}}
+      armed=null;document.activeElement&&document.activeElement.blur();render();
+    }catch(err){const x=e.target.querySelector(".err");if(x)errMsg(err,"#"+x.id)}
+    busy=false;return;
+  }
+  if(e.target.id==="pf"||e.target.id==="sinfo"){
+    e.preventDefault();if(busy||!isTeacher||!openSid)return;const sid=openSid;busy=true;
+    try{
+      if(e.target.id==="pf"){
+        const date=$("#gdate").value,range=$("#grange").value.trim(),memo=$("#gmemo").value.trim(),pb=document.querySelector("#gsubj [aria-pressed=true]"),subj=pb?+pb.dataset.gs:0;
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!range){$("#gerr").textContent="날짜와 진도 범위를 적어 주세요.";busy=false;return}
+        await addDoc(collection(db,"students",sid,"progress"),{date,subj,range,memo,at:serverTimestamp()});
+        const l=(students[sid]||{}).last;if(!l||!l.date||date>=l.date)await setDoc(doc(db,"students",sid),{last:{date,subj,range},at:serverTimestamp()},{merge:true});
+        $("#gerr").textContent="";$("#grange").value="";$("#gmemo").value="";
+      }else{
+        const fee=Math.max(0,Math.min(100000000,Math.round(Number($("#sfee").value)||0)));
+        await setDoc(doc(db,"students",sid),{phone:$("#sphone").value.trim(),parent:$("#sparent").value.trim(),fee,memo:$("#smemo").value.trim(),at:serverTimestamp()},{merge:true});
+        $("#serr").textContent="";
+      }
+      document.activeElement&&document.activeElement.blur();render();
+      if(e.target.id==="sinfo"){const o=$("#sok");if(o){o.textContent="저장했어요";setTimeout(()=>{if(o.isConnected)o.textContent=""},2000)}}
+    }catch(err){errMsg(err,e.target.id==="pf"?"#gerr":"#serr")}
+    busy=false;return;
+  }
   if(e.target.id==="rf"){
     e.preventDefault();if(busy)return;
     const code=$("#rcode").value.trim().toUpperCase(),name=$("#rn").value.trim(),school=$("#rs").value.trim();
@@ -520,9 +774,13 @@ document.addEventListener("submit",async e=>{
     if(!school){$("#rerr").textContent="학교를 적어 주세요.";return}
     if(!pg){$("#rerr").textContent="학년을 골라 주세요.";return}
     if(!name){$("#rerr").textContent="이름을 적어 주세요.";return}
+    const fmtTel=v=>{const d=v.replace(/\D/g,"");return d.length===11?d.replace(/(\d{3})(\d{4})(\d{4})/,"$1-$2-$3"):d.length===10?d.replace(/(\d{3})(\d{3,4})(\d{4})/,"$1-$2-$3"):v.trim()};
+    const phone=fmtTel($("#rp").value),parent=fmtTel($("#rpp").value);
+    if(!/^[0-9-]{9,20}$/.test(phone)){$("#rerr").textContent="학생 전화번호를 숫자로 적어 주세요.";return}
+    if(!/^[0-9-]{9,20}$/.test(parent)){$("#rerr").textContent="학부모 전화번호를 숫자로 적어 주세요.";return}
     const cls=+pc.dataset.rc,grade=+pg.dataset.rg,region=schoolPick&&schoolPick.n===school?schoolPick.r:"";
     busy=true;
-    try{await setDoc(doc(db,"requests",me.uid),{code,name,school,region,grade,cls,email:me.email,at:serverTimestamp()});document.activeElement&&document.activeElement.blur();render()}
+    try{await setDoc(doc(db,"requests",me.uid),{code,name,school,region,grade,cls,phone,parent,email:me.email,at:serverTimestamp()});document.activeElement&&document.activeElement.blur();render()}
     catch(err){$("#rerr").textContent=err&&err.code==="permission-denied"?"입장 코드가 맞지 않아요. 선생님께 받은 코드를 다시 확인해 주세요.":"신청하지 못했어요. 잠시 후 다시 시도해 주세요."}
     busy=false;return;
   }
@@ -571,13 +829,54 @@ document.addEventListener("click",async e=>{
   else if(d.rm!==undefined){form.files.splice(+d.rm,1);files(form.target==="q"?"#ffiles":"#afiles",form.target)}
   else if(d.usedraft!==undefined){const dr=drafts[openId],a=$("#ab");if(dr&&a){a.value=dr.body;a.focus();a.style.height=Math.min(600,a.scrollHeight+20)+"px"}}
   else if(d.deldraft!==undefined){if(openId)deleteDoc(doc(db,"drafts",openId)).catch(()=>{})}
-  else if(d.arm){armed=d.arm;render()}
+  else if(d.sf!==undefined){sf.cls=d.sf;render()}
+  else if(d.sst!==undefined){sf.st=d.sst;sf.cls="all";sf.fold="all";render()}
+  else if(d.sgr!==undefined){const sid=openSid,gv=+d.sgr;if(!sid||![1,2,3,4].includes(gv))return;try{await setDoc(doc(db,(students[sid]||{}).manual?"students":"members",sid),{grade:gv},{merge:true})}catch(err){errMsg(err,"#xerr")}}
+  else if(d.sstate){const sid=openSid;if(!sid)return;const fo=(($("#sfold")||{}).value||"").trim().slice(0,40);armed=null;document.activeElement&&document.activeElement.blur();
+    try{await setDoc(doc(db,"students",sid),d.sstate==="done"?{state:"done",doneAt:todayStr(),folder:fo,at:serverTimestamp()}:{state:"on",doneAt:deleteField(),folder:deleteField(),at:serverTimestamp()},{merge:true});render()}catch(err){errMsg(err,"#xerr");render()}}
+  else if(d.foldsave!==undefined){const sid=openSid;if(!sid)return;const fo=($("#sfold").value||"").trim().slice(0,40);
+    try{await setDoc(doc(db,"students",sid),{folder:fo,at:serverTimestamp()},{merge:true});document.activeElement&&document.activeElement.blur();render()}catch(err){errMsg(err,"#xerr")}}
+  else if(d.sfold!==undefined){sf.fold=d.sfold;render()}
+  else if(d.pickclr!==undefined){pick.clear();render()}
+  else if(d.bulkdone!==undefined){const fo=($("#bfold").value||"").trim().slice(0,40),ids=[...pick];if(!ids.length)return;t.disabled=true;
+    try{for(const id of ids)await setDoc(doc(db,"students",id),{state:"done",doneAt:todayStr(),folder:fo,at:serverTimestamp()},{merge:true});pick.clear();sf.st="done";sf.fold=fo;document.activeElement&&document.activeElement.blur();render()}
+    catch(err){t.disabled=false}}
+  else if(d.skill!==undefined){const sid=openSid;armed=null;if(!sid)return;t.disabled=true;
+    try{for(const g of prog)await deleteDoc(doc(db,"students",sid,"progress",g.id));const man=(students[sid]||{}).manual;await deleteDoc(doc(db,"students",sid));if(!man)await setDoc(doc(db,"members",sid),{status:"rejected",at:serverTimestamp()},{merge:true});location.hash="students"}
+    catch(err){t.disabled=false;errMsg(err,"#xerr")}}
+  else if(d.sopen){location.hash="s-"+d.sopen}
+  else if(d.sk!==undefined){sf.k=d.sk;armed=null;render()}
+  else if(d.kt){const sid=openSid,kid=d.kt;if(!sid||!klasses[kid])return;const cur=(students[sid]||{}).classes||[];
+    try{await setDoc(doc(db,"students",sid),{classes:cur.includes(kid)?cur.filter(x=>x!==kid):[...cur,kid],at:serverTimestamp()},{merge:true})}catch(err){errMsg(err,"#xerr")}}
+  else if(d.bkin!==undefined||d.bkout!==undefined){const kid=d.bkout!==undefined?sf.k:$("#bk").value;if(!klasses[kid])return;t.disabled=true;
+    try{for(const id of [...pick]){const cur=(students[id]||{}).classes||[];const nx=d.bkout!==undefined?cur.filter(x=>x!==kid):cur.includes(kid)?cur:[...cur,kid];await setDoc(doc(db,"students",id),{classes:nx,at:serverTimestamp()},{merge:true})}pick.clear();sf.k=kid;render()}catch(err){t.disabled=false}}
+  else if(d.kdel!==undefined){const kid=sf.k;armed=null;if(!klasses[kid])return;t.disabled=true;
+    try{for(const [id,st] of Object.entries(students))if((st.classes||[]).includes(kid))await setDoc(doc(db,"students",id),{classes:st.classes.filter(x=>x!==kid)},{merge:true});await deleteDoc(doc(db,"classes",kid));sf.k="all";render()}catch(err){t.disabled=false}}
+  else if(d.sback!==undefined){location.hash="students"}
+  else if(d.gs!==undefined){document.querySelectorAll("#gsubj button").forEach(b=>b.setAttribute("aria-pressed",b===t))}
+  else if(d.psave||d.ptoday||d.pclear){
+    const ym=d.psave||d.ptoday||d.pclear,sid=openSid,row=document.querySelector(`tr[data-row="${ym}"]`);if(!sid||!row||!/^\d{4}-\d{2}$/.test(ym))return;
+    const fee=(students[sid]||{}).fee|0;let v;armed=null;
+    if(d.pclear)v=deleteField();
+    else{const amt=Math.max(0,Math.round(Number(row.querySelector(".pamt").value)||0)),date=d.ptoday?todayStr():row.querySelector(".pdate").value,memo=row.querySelector(".pmemo").value.trim().slice(0,60);
+      v=(!amt&&!date&&!memo)?deleteField():{amt:amt||(d.ptoday?fee:0),date:/^\d{4}-\d{2}-\d{2}$/.test(date)?date:"",memo}}
+    t.disabled=true;
+    try{await setDoc(doc(db,"students",sid),{pay:{[ym]:v},at:serverTimestamp()},{merge:true});$("#perr").textContent="";document.activeElement&&document.activeElement.blur();render()}
+    catch(err){t.disabled=false;errMsg(err,"#perr")}
+  }
+  else if(d.gdel){
+    const sid=openSid,gid=d.gdel;armed=null;if(!sid)return;
+    try{await deleteDoc(doc(db,"students",sid,"progress",gid));const rest=prog.filter(x=>x.id!==gid);
+      await setDoc(doc(db,"students",sid),{last:rest[0]?{date:rest[0].date,subj:rest[0].subj|0,range:rest[0].range}:deleteField(),at:serverTimestamp()},{merge:true})}catch(err){render()}
+  }
+  else if(d.arm!==undefined){armed=d.arm||null;render()}
   else if(d.newcode!==undefined)setCode(randCode());
   else if(d.setcode!==undefined)setCode(($("#mycode").value||"").trim().toUpperCase());
   else if(d.copy!==undefined){try{await navigator.clipboard.writeText(entry.code);t.textContent="복사됨"}catch(_){}}
   else if(d.approve||d.reject||d.revoke){
     const id=d.approve||d.reject||d.revoke,r=reqs.find(x=>x.id===id)||{},old=members[id]||{};armed=null;t.disabled=true;
-    try{await setDoc(doc(db,"members",id),{status:d.approve?"approved":"rejected",name:r.name||old.name||"학생",school:r.school||old.school||"",grade:(r.grade??old.grade??0)|0,region:r.region||old.region||"",cls:(r.cls??old.cls??0)|0,email:r.email||old.email||"",at:serverTimestamp()})}catch(err){t.disabled=false}
+    try{await setDoc(doc(db,"members",id),{status:d.approve?"approved":"rejected",name:r.name||old.name||"학생",school:r.school||old.school||"",grade:(r.grade??old.grade??0)|0,region:r.region||old.region||"",cls:(r.cls??old.cls??0)|0,email:r.email||old.email||"",at:serverTimestamp()});
+      if(d.approve&&(r.phone||r.parent)){const st=students[id]||{};await setDoc(doc(db,"students",id),{phone:st.phone||r.phone||"",parent:st.parent||r.parent||"",at:serverTimestamp()},{merge:true})}}catch(err){t.disabled=false}
   }
   else if(d.del){
     const q=qs.find(x=>x.id===openId);armed=null;if(!q)return;
@@ -595,10 +894,13 @@ document.addEventListener("click",async e=>{
 });
 $("#logout").addEventListener("click",()=>signOut(auth));
 document.addEventListener("input",async e=>{if(e.target.id==="q"){f.q=e.target.value;render()}
+  else if(e.target.id==="sq"){sf.q=e.target.value;render()}
   else if(e.target.id==="rs"){schoolPick=null;$("#shint").textContent="전국 고등학교 2,401곳에서 찾아요. 목록에 없으면 그대로 입력해도 돼요.";await loadSchools();const v=e.target.value,r=findSchools(v),L=$("#slist");window.__slast=r;
     L.innerHTML=r.map((x,i)=>`<button type="button" role="option" data-sp="${i}"><b>${esc(x.n)}</b><span>${esc(x.r)}</span></button>`).join("")+(v.trim()&&!r.length?`<div class="snone">검색 결과가 없어요. 그대로 입력하면 돼요.</div>`:"");
     L.hidden=!v.trim();e.target.setAttribute("aria-expanded",String(!L.hidden))}});
 document.addEventListener("focusin",e=>{if(e.target.id==="rs")loadSchools()});
+document.addEventListener("change",e=>{const t=e.target;if(t.dataset.pick){t.checked?pick.add(t.dataset.pick):pick.delete(t.dataset.pick);render()}
+  else if(t.dataset.pickall!==undefined){document.querySelectorAll("[data-pick]").forEach(c=>t.checked?pick.add(c.dataset.pick):pick.delete(c.dataset.pick));render()}});
 document.addEventListener("click",e=>{const L=$("#slist");if(L&&!e.target.closest(".sbox"))L.hidden=true},true);
 document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
 $("#pick").addEventListener("change",async e=>{
