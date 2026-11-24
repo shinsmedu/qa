@@ -143,6 +143,11 @@ table.mt{width:100%;border-collapse:collapse;font-size:13px}
 .who-top{font-size:12px;color:var(--bar-muted)}
 .btn.bar{background:transparent;border-color:#444;color:#ddd}.btn.bar:hover{background:#222}
 .gbtn{display:inline-flex;align-items:center;gap:10px}
+.tag.priv{color:#5d3aa8;border-color:#cfc2ea;background:#f4f0fb}
+.tag.ai{color:#1f5f9e;border-color:#bcd3ea;background:#eef4fb}
+.draft{border:1px dashed #9db8d6;background:#f5f9fd;margin-top:22px}
+.draft .qmeta{border-bottom:1px dashed #c5d6e8}
+.draft .who{color:#1f5f9e!important}
 </style>
 </head>
 <body>
@@ -162,6 +167,7 @@ table.mt{width:100%;border-collapse:collapse;font-size:13px}
       <label class="f">내용<textarea id="fb" maxlength="4000" placeholder="교재 이름·쪽수, 문제 번호, 내가 생각한 풀이를 같이 적으면 더 빨리 답할 수 있어요." required></textarea></label>
       <div class="files" id="ffiles"></div>
       <label class="chk"><input type="checkbox" id="fanon"> 다른 학생에게 이름 숨기기 (선생님에게는 보여요)</label>
+      <label class="chk"><input type="checkbox" id="fpriv"> 선생님만 보기 (다른 학생에게 질문과 답변이 아예 안 보여요)</label>
       <div class="err" id="ferr"></div>
       <div class="row"><button class="btn primary" type="submit" id="fsend">질문 등록</button></div>
     </form>
@@ -174,7 +180,7 @@ table.mt{width:100%;border-collapse:collapse;font-size:13px}
 import { firebaseConfig, TEACHER_EMAIL, TEACHER_NAME } from "./firebase-config.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, limit, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const SUBJ=["고1 통합사회","고1 한국사","고3 수능 통합사회"];
 const KIND=["개념 질문","문제 풀이","공부법·시험","기타"];
@@ -189,7 +195,7 @@ try{app0=initializeApp(firebaseConfig);auth=getAuth(app0);db=getFirestore(app0)}
 let me=null,isTeacher=false,ready=false,qLoaded=false,busy=false;
 let myMember=undefined,myReq=undefined,members={},reqs=[],qs=[],answers=[],entry=null,imgCache={};
 let page="board",openId=null,armed=null;
-let subs=[],qUnsub=null,ansUnsub=null;
+let subs=[],qUnsub=null,ansUnsub=null,drafts={},qPub=[],qMine=[];
 const f={subj:"all",st:"all",q:""};
 const form={subj:0,kind:0,files:[],target:"q"};
 
@@ -253,7 +259,7 @@ function boardView(mode){
   else if(!base.length)body=`<div class="empty"><h2>${mode==="mine"?"아직 올린 질문이 없어요":"아직 질문이 없어요"}</h2><p>${isTeacher?"학생들이 질문을 올리면 여기에 쌓여요.":"모르는 건 그날 바로 물어보세요. 사소한 질문도 환영이에요."}</p></div>`;
   else if(!list.length)body=`<div class="empty"><h2>조건에 맞는 질문이 없어요</h2><p>과목이나 상태, 검색어를 바꿔 보세요.</p></div>`;
   else body=`<div class="qlist">${list.map(q=>{const[sc,sl]=stOf(q);return `<button class="qcard${q.pinned?" pinned":""}" data-open="${esc(q.id)}">
-    <div class="qmeta">${q.pinned?'<span class="tag pin">고정</span>':""}<span class="tag subj">${esc(SUBJ[q.subject|0])}</span><span class="tag">${esc(KIND[q.kind|0])}</span><span class="tag ${sc}">${sl}</span><span class="sp"></span><time>${ago(q.createdAt)}</time></div>
+    <div class="qmeta">${q.pinned?'<span class="tag pin">고정</span>':""}<span class="tag subj">${esc(SUBJ[q.subject|0])}</span><span class="tag">${esc(KIND[q.kind|0])}</span><span class="tag ${sc}">${sl}</span>${q.private?'<span class="tag priv">선생님만 보기</span>':""}${isTeacher&&drafts[q.id]&&sc==="wait"?'<span class="tag ai">Claude 초안 있음</span>':""}<span class="sp"></span><time>${ago(q.createdAt)}</time></div>
     <div class="sheet"><h3>${esc(q.title)}</h3><p class="pv">${esc(q.body)}</p></div>
     <div class="qact"><span>${esc(nameOf(q))}</span><span class="sp"></span><span>답변 ${q.answerCount|0}</span>${(q.imageIds||[]).length?`<span>사진 ${q.imageIds.length}</span>`:""}</div></button>`}).join("")}</div>`;
   return intro(mode==="mine"?"My questions":"Q&amp;A Board",mode==="mine"?"내 질문":"질문 게시판",mode==="mine"?"내가 올린 질문과 답변 상태를 한눈에 확인해요.":"고1 내신 통합사회·한국사, 고3 수능 통합사회. 모르는 건 그날 바로 물어보고, 선생님 답변으로 정리해요.",stats)+
@@ -267,13 +273,14 @@ function detailView(q){
   const del=key=>armed===key?`<button class="btn danger sm" data-del="${key}">정말 삭제할까요?</button>`:`<button class="btn ghost sm" data-arm="${key}">삭제</button>`;
   return `<main class="gut detail" style="max-width:980px"><button class="btn" data-back style="margin-bottom:22px">← 목록으로</button>
   <article class="qcard${q.pinned?" pinned":""}">
-    <div class="qmeta">${q.pinned?'<span class="tag pin">고정</span>':""}<span class="tag subj">${esc(SUBJ[q.subject|0])}</span><span class="tag">${esc(KIND[q.kind|0])}</span><span class="tag ${sc}">${sl}</span><span class="sp"></span><span class="who">${esc(nameOf(q))}</span><time>${ago(q.createdAt)}</time></div>
+    <div class="qmeta">${q.pinned?'<span class="tag pin">고정</span>':""}<span class="tag subj">${esc(SUBJ[q.subject|0])}</span><span class="tag">${esc(KIND[q.kind|0])}</span><span class="tag ${sc}">${sl}</span>${q.private?'<span class="tag priv">선생님만 보기</span>':""}<span class="sp"></span><span class="who">${esc(nameOf(q))}</span><time>${ago(q.createdAt)}</time></div>
     <div class="sheet"><h2>${esc(q.title)}</h2><p class="body">${esc(q.body)}</p>${imgs(q.imageIds)}</div>
     ${isTeacher||mine?`<div class="qact"><button class="btn sm" data-solve>${q.solved?"해결 표시 취소":"해결됐어요"}</button>${isTeacher?`<button class="btn sm" data-pin>${q.pinned?"고정 해제":"맨 위에 고정"}</button>`:""}<span class="sp"></span>${del("q")}</div>`:""}
   </article>
   <section class="answers"><div class="sectitle">답변 ${answers.length}</div>
   ${answers.length?answers.map(a=>`<div class="ans${a.teacher?" t":""}"><div class="qmeta"><span class="who">${esc(a.teacher?TEACHER_NAME:nameOf(a))}</span><span class="sp"></span><time>${ago(a.createdAt)}</time></div>
     <div class="sheet"><p class="body">${esc(a.body)}</p>${imgs(a.imageIds)}</div>${isTeacher||a.authorId===me.uid?`<div class="qact"><span class="sp"></span>${del("a:"+esc(a.id))}</div>`:""}</div>`).join(""):`<div class="empty" style="padding:36px 28px"><p>${isTeacher?"아직 답변이 없어요. 아래에서 답변을 달아 주세요.":"선생님이 확인하면 여기에 답변이 달려요."}</p></div>`}
+  ${isTeacher&&drafts[q.id]?`<div class="draft"><div class="qmeta"><span class="who">Claude 초안</span><span class="tag ai">검토 후 등록하세요</span><span class="sp"></span><time>${ago(drafts[q.id].at)}</time></div><div class="sheet"><p class="body">${esc(drafts[q.id].body)}</p></div><div class="qact"><button class="btn primary sm" data-usedraft>답변 칸에 넣고 고치기</button><span class="sp"></span><button class="btn ghost sm" data-deldraft>초안 지우기</button></div></div>`:""}
   <form class="panel stack composer" id="af"><label class="f">${isTeacher?"선생님 답변":"추가 질문 · 댓글"}<textarea id="ab" maxlength="4000" placeholder="${isTeacher?"핵심 개념 → 풀이 순서 → 비슷한 기출 포인트":"이해 안 되는 부분을 더 물어보거나, 고맙다는 말도 좋아요"}" required></textarea></label>
     <div class="files" id="afiles"></div><div class="err" id="aerr"></div><div class="row"><button class="btn primary" type="submit">${isTeacher?"답변 등록":"댓글 등록"}</button></div></form>
   </section></main>`;
@@ -340,17 +347,22 @@ async function toJpeg(file){
   }
   return out.length<880000?out:null;
 }
-async function uploadAll(list){const ids=[];for(const data of list){const r=await addDoc(collection(db,"images"),{data,ownerId:me.uid,at:serverTimestamp()});ids.push(r.id)}return ids}
+async function uploadAll(list,priv,viewer){const ids=[];for(const data of list){const r=await addDoc(collection(db,"images"),{data,ownerId:me.uid,at:serverTimestamp(),priv:!!priv,viewer:viewer||""});ids.push(r.id)}return ids}
 const errMsg=(e,el)=>{const x=$(el);if(x)x.textContent=e&&e.code==="permission-denied"?"권한이 없어 저장하지 못했어요. (승인이 취소됐거나 입력값이 규칙에 맞지 않아요)":"저장하지 못했어요. 잠시 후 다시 시도해 주세요."};
 
 /* ---------- 데이터 구독 ---------- */
-function clearSubs(){subs.forEach(u=>u());subs=[];if(qUnsub){qUnsub();qUnsub=null}if(ansUnsub){ansUnsub();ansUnsub=null}qs=[];answers=[];members={};reqs=[];entry=null;qLoaded=false;myMember=undefined;myReq=undefined;imgCache={}}
+function clearSubs(){subs.forEach(u=>u());subs=[];if(qUnsub){qUnsub();qUnsub=null}if(ansUnsub){ansUnsub();ansUnsub=null}qs=[];qPub=[];qMine=[];drafts={};answers=[];members={};reqs=[];entry=null;qLoaded=false;myMember=undefined;myReq=undefined;imgCache={}}
 function startBoard(){
   if(qUnsub)return;
-  qUnsub=onSnapshot(query(collection(db,"questions"),orderBy("createdAt","desc"),limit(500)),s=>{qs=s.docs.map(d=>({id:d.id,...d.data()}));qLoaded=true;render()},()=>{qLoaded=true;render()});
+  const sortQ=()=>{const m=new Map();for(const x of [...qPub,...qMine])m.set(x.id,x);qs=[...m.values()].sort((a,b)=>ms(b.createdAt)-ms(a.createdAt));qLoaded=true;render()};
+  if(isTeacher){qUnsub=onSnapshot(query(collection(db,"questions"),orderBy("createdAt","desc"),limit(500)),s=>{qPub=s.docs.map(d=>({id:d.id,...d.data()}));qMine=[];sortQ()},()=>{qLoaded=true;render()});
+    subs.push(onSnapshot(collection(db,"drafts"),s=>{drafts={};s.docs.forEach(d=>drafts[d.id]=d.data());render()},()=>{}));}
+  else{const u1=onSnapshot(query(collection(db,"questions"),where("private","==",false)),s=>{qPub=s.docs.map(d=>({id:d.id,...d.data()}));sortQ()},()=>{qLoaded=true;render()});
+    const u2=onSnapshot(query(collection(db,"questions"),where("authorId","==",me.uid)),s=>{qMine=s.docs.map(d=>({id:d.id,...d.data()}));sortQ()},()=>{});
+    qUnsub=()=>{u1();u2()};}
   watchAnswers();
 }
-function stopBoard(){if(qUnsub){qUnsub();qUnsub=null}if(ansUnsub){ansUnsub();ansUnsub=null}qs=[];answers=[];qLoaded=false}
+function stopBoard(){if(qUnsub){qUnsub();qUnsub=null}if(ansUnsub){ansUnsub();ansUnsub=null}qs=[];qPub=[];qMine=[];answers=[];qLoaded=false}
 function sync(){if(inside())startBoard();else stopBoard();render()}
 function watchAnswers(){
   if(ansUnsub){ansUnsub();ansUnsub=null}answers=[];
@@ -403,10 +415,10 @@ $("#qf").addEventListener("submit",async e=>{
   if(!t||!b){$("#ferr").textContent="제목과 내용을 모두 적어 주세요.";return}
   busy=true;$("#fsend").disabled=true;$("#fsend").textContent="올리는 중…";
   try{
-    const anon=$("#fanon").checked,ids=await uploadAll(form.files);
-    await addDoc(collection(db,"questions"),{title:t,body:b,subject:form.subj,kind:form.kind,authorId:me.uid,authorName:anon?"익명 학생":(isTeacher?TEACHER_NAME:myMember.name),anon,imageIds:ids,createdAt:serverTimestamp(),status:"wait",solved:false,pinned:false,answerCount:0});
+    const anon=$("#fanon").checked,priv=$("#fpriv").checked,ids=await uploadAll(form.files,priv,me.uid);
+    await addDoc(collection(db,"questions"),{title:t,body:b,subject:form.subj,kind:form.kind,authorId:me.uid,authorName:anon?"익명 학생":(isTeacher?TEACHER_NAME:myMember.name),anon,private:priv,imageIds:ids,createdAt:serverTimestamp(),status:"wait",solved:false,pinned:false,answerCount:0});
     try{localStorage.removeItem("qa-draft")}catch(_){}
-    $("#ft").value="";$("#fb").value="";$("#fanon").checked=false;close();
+    $("#ft").value="";$("#fb").value="";$("#fanon").checked=false;$("#fpriv").checked=false;close();
   }catch(err){errMsg(err,"#ferr")}
   busy=false;$("#fsend").disabled=false;$("#fsend").textContent="질문 등록";
 });
@@ -426,10 +438,11 @@ document.addEventListener("submit",async e=>{
   const b=$("#ab").value.trim(),q=qs.find(x=>x.id===openId);if(!b||!q)return;
   busy=true;e.target.querySelector("[type=submit]").disabled=true;
   try{
-    const anon=!isTeacher&&q.authorId===me.uid&&!!q.anon,ids=await uploadAll(form.target==="a"?form.files:[]);
+    const anon=!isTeacher&&q.authorId===me.uid&&!!q.anon,ids=await uploadAll(form.target==="a"?form.files:[],!!q.private,q.private?q.authorId:"");
     await addDoc(collection(db,"questions",q.id,"answers"),{body:b,authorId:me.uid,authorName:anon?"익명 학생":(isTeacher?TEACHER_NAME:myMember.name),teacher:isTeacher,anon,imageIds:ids,createdAt:serverTimestamp()});
     const up={answerCount:increment(1),lastAt:serverTimestamp()};if(isTeacher&&q.status!=="answered")up.status="answered";
     await updateDoc(doc(db,"questions",q.id),up);
+    if(isTeacher&&drafts[q.id])deleteDoc(doc(db,"drafts",q.id)).catch(()=>{});
     form.files=[];$("#ab").value="";$("#ab").blur();render();
   }catch(err){errMsg(err,"#aerr")}
   busy=false;const s=document.querySelector("#af [type=submit]");if(s)s.disabled=false;
@@ -462,6 +475,8 @@ document.addEventListener("click",async e=>{
   else if(d.img){const v=imgCache[d.img];if(v){const lb=$("#lb");lb.querySelector("img").src=v;lb.classList.add("on")}}
   else if(d.attach){if(form.target!==d.attach){form.target=d.attach;form.files=[]}$("#pick").click()}
   else if(d.rm!==undefined){form.files.splice(+d.rm,1);files(form.target==="q"?"#ffiles":"#afiles",form.target)}
+  else if(d.usedraft!==undefined){const dr=drafts[openId],a=$("#ab");if(dr&&a){a.value=dr.body;a.focus();a.style.height=Math.min(600,a.scrollHeight+20)+"px"}}
+  else if(d.deldraft!==undefined){if(openId)deleteDoc(doc(db,"drafts",openId)).catch(()=>{})}
   else if(d.arm){armed=d.arm;render()}
   else if(d.newcode!==undefined)setCode(randCode());
   else if(d.setcode!==undefined)setCode(($("#mycode").value||"").trim().toUpperCase());
@@ -473,7 +488,7 @@ document.addEventListener("click",async e=>{
   else if(d.del){
     const q=qs.find(x=>x.id===openId);armed=null;if(!q)return;
     try{
-      if(d.del==="q"){await deleteDoc(doc(db,"questions",q.id));for(const i of q.imageIds||[])deleteDoc(doc(db,"images",i)).catch(()=>{});location.hash="board"}
+      if(d.del==="q"){await deleteDoc(doc(db,"questions",q.id));if(isTeacher)deleteDoc(doc(db,"drafts",q.id)).catch(()=>{});for(const i of q.imageIds||[])deleteDoc(doc(db,"images",i)).catch(()=>{});location.hash="board"}
       else{const aid=d.del.slice(2),a=answers.find(x=>x.id===aid);await deleteDoc(doc(db,"questions",q.id,"answers",aid));
         const up={answerCount:increment(-1)};if(isTeacher)up.status=answers.some(x=>x.id!==aid&&x.teacher)?"answered":"wait";
         await updateDoc(doc(db,"questions",q.id),up).catch(()=>{});for(const i of (a&&a.imageIds)||[])deleteDoc(doc(db,"images",i)).catch(()=>{})}
