@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-K3UfXlhJ9ybmf9W1WpN6YerV/sF1GuWrGq9zlw1Y3Uo=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://shinsmedu-qa.firebaseapp.com https://www.gstatic.com; frame-src https://shinsmedu-qa.firebaseapp.com https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-9y4aoojWFgrU8qDOff9nUZqQHbqiwYwF0hYQe1rjj0I=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://shinsmedu-qa.firebaseapp.com https://www.gstatic.com; frame-src https://shinsmedu-qa.firebaseapp.com https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#111111">
@@ -321,6 +321,15 @@ body:not([data-th=""]) .intro::before{background:radial-gradient(closest-side,va
 .nrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:8px 0;border-top:1px solid #f0f0ef}.nrow:first-of-type{border-top:0}
 .nrow p{margin:0;flex:1 1 260px;font-size:14px;letter-spacing:0}.nrow.off{opacity:.5}
 .nform textarea{min-height:80px}
+.smsf textarea{min-height:110px}
+.smstool{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.smstool input{max-width:230px;padding:8px 10px;font-size:14px;border-radius:10px}
+.smsout{display:grid;gap:10px}
+.smsall{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:#111;color:#fff;border-radius:14px;padding:12px 16px}
+.smsall .small{color:#bbb;flex:1 1 260px}.smsall .btn.primary{background:#fff;color:#111;border-color:#fff}.smsall .btn{border-color:#555;color:#eee;background:transparent}
+.srows{background:#fff;border:1px solid #ececea;border-radius:14px;padding:4px 16px}
+.srow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #f0f0ef}.srow:first-child{border-top:0}
+.srow b{flex:0 0 auto;font-weight:500}.srow .num{font-size:13px;color:#777;font-variant-numeric:tabular-nums}
+.srow p{margin:0;flex:1 1 240px;font-size:13px;color:#555;letter-spacing:0;white-space:pre-wrap}.srow.sent{opacity:.55}
 .kcode .code{font-size:15px;padding:4px 10px}
 /* 학교 검색 */
 .sbox{position:relative}
@@ -388,7 +397,9 @@ let myBlocked=undefined,blockedList={},myMember=undefined,myReq=undefined,member
 let page="board",openId=null,armed=null;
 let subs=[],qUnsub=null,ansUnsub=null,drafts={},qPub=[],qMine=[];
 let students={},klasses={},prog=[],progUnsub=null,openSid=null;
-let notices={},presence={},seen=null,lastNew=new Set(),notifAsked=false;const sf={cls:"all",q:"",st:"on",fold:"all",k:"all"};
+let notices={},presence={},seen=null,lastNew=new Set(),notifAsked=false;
+let armed2=null;
+let sms={to:"parent",text:"",sent:new Set(),cur:-1},smsT=[],smsSaved=null;const sf={cls:"all",q:"",st:"on",fold:"all",k:"all"};
 const f={subj:"all",st:"all",q:""};
 const form={subj:0,kind:0,files:[],target:"q"};
 
@@ -592,8 +603,9 @@ function studentsView(){
   const allPicked=list.length&&list.every(x=>pick.has(x.id));
   return intro("Students","학생 관리","진도, 수강료 납부, 연락처와 메모를 관리해요. 끝까지 마친 학생은 체크해서 수료 폴더로 옮기고, 중간에 그만둔 학생은 삭제하면 돼요. 이 기록은 선생님만 볼 수 있어요.",
     `<div class="stats">${[[act.length,"수강 중"],[unpaid.length,mon+" 미납"],[won(sum),mon+" 납부 합계"],[fin.length,"수료생"]].map(([n,l])=>`<div><b>${n}</b><span>${l}</span></div>`).join("")}</div>`)+
-  `<main class="gut"><div class="listbar"><input type="search" id="sq" placeholder="${doneTab?"이름·학교·폴더 검색":"이름·학교 검색"}" aria-label="학생 검색" value="${esc(sf.q)}"><button class="btn sm" data-arm="${armed==="notice"?"":"notice"}">공지 쓰기</button><button class="btn sm" data-arm="${armed==="exp"?"":"exp"}">엑셀로 내보내기</button></div>
+  `<main class="gut"><div class="listbar"><input type="search" id="sq" placeholder="${doneTab?"이름·학교·폴더 검색":"이름·학교 검색"}" aria-label="학생 검색" value="${esc(sf.q)}"><button class="btn sm" data-arm="${armed==="notice"?"":"notice"}">공지 쓰기</button><button class="btn sm" data-arm="${armed==="sms"?"":"sms"}">문자 보내기</button><button class="btn sm" data-arm="${armed==="exp"?"":"exp"}">엑셀로 내보내기</button></div>
   ${armed==="exp"?`<div class="kform"><span class="small">내려받을 자료</span><button class="btn sm" data-exp="students">학생 명단</button><button class="btn sm" data-exp="pay">납부 내역</button><button class="btn sm" data-exp="prog">진도 기록</button><button class="btn sm" data-exp="qs">질문 목록</button><span class="small" id="experr">엑셀에서 바로 열리는 CSV 파일로 받아요. 연락처가 들어 있으니 보관에 주의하세요.</span></div>`:""}
+  ${armed==="sms"?(smsT=pick.size&&!doneTab?act.filter(x=>pick.has(x.id)):list,smsForm()):""}
   ${armed==="notice"?noticeForm():""}${noticeAdmin()}
   <div class="stabs">${stab("on","수강 중",act.length)}${stab("done","수료생",fin.length)}</div>
   ${doneTab?"":klassBar(act)}
@@ -717,6 +729,42 @@ async function exportCsv(kind){
   else if(kind==="prog"){const rows=[["이름","수업 날짜","과목","진도 범위","메모"]];for(const{id,m}of P){try{const g=await getDocs(collection(db,"students",id,"progress"));g.docs.map(d=>d.data()).sort((a,b)=>a.date<b.date?-1:1).forEach(x=>rows.push([m.name,x.date,SUBJ[x.subj|0],x.range,x.memo||""]))}catch(_){}}csvDownload("진도기록",rows)}
   else if(kind==="qs")csvDownload("질문목록",[["날짜","학생","과목","유형","제목","상태","답변 수"],...qs.map(q=>[day(q.createdAt),(members[q.authorId]||{}).name||q.authorName,SUBJ[q.subject|0],KIND[q.kind|0],q.title,stOf(q)[1],q.answerCount|0])]);
 }
+/* ---------- 문자 보내기: 선생님 휴대폰의 문자 앱을 열어 줌 (사이트는 문자를 보내지 않음) ---------- */
+const SMS_DEF=[{l:"수강료 안내",t:"[신상명 선생님] {이름} 학생 {월} 수강료 {수강료} 안내드립니다. 감사합니다."},
+  {l:"미납 안내",t:"[신상명 선생님] {이름} 학생 {월} 수강료 {수강료} 납부가 아직 확인되지 않아 안내드립니다. 이미 납부하셨다면 알려 주세요."},
+  {l:"진도 안내",t:"[신상명 선생님] {이름} 학생 최근 수업({진도일}) 진도 안내드립니다.\n{진도}"},
+  {l:"수업 공지",t:"[신상명 선생님] 안내드립니다.\n"}];
+// 선생님이 저장한 문구(secret/sms, 선생님만 읽고 씀)가 있으면 그걸 쓰고, 없으면 처음 문구를 씀
+const smsTpls=()=>Array.isArray(smsSaved)&&smsSaved.length?smsSaved:SMS_DEF;
+async function smsStore(list){const m=$("#smsmsg");try{await setDoc(doc(db,"secret","sms"),{tpl:list.slice(0,12).map(x=>({l:String(x.l).slice(0,16),t:String(x.t).slice(0,1000)})),at:serverTimestamp()});sms.note="저장했어요. 다음부터 이 문구가 기본으로 나와요.";render()}catch(_){if(m)m.textContent="저장하지 못했어요. 잠시 뒤 다시 해 주세요."}}
+const telOf=v=>{const m=String(v||"").match(/0\d{1,2}[-\s.]?\d{3,4}[-\s.]?\d{4}/);return m?m[0].replace(/\D/g,""):""};
+const smsNum=x=>telOf(sms.to==="parent"?x.s.parent:x.s.phone);
+const smsPersonal=t=>/\{(이름|월|수강료|진도|진도일)\}/.test(t);
+const smsFill=(t,x)=>{const l=x.s.last;return t.replace(/\{이름\}/g,x.m.name).replace(/\{월\}/g,(new Date().getMonth()+1)+"월").replace(/\{수강료\}/g,(x.s.fee|0)>0?won(x.s.fee):"(수강료 미설정)").replace(/\{진도일\}/g,l?dotDate(l.date).slice(5):"기록 없음").replace(/\{진도\}/g,l?l.range:"(진도 기록 없음)")};
+const smsHref=(nums,body)=>{const ios=/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent),b=encodeURIComponent(body);
+  return nums.length>1&&ios?`sms:/open?addresses=${nums.join(",")}&body=${b}`:`sms:${nums.join(",")}${ios?"&":"?"}body=${b}`};
+function smsOut(){
+  const text=sms.text.trim(),has=smsT.filter(x=>smsNum(x)),no=smsT.filter(x=>!smsNum(x)),who=sms.to==="parent"?"학부모":"학생";
+  const head=`<p class="small" style="margin:0">받는 사람 <b style="color:#111">${has.length}명</b>${no.length?` · ${who} 번호가 없어 빠진 학생 ${no.length}명 (${esc(no.slice(0,6).map(x=>x.m.name).join(", "))}${no.length>6?" 외":""})`:""}</p>`;
+  if(!smsT.length)return `<p class="small" style="margin:0">보낼 학생이 없어요. 목록에서 반이나 조건을 바꿔 보세요.</p>`;
+  if(!has.length)return head;
+  if(!text)return head+`<p class="small" style="margin:0">내용을 쓰면 보내기 버튼이 나타나요.</p>`;
+  const per=smsPersonal(text),sample=per?smsFill(text,has[0]):text,len=[...sample].length,bytes=[...sample].reduce((n,c)=>n+(c.charCodeAt(0)>127?2:1),0);
+  const all=!per&&has.length>1?`<div class="smsall"><button type="button" class="btn primary sm" data-smsgo="all">한 번에 보내기 (${has.length}명)</button><button type="button" class="btn sm" data-smsc="nums">번호 모두 복사</button><button type="button" class="btn sm" data-smsc="body">내용 복사</button><span class="small">아이폰은 받는 분들끼리 번호가 보이는 단체 대화로 열릴 수 있어요. 그럴 땐 아래에서 한 명씩 보내세요.</span></div>`:"";
+  const rows=has.map(x=>`<div class="srow${sms.sent.has(x.id)?" sent":""}"><b>${esc(x.m.name)}</b><span class="num">${esc(smsNum(x).replace(/(\d{3})(\d{3,4})(\d{4})/,"$1-$2-$3"))}</span><p>${per?esc(smsFill(text,x)):""}</p>${sms.sent.has(x.id)?'<span class="tag done">열었음</span>':""}<button type="button" class="btn sm" data-smsgo="${esc(x.id)}">문자 앱 열기</button><button type="button" class="btn ghost sm" data-smsc="${esc(x.id)}">복사</button></div>`).join("");
+  return head+all+`<div class="srows">${rows}</div><p class="small" style="margin:0">${per?"첫 번째 문자 기준 ":""}${len}자${bytes>90?" · 길어서 장문 문자(LMS)로 나가요":" · 단문 문자(SMS) 길이예요"} · 문자는 선생님 휴대폰 번호로, 휴대폰 문자 앱에서 전송 버튼을 눌러야 나가요. PC에서는 ‘복사’를 쓰세요.</p>`;
+}
+function smsForm(){
+  const pickN=smsT.length,from=pick.size?"체크한 학생":"지금 목록에 보이는 학생";
+  return `<form class="panel stack nform smsf" id="smsf" data-keep autocomplete="off"><div class="sectitle" style="margin:0">문자 보내기 <span class="small" style="letter-spacing:0">· ${from} ${pickN}명</span></div>
+    <div class="f">받는 번호<div class="seg"><button type="button" data-smsto="parent" aria-pressed="${sms.to==="parent"}">학부모</button><button type="button" data-smsto="phone" aria-pressed="${sms.to==="phone"}">학생</button></div></div>
+    <div class="f">문구 불러오기<div class="seg">${smsTpls().map((x,i)=>`<button type="button" data-smstpl="${i}" aria-pressed="${sms.cur===i}">${esc(x.l)}</button>`).join("")}</div></div>
+    <textarea id="smstext" maxlength="1000" placeholder="보낼 내용을 쓰세요. {이름} {월} {수강료} {진도} {진도일} 을 넣으면 학생마다 자동으로 바뀌어요.">${esc(sms.text)}</textarea>
+    <div class="smstool">${smsTpls()[sms.cur]?`<button type="button" class="btn sm" data-smssave>지금 내용을 ‘${esc(smsTpls()[sms.cur].l)}’ 기본 문구로 저장</button>${armed2==="smsdel"?`<button type="button" class="btn danger sm" data-smsdel>정말 지울까요?</button>`:`<button type="button" class="btn ghost sm" data-smsdelarm>이 문구 지우기</button>`}`:""}<input type="text" id="smsname" maxlength="16" placeholder="새 문구 이름 (예: 휴강 안내)"><button type="button" class="btn sm" data-smsadd>새 문구로 추가</button>${smsSaved?`<button type="button" class="btn ghost sm" data-smsreset>처음 문구로 되돌리기</button>`:""}</div>
+    <div class="smsout" id="smsout">${smsOut()}</div>
+    <div class="row"><button class="btn ghost sm" type="button" data-arm="">닫기</button><span class="small" id="smsmsg">${esc(sms.note||"")}</span></div></form>`;
+}
+function smsRefresh(){const o=$("#smsout");if(o)o.innerHTML=smsOut()}
 /* ---------- 반 배정 (학생 관리 + 회원 정보에 함께 저장) ---------- */
 async function setClasses(id,arr){await setDoc(doc(db,"students",id),{classes:arr,at:serverTimestamp()},{merge:true});if(members[id])await setDoc(doc(db,"members",id),{classes:arr},{merge:true}).catch(()=>{})}
 const classOfCode=code=>{const e=Object.entries(klasses).find(([,k])=>k.code&&k.code===code);return e?e[0]:null};
@@ -779,7 +827,7 @@ async function uploadAll(list,priv,viewer){const ids=[];for(const data of list){
 const errMsg=(e,el)=>{const x=$(el);if(x)x.textContent=e&&e.code==="permission-denied"?"권한이 없어 저장하지 못했어요. (승인이 취소됐거나 입력값이 규칙에 맞지 않아요)":"저장하지 못했어요. 잠시 후 다시 시도해 주세요."};
 
 /* ---------- 데이터 구독 ---------- */
-function clearSubs(){subs.forEach(u=>u());subs=[];if(progUnsub){progUnsub();progUnsub=null}students={};klasses={};prog=[];if(qUnsub){qUnsub();qUnsub=null}if(ansUnsub){ansUnsub();ansUnsub=null}qs=[];qPub=[];qMine=[];drafts={};answers=[];members={};notices={};presence={};seen=null;lastNew=new Set();reqs=[];entry=null;qLoaded=false;myMember=undefined;myReq=undefined;myBlocked=undefined;blockedList={};imgCache={}}
+function clearSubs(){subs.forEach(u=>u());subs=[];if(progUnsub){progUnsub();progUnsub=null}students={};klasses={};prog=[];if(qUnsub){qUnsub();qUnsub=null}if(ansUnsub){ansUnsub();ansUnsub=null}qs=[];qPub=[];qMine=[];drafts={};answers=[];members={};notices={};presence={};smsSaved=null;seen=null;lastNew=new Set();reqs=[];entry=null;qLoaded=false;myMember=undefined;myReq=undefined;myBlocked=undefined;blockedList={};imgCache={}}
 function startBoard(){
   if(qUnsub)return;
   loadSeen();lastNew=new Set();touchPresence();
@@ -817,6 +865,7 @@ if(auth){
       subs.push(onSnapshot(collection(db,"members"),s=>{members={};s.docs.forEach(d=>members[d.id]=d.data());render()},()=>{}));
       subs.push(onSnapshot(query(collection(db,"requests"),orderBy("at","desc")),s=>{reqs=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{}));
       subs.push(onSnapshot(doc(db,"secret","entry"),s=>{entry=s.exists()?s.data():null;render()},()=>{}));
+      subs.push(onSnapshot(doc(db,"secret","sms"),s=>{const v=s.exists()?s.data().tpl:null;smsSaved=Array.isArray(v)&&v.length?v.filter(x=>x&&typeof x.l==="string"&&typeof x.t==="string"):null;render()},()=>{}));
       subs.push(onSnapshot(collection(db,"students"),s=>{students={};s.docs.forEach(d=>students[d.id]=d.data());render()},()=>{}));
       subs.push(onSnapshot(collection(db,"blocked"),s=>{blockedList={};s.docs.forEach(d=>blockedList[d.id]=d.data());render()},()=>{}));
       subs.push(onSnapshot(collection(db,"presence"),s=>{presence={};s.docs.forEach(d=>presence[d.id]=d.data());render()},()=>{}));
@@ -981,6 +1030,22 @@ document.addEventListener("click",async e=>{
   else if(d.nbhide!==undefined){try{localStorage.setItem("qa-nb-hide","1")}catch(_){}render()}
   else if(d.install!==undefined){if(installEvt){installEvt.prompt();try{await installEvt.userChoice}catch(_){}installEvt=null;render()}}
   else if(d.nhide){try{localStorage.setItem("qa-nh-"+d.nhide,"1")}catch(_){}render()}
+  else if(d.smsto){sms.to=d.smsto;t.parentNode.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b===t)));smsRefresh()}
+  else if(d.smstpl){const x=smsTpls()[+d.smstpl];if(!x)return;sms.cur=+d.smstpl;sms.text=x.t;sms.note="";armed2=null;render()}
+  else if(d.smssave!==undefined||d.smsadd!==undefined||d.smsdel!==undefined||d.smsreset!==undefined||d.smsdelarm!==undefined){
+    const list=smsTpls().map(x=>({l:x.l,t:x.t})),m=$("#smsmsg"),text=sms.text.trim();
+    if(d.smsdelarm!==undefined){armed2="smsdel";render();return}
+    armed2=null;
+    if(d.smsreset!==undefined){sms.cur=-1;try{await deleteDoc(doc(db,"secret","sms"))}catch(_){if(m)m.textContent="되돌리지 못했어요."}return}
+    if(d.smsdel!==undefined){if(list.length<=1){if(m)m.textContent="문구는 하나 이상 남겨 두어야 해요.";return}list.splice(sms.cur,1);sms.cur=-1;await smsStore(list);return}
+    if(!text){if(m)m.textContent="저장할 내용을 먼저 써 주세요.";return}
+    if(d.smssave!==undefined){if(!list[sms.cur])return;list[sms.cur].t=sms.text;await smsStore(list);return}
+    const name=(($("#smsname")||{}).value||"").trim();if(!name){if(m)m.textContent="새 문구 이름을 적어 주세요.";return}
+    if(list.length>=12){if(m)m.textContent="문구는 12개까지 저장할 수 있어요.";return}
+    list.push({l:name,t:sms.text});sms.cur=list.length-1;document.activeElement&&document.activeElement.blur();await smsStore(list)}
+  else if(d.smsgo||d.smsc){const key=d.smsgo||d.smsc,text=sms.text.trim(),has=smsT.filter(x=>smsNum(x)),x=has.find(y=>y.id===key);if(!text)return;
+    if(d.smsgo){if(key==="all")location.href=smsHref(has.map(smsNum),text);else if(x){sms.sent.add(x.id);location.href=smsHref([smsNum(x)],smsFill(text,x));smsRefresh()}}
+    else{const v=key==="nums"?has.map(smsNum).join(", "):key==="body"?text:x?smsFill(text,x):"";try{await navigator.clipboard.writeText(v);t.textContent="복사됨"}catch(_){const m=$("#smsmsg");if(m)m.textContent="복사하지 못했어요. 내용을 길게 눌러 직접 복사해 주세요."}}}
   else if(d.ncls){t.setAttribute("aria-pressed",t.getAttribute("aria-pressed")==="true"?"false":"true")}
   else if(d.ndel){const id=d.ndel;armed=null;try{await deleteDoc(doc(db,"notices",id))}catch(err){render()}}
   else if(d.exp){const x=$("#experr");t.disabled=true;if(x)x.textContent="파일을 만드는 중…";try{await exportCsv(d.exp);if(x)x.textContent="내려받았어요. 다운로드 폴더(또는 파일 앱)를 확인하세요."}catch(err){if(x)x.textContent="파일을 만들지 못했어요."}t.disabled=false}
@@ -1057,6 +1122,7 @@ let lastAct=Date.now();["pointerdown","keydown","scroll","touchstart"].forEach(e
 setInterval(()=>{if(isTeacher&&auth&&Date.now()-lastAct>2*3600e3){lastAct=Date.now();signOut(auth)}},60e3);
 document.addEventListener("input",async e=>{if(e.target.id==="q"){f.q=e.target.value;render()}
   else if(e.target.id==="sq"){sf.q=e.target.value;render()}
+  else if(e.target.id==="smstext"){sms.text=e.target.value;smsRefresh()}
   else if(e.target.id==="rs"){schoolPick=null;$("#shint").textContent="전국 고등학교 2,401곳에서 찾아요. 목록에 없으면 그대로 입력해도 돼요.";await loadSchools();const v=e.target.value,r=findSchools(v),L=$("#slist");window.__slast=r;
     L.innerHTML=r.map((x,i)=>`<button type="button" role="option" data-sp="${i}"><b>${esc(x.n)}</b><span>${esc(x.r)}</span></button>`).join("")+(v.trim()&&!r.length?`<div class="snone">검색 결과가 없어요. 그대로 입력하면 돼요.</div>`:"");
     L.hidden=!v.trim();e.target.setAttribute("aria-expanded",String(!L.hidden))}});
