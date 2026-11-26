@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-HCjcXbOpP3fNqWI/fUiTPuGX4zXmeqyziTzEhmSafCQ=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://shinsmedu-qa.firebaseapp.com https://www.gstatic.com; frame-src https://shinsmedu-qa.firebaseapp.com https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Qm0XwWaoGOA7kqrE0461ghA95j46U8iqcTbfi7lXDXE=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://shinsmedu-qa.firebaseapp.com https://www.gstatic.com; frame-src https://shinsmedu-qa.firebaseapp.com https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#111111">
@@ -75,7 +75,7 @@ textarea{resize:vertical;line-height:1.7;min-height:130px}
 .seg button[aria-pressed=true]{background:#111;border-color:#111;color:#fff}
 .tag{display:inline-flex;align-items:center;font-size:11px;padding:3px 10px;border-radius:30px;color:#888;border:1px solid #e2e2e0;white-space:nowrap}
 .tag.subj{color:var(--ink);border-color:#cfcfcf}
-.tag.wait{color:var(--mark);border-color:#e7b9c1;background:var(--mark-soft)}
+.tag.wait{color:var(--warn);border-color:#e6d3ad;background:var(--warn-soft)}
 .tag.done{color:var(--ok);border-color:#bcd6c1;background:var(--ok-soft)}
 .tag.solved{color:#777;background:var(--soft-2);border-color:transparent}
 .tag.pin{background:#111;color:#fff;border-color:#111}
@@ -160,6 +160,15 @@ table.mt{width:100%;border-collapse:collapse;font-size:13px}
 :root{--s0:#2f7f73;--s0-soft:#e8f3f0;--s1:#b2563d;--s1-soft:#f8ece7;--s2:#6a55c2;--s2-soft:#efecfa;--radius:16px}
 body{background:#fafaf8}
 .top{box-shadow:0 1px 0 #ffffff10}
+.dday{display:flex;align-items:baseline;gap:14px;margin-right:auto;padding-left:18px;border-left:1px solid #e2e2e0;color:#1c1c1c;white-space:nowrap;line-height:1.2}
+.dday[hidden]{display:none}
+.dday .dl{font-size:13px;color:#777;letter-spacing:-.01em}.dday .dl i{font-style:normal}.dday .dl .sm,.dday .dl .xs{display:none}
+.dday .dv{display:flex;align-items:baseline;gap:12px}
+.dday b{font-size:21px;font-weight:700;letter-spacing:-.03em}.dday .dt{font-size:21px;font-weight:300;font-variant-numeric:tabular-nums}
+@media(max-width:1380px){.dday .dl .lg{display:none}.dday .dl .sm{display:inline}}
+@media(max-width:1120px){.dday{gap:9px}.dday .dl{font-size:12px}.dday .dl .sm{display:none}.dday .dl .xs{display:inline}.dday b,.dday .dt{font-size:18px}.dday .dv{gap:9px}}
+@media(max-width:480px){.top{column-gap:10px}.dday{gap:6px;padding-left:10px}.dday .dl{font-size:11px}.dday b,.dday .dt{font-size:15px}.dday .dv{gap:6px}}
+@media(max-width:380px){.top{column-gap:8px}.dday .dl{display:none}.dday b,.dday .dt{font-size:14.5px}}
 .intro{position:relative;overflow:hidden;background:#fff}
 .intro::after{content:"";position:absolute;right:-140px;top:-120px;width:560px;height:560px;border-radius:50%;background:radial-gradient(closest-side,#7fd1a84d,#a6d4e333 50%,#b4a2e51f 75%,transparent);pointer-events:none}
 .intro::before{content:"";position:absolute;right:160px;bottom:-170px;width:420px;height:420px;border-radius:50%;background:radial-gradient(closest-side,#4fbf8b38,#86d3b11f 60%,transparent);pointer-events:none}
@@ -265,11 +274,11 @@ body[data-pg=gate] .intro::after{right:-220px;top:-40px;background:radial-gradie
 body[data-pg=gate] .intro::before{right:280px;bottom:-140px;background:radial-gradient(closest-side,#b4a2e533,#a6d4e31a 60%,transparent)}
 @media(max-width:700px){body[data-pg] .intro::after{width:360px;height:360px;right:-160px}body[data-pg=students] .intro::after{right:-60px;top:-200px}}
 /* ===== 컬러 테마: 기본 모노(블랙·그레이·화이트), 과목별 메인 컬러 ===== */
-:root{--s0:#6d4fd0;--s0-soft:#f1edfc;--s1:#b0602a;--s1-soft:#fbefe5;--s2:#23845a;--s2-soft:#e8f6ee;
+:root{--s0:#4a6a9c;--s0-soft:#ebf0f7;--s1:#6b7a45;--s1-soft:#f0f3e6;--s2:#a8434f;--s2-soft:#f8eaec;
   --h1:#1f1f1f1a;--h2:#8f8f8f1f;--h3:#cfcfcf26;--grad:linear-gradient(90deg,#111 0%,#7d7d7d 50%,#d9d9d9 100%)}
-body[data-th="0"]{--h1:#8e6cf04d;--h2:#c9b8ff38;--h3:#e6defd26;--grad:linear-gradient(90deg,#dcd1fd 0%,#a68bf5 45%,#6d4fd0 100%)}
-body[data-th="1"]{--h1:#e08a4a4a;--h2:#f6c58f38;--h3:#a8643a1f;--grad:linear-gradient(90deg,#f7d6ad 0%,#e08a4a 50%,#8f4f25 100%)}
-body[data-th="2"]{--h1:#56c48f4d;--h2:#b8ecd038;--h3:#24865a1f;--grad:linear-gradient(90deg,#c9f1db 0%,#56c48f 50%,#1f7a51 100%)}
+body[data-th="0"]{--h1:#7f9cc74d;--h2:#c9d6ea38;--h3:#44628f1f;--grad:linear-gradient(90deg,#d6e0ee 0%,#7f9cc7 45%,#44628f 100%)}
+body[data-th="1"]{--h1:#9aaa6c4d;--h2:#dbe3c038;--h3:#5f6e3b1f;--grad:linear-gradient(90deg,#e1e7cc 0%,#9aaa6c 50%,#5f6e3b 100%)}
+body[data-th="2"]{--h1:#c9707a4d;--h2:#f0ccd138;--h3:#983a461f;--grad:linear-gradient(90deg,#f0d2d6 0%,#c9707a 50%,#983a46 100%)}
 body .intro::after{background:radial-gradient(closest-side,var(--h1),var(--h2) 50%,var(--h3) 75%,transparent)!important}
 body .intro::before{background:radial-gradient(closest-side,var(--h2),var(--h3) 60%,transparent)!important}
 body:not([data-th=""]) .intro::before{background:radial-gradient(closest-side,var(--h1),var(--h3) 60%,transparent)!important}
@@ -344,6 +353,7 @@ body:not([data-th=""]) .intro::before{background:radial-gradient(closest-side,va
 <body>
 <header class="top gut">
   <a class="brand" href="#board" aria-label="신상명 Q&amp;A 홈"><span class="mark" aria-hidden="true">Q</span><span class="bt"><b>신상명</b><em>Q&amp;A</em></span></a>
+  <div class="dday" id="dday" hidden><span class="dl"><i class="lg">2028학년도 대학수학능력시험 사회탐구 시험</i><i class="sm">2028 수능 사회탐구</i><i class="xs">수능</i></span><span class="dv"><b id="ddn"></b><span class="dt" id="ddt" aria-hidden="true"></span></span></div>
   <div class="topr"><nav class="tabs" id="tabs" aria-label="메뉴"></nav><span class="who-top" id="whotop"></span><button class="btn bar sm" id="logout" hidden>로그아웃</button></div>
 </header>
 <div id="app"><section class="intro gut"><div class="eyebrow">Loading</div><h2>불러오는 중</h2><div class="accent-line"></div><p>잠시만 기다려 주세요.</p></section></div>
@@ -398,6 +408,7 @@ let page="board",openId=null,armed=null;
 let subs=[],qUnsub=null,ansUnsub=null,drafts={},qPub=[],qMine=[];
 let students={},klasses={},prog=[],progUnsub=null,openSid=null;
 let notices={},presence={},seen=null,lastNew=new Set(),notifAsked=false;
+const draftUsed=new Set();
 let armed2=null,mines={},minesLoaded=false,progReady=false,myRec=undefined,mineFilled=false;
 let sms={to:"parent",text:"",sent:new Set(),cur:-1},smsT=[],smsSaved=null;const sf={cls:"all",q:"",st:"on",fold:"all",k:"all"};
 const f={subj:"all",st:"all",q:""};
@@ -469,7 +480,7 @@ function boardView(mode){
   else if(!base.length)body=`<div class="empty"><h2>${mode==="mine"?"아직 올린 질문이 없어요":"아직 질문이 없어요"}</h2><p>${isTeacher?"학생들이 질문을 올리면 여기에 쌓여요.":"모르는 건 그날 바로 물어보세요. 사소한 질문도 환영이에요. 내 질문은 선생님만 볼 수 있어요."}</p></div>`;
   else if(!list.length)body=`<div class="empty"><h2>조건에 맞는 질문이 없어요</h2><p>과목이나 상태, 검색어를 바꿔 보세요.</p></div>`;
   else body=`<div class="qlist">${list.map(q=>{const[sc,sl]=stOf(q);return `<button class="qcard sc${q.subject|0}${q.pinned?" pinned":""}" data-open="${esc(q.id)}">
-    <div class="qmeta">${q.pinned?'<span class="tag pin">고정</span>':""}<span class="tag subj s${q.subject|0}">${esc(SUBJ[q.subject|0])}</span><span class="tag">${esc(KIND[q.kind|0])}</span><span class="tag ${sc}">${sl}</span>${isNewQ(q)?`<span class="tag new">${newLabel(q)}</span>`:""}${isTeacher&&drafts[q.id]&&sc==="wait"?'<span class="tag ai">Claude 초안 있음</span>':""}${isTeacher&&sc==="wait"?(()=>{const wd=Math.floor((Date.now()-ms(q.createdAt))/864e5);return wd>=1?`<span class="tag late${wd>=3?" hot":""}">${wd}일째 대기</span>`:""})():""}<span class="sp"></span><time>${ago(q.createdAt)}</time></div>
+    <div class="qmeta">${q.pinned?'<span class="tag pin">고정</span>':""}<span class="tag subj s${q.subject|0}">${esc(SUBJ[q.subject|0])}</span><span class="tag">${esc(KIND[q.kind|0])}</span><span class="tag ${sc}">${sl}</span>${isNewQ(q)?`<span class="tag new">${newLabel(q)}</span>`:""}${isTeacher&&drafts[q.id]&&!drafts[q.id].done&&sc==="wait"?'<span class="tag ai">Claude 초안 있음</span>':""}${isTeacher&&sc==="wait"?(()=>{const wd=Math.floor((Date.now()-ms(q.createdAt))/864e5);return wd>=1?`<span class="tag late${wd>=3?" hot":""}">${wd}일째 대기</span>`:""})():""}<span class="sp"></span><time>${ago(q.createdAt)}</time></div>
     <div class="sheet"><h3>${esc(q.title)}</h3><p class="pv">${esc(q.body)}</p></div>
     <div class="qact"><span>${esc(nameOf(q))}</span><span class="sp"></span><span>답변 ${q.answerCount|0}</span>${(q.imageIds||[]).length?`<span>사진 ${q.imageIds.length}</span>`:""}</div></button>`}).join("")}</div>`;
   return intro("Q&amp;A",isTeacher?"질문 게시판":"내 질문",isTeacher?"고1 내신 통합사회·한국사, 수능 통합사회":({"0,1":"고1 내신 통합사회·한국사","2":"수능 통합사회"}[mySubj().join()]||"고1 내신 통합사회·한국사, 수능 통합사회")+"<br>내 질문과 답변은 선생님과 나만 볼 수 있어요.",stats)+
@@ -490,7 +501,7 @@ function detailView(q){
   <section class="answers"><div class="sectitle">답변 ${answers.length}</div>
   ${answers.length?answers.map(a=>`<div class="ans${a.teacher?" t":""}"><div class="qmeta"><span class="who">${esc(a.teacher?TEACHER_NAME:nameOf(a))}</span><span class="sp"></span><time>${ago(a.createdAt)}</time></div>
     <div class="sheet"><p class="body">${esc(a.body)}</p>${imgs(a.imageIds)}</div>${isTeacher||a.authorId===me.uid?`<div class="qact"><span class="sp"></span>${del("a:"+esc(a.id))}</div>`:""}</div>`).join(""):`<div class="empty" style="padding:36px 28px"><p>${isTeacher?"아직 답변이 없어요. 아래에서 답변을 달아 주세요.":"선생님이 확인하면 여기에 답변이 달려요."}</p></div>`}
-  ${isTeacher&&drafts[q.id]?`<div class="draft"><div class="qmeta"><span class="who">Claude 초안</span><span class="tag ai">검토 후 등록하세요</span><span class="sp"></span><time>${ago(drafts[q.id].at)}</time></div><div class="sheet"><p class="body">${esc(drafts[q.id].body)}</p></div><div class="qact"><button class="btn primary sm" data-usedraft>답변 칸에 넣고 고치기</button><span class="sp"></span><button class="btn ghost sm" data-deldraft>초안 지우기</button></div></div>`:""}
+  ${isTeacher&&drafts[q.id]&&!drafts[q.id].done?`<div class="draft"><div class="qmeta"><span class="who">Claude 초안</span><span class="tag ai">검토 후 등록하세요</span><span class="sp"></span><time>${ago(drafts[q.id].at)}</time></div><div class="sheet"><p class="body">${esc(drafts[q.id].body)}</p></div><div class="qact"><button class="btn primary sm" data-usedraft>답변 칸에 넣고 고치기</button><span class="sp"></span><button class="btn ghost sm" data-deldraft>초안 지우기</button></div></div>`:""}
   <form class="panel stack composer" id="af"><label class="f">${isTeacher?"선생님 답변":"추가 질문 · 댓글"}<textarea id="ab" maxlength="4000" placeholder="${isTeacher?"핵심 개념 → 풀이 순서 → 비슷한 기출 포인트":"이해 안 되는 부분을 더 물어보거나, 고맙다는 말도 좋아요"}" required></textarea></label>
     <div class="files" id="afiles"></div><div class="err" id="aerr"></div><div class="row"><button class="btn primary" type="submit">${isTeacher?"답변 등록":"댓글 등록"}</button></div></form>
   </section></main>`;
@@ -1000,7 +1011,7 @@ document.addEventListener("submit",async e=>{
     await addDoc(collection(db,"questions",q.id,"answers"),{body:b,authorId:me.uid,authorName:anon?"익명 학생":(isTeacher?TEACHER_NAME:myMember.name),teacher:isTeacher,anon,imageIds:ids,createdAt:serverTimestamp()});
     const up={answerCount:increment(1),lastAt:serverTimestamp()};if(isTeacher&&q.status!=="answered")up.status="answered";
     await updateDoc(doc(db,"questions",q.id),up);
-    if(isTeacher&&drafts[q.id])deleteDoc(doc(db,"drafts",q.id)).catch(()=>{});
+    if(isTeacher&&drafts[q.id]&&!drafts[q.id].done)setDoc(doc(db,"drafts",q.id),{done:true,final:b,used:draftUsed.has(q.id),doneAt:serverTimestamp(),qtitle:q.title||"",qbody:q.body||"",subject:q.subject|0,kind:q.kind|0},{merge:true}).catch(()=>{});
     form.files=[];$("#ab").value="";$("#ab").blur();render();
   }catch(err){errMsg(err,"#aerr")}
   busy=false;const s=document.querySelector("#af [type=submit]");if(s)s.disabled=false;
@@ -1035,7 +1046,7 @@ document.addEventListener("click",async e=>{
   else if(d.img){const v=imgCache[d.img];if(v){const lb=$("#lb");lb.querySelector("img").src=v;lb.classList.add("on")}}
   else if(d.attach){if(form.target!==d.attach){form.target=d.attach;form.files=[]}$("#pick").click()}
   else if(d.rm!==undefined){form.files.splice(+d.rm,1);files(form.target==="q"?"#ffiles":"#afiles",form.target)}
-  else if(d.usedraft!==undefined){const dr=drafts[openId],a=$("#ab");if(dr&&a){a.value=dr.body;a.focus();a.style.height=Math.min(600,a.scrollHeight+20)+"px"}}
+  else if(d.usedraft!==undefined){const dr=drafts[openId],a=$("#ab");if(dr&&a){draftUsed.add(openId);a.value=dr.body;a.focus();a.style.height=Math.min(600,a.scrollHeight+20)+"px"}}
   else if(d.deldraft!==undefined){if(openId)deleteDoc(doc(db,"drafts",openId)).catch(()=>{})}
   else if(d.sf!==undefined){sf.cls=d.sf;render()}
   else if(d.sst!==undefined){sf.st=d.sst;sf.cls="all";sf.fold="all";render()}
@@ -1147,6 +1158,18 @@ if("serviceWorker" in navigator&&location.protocol==="https:"&&window.top===wind
   navigator.serviceWorker.addEventListener("message",e=>{if(e.data&&e.data.hash)location.hash=e.data.hash})}
 /* ---------- 보안: 선생님 계정은 2시간 동안 아무 조작이 없으면 자동 로그아웃 ---------- */
 let lastAct=Date.now();["pointerdown","keydown","scroll","touchstart"].forEach(ev=>addEventListener(ev,()=>{lastAct=Date.now()},{passive:true}));
+/* ---------- 수능 카운트다운: 2028학년도 수능일(2027-11-18) 사회탐구 시작 15:35 (한국 시간) ---------- */
+const DDAY=Date.parse("2027-11-18T15:35:00+09:00");
+function tickDday(){
+  const el=$("#dday"),left=DDAY-Date.now();if(!el)return;
+  if(left<=0){el.hidden=true;return}
+  const k=new Date(Date.now()+9*3600e3),days=Math.round((Date.UTC(2027,10,18)-Date.UTC(k.getUTCFullYear(),k.getUTCMonth(),k.getUTCDate()))/864e5);
+  const sec=Math.floor(left/1000),p=n=>String(n).padStart(2,"0");
+  $("#ddn").textContent=days>0?"D-"+days:"D-DAY";
+  $("#ddt").textContent=Math.floor(sec/3600)+" : "+p(Math.floor(sec/60)%60)+" : "+p(sec%60);
+  el.hidden=false;
+}
+tickDday();setInterval(tickDday,1000);
 setInterval(()=>{if(isTeacher&&auth&&Date.now()-lastAct>2*3600e3){lastAct=Date.now();signOut(auth)}},60e3);
 document.addEventListener("input",async e=>{if(e.target.id==="q"){f.q=e.target.value;render()}
   else if(e.target.id==="sq"){sf.q=e.target.value;render()}
