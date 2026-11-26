@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-D6fgDt1uxu6Ki4iVfqFbCfyMO5PL0wu9VusPtJC5zbY=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://shinsmedu-qa.firebaseapp.com https://www.gstatic.com; frame-src https://shinsmedu-qa.firebaseapp.com https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-D3f0u5NAxfT1ae1K35UuutgzYOSONIvn+zdW/ZmkNOs=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://shinsmedu-qa.firebaseapp.com https://www.gstatic.com; frame-src https://shinsmedu-qa.firebaseapp.com https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#111111">
@@ -177,8 +177,20 @@ table.mt{width:100%;border-collapse:collapse;font-size:13px}
 :root{--s0:#2f7f73;--s0-soft:#e8f3f0;--s1:#b2563d;--s1-soft:#f8ece7;--s2:#6a55c2;--s2-soft:#efecfa;--radius:16px}
 body{background:#fafaf8}
 .top{box-shadow:0 1px 0 #ffffff10}
-.dday{display:flex;align-items:baseline;gap:14px;margin-right:auto;padding-left:18px;border-left:1px solid #e2e2e0;color:#1c1c1c;white-space:nowrap;line-height:1.2}
+.dday{background:none;border:0;border-radius:0;font:inherit;cursor:pointer;text-align:left;display:flex;align-items:baseline;gap:14px;margin-right:auto;padding-left:18px;border-left:1px solid #e2e2e0;color:#1c1c1c;white-space:nowrap;line-height:1.2}
 .dday[hidden]{display:none}
+.dday:hover .dl{color:#111}
+.pgf{border:1px solid #e6e6e2;border-radius:18px;padding:26px 24px;text-align:center;background:#fafaf8}
+.pgf q{display:block;quotes:none;font-size:clamp(20px,3.4vw,27px);font-weight:600;letter-spacing:-.04em;line-height:1.45;color:#111;word-break:keep-all}
+.pgf span{display:block;margin-top:10px;font-size:13px;color:#777}
+.pgl{display:flex;flex-direction:column}
+.pgr{display:grid;grid-template-columns:86px 1fr;gap:2px 14px;padding:13px 2px;border-top:1px solid #eeeeea;align-items:baseline}
+.pgr .y{font-size:13px;color:#777;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pgr .t{font-size:15.5px;color:#111;letter-spacing:-.02em;word-break:keep-all}.pgr .t.no{color:#b5b5b0;font-size:13.5px}
+.pgr .s{grid-column:2;font-size:12.5px;color:#8a8a86}
+.pgr input{grid-column:2}
+.pgnew{display:grid;grid-template-columns:90px 1fr 1fr;gap:8px}.pgnew input:last-child{grid-column:1/-1}
+@media(max-width:480px){.pgr{grid-template-columns:76px 1fr;gap:2px 10px}.pgr .y{font-size:12.5px}.pgnew{grid-template-columns:1fr 1fr}.pgnew input:first-child{grid-column:1/-1}}
 .dday .dl{font-size:13px;color:#777;letter-spacing:-.01em}.dday .dl i{font-style:normal}.dday .dl .sm,.dday .dl .xs{display:none}
 .dday .dv{display:flex;align-items:baseline;gap:12px}
 .dday b{font-size:21px;font-weight:700;letter-spacing:-.03em}.dday .dt{font-size:21px;font-weight:300;font-variant-numeric:tabular-nums}
@@ -376,7 +388,7 @@ body:not([data-th=""]) .intro::before{background:radial-gradient(closest-side,va
 <body>
 <header class="top gut">
   <a class="brand" href="#board" aria-label="신상명 Q&amp;A 홈"><span class="mark" aria-hidden="true"><svg viewBox="0 0 120 120" width="29" height="29"><path d="M14 62L50 26L74 50M46 70L70 94L106 58" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="miter" stroke-miterlimit="8"/></svg><i class="gem"></i></span><span class="bt"><b>신상명</b><em>Q&amp;A</em></span></a>
-  <div class="dday" id="dday" hidden><span class="dl"><i class="lg">2028학년도 대학수학능력시험 사회탐구 시험</i><i class="sm">2028 수능 사회탐구</i><i class="xs">수능</i></span><span class="dv"><b id="ddn"></b><span class="dt" id="ddt" aria-hidden="true"></span></span></div>
+  <button type="button" class="dday" id="dday" data-pg title="역대 수능 필적 확인 문구 보기" hidden><span class="dl"><i class="lg">2028학년도 대학수학능력시험 사회탐구 시험</i><i class="sm">2028 수능 사회탐구</i><i class="xs">수능</i></span><span class="dv"><b id="ddn"></b><span class="dt" id="ddt" aria-hidden="true"></span></span></button>
   <div class="topr"><nav class="tabs" id="tabs" aria-label="메뉴"></nav><a class="who-top" id="whotop" href="#profile" aria-label="프로필"></a><button class="btn bar sm" id="logout" hidden>로그아웃</button></div>
 </header>
 <div id="app"><section class="intro gut"><div class="eyebrow">Loading</div><h2>불러오는 중</h2><div class="accent-line"></div><p>잠시만 기다려 주세요.</p></section></div>
@@ -397,6 +409,7 @@ body:not([data-th=""]) .intro::before{background:radial-gradient(closest-side,va
     </form>
   </div>
 </div>
+<div class="ov" id="pgov" role="dialog" aria-modal="true" aria-label="역대 수능 필적 확인 문구"><div class="modal stack" id="pgbox"></div></div>
 <div class="ov lb" id="lb"><img alt="첨부 사진 크게 보기"></div>
 <input type="file" id="pick" accept="image/*" multiple hidden>
 
@@ -876,6 +889,27 @@ function recView(){
 async function setClasses(id,arr){await setDoc(doc(db,"students",id),{classes:arr,at:serverTimestamp()},{merge:true});if(members[id]){await setDoc(doc(db,"members",id),{classes:arr},{merge:true}).catch(()=>{});await setDoc(doc(db,"mine",id),{klass:klassNames(arr),at:serverTimestamp()},{merge:true}).catch(()=>{})}}
 const classOfCode=code=>{const e=Object.entries(klasses).find(([,k])=>k.code&&k.code===code);return e?e[0]:null};
 
+/* ---------- 역대 수능 필적 확인 문구: 카운트다운을 누르면 열림. 출처(시인·작품)는 고정 목록, 문구는 선생님이 board/pilgi 에 저장 ---------- */
+const PILGI=[[2006,"정지용","향수","흙에서 자란 내 마음 파란 하늘빛"],[2007,"정지용","향수","넓은 벌 동쪽 끝으로 옛이야기"],[2008,"윤동주","소년"],[2009,"윤동주","별 헤는 밤"],[2010,"유안진","지란지교를 꿈꾸며"],[2011,"정채봉","첫 마음"],[2012,"황동규","즐거운 편지"],[2013,"정한모","가을에"],[2014,"박정만","작은 연가"],[2015,"문태준","돌의 배"],[2016,"주요한","청년이여 노래하라"],[2017,"정지용","향수","흙에서 자란 내 마음 파아란 하늘빛"],[2018,"김영랑","바다로 가자"],[2019,"김남조","편지"],[2020,"박두진","별밭에 누워"],[2021,"나태주","들길을 걸으며"],[2022,"이해인","작은 노래 2"],[2023,"한용운","나의 꿈","나의 꿈은 맑은 바람이 되어서"],[2024,"양광모","가장 넓은 길"],[2025,"곽의영","하나뿐인 예쁜 딸아"],[2026,"안규례","아침 산책"],[2027,"강원석","비상"]];
+let pilgi={lines:{},extra:{}},pgEdit=false,pgPick=null;
+function pgRows(){const m=new Map();for(const [y,p,w,dl] of PILGI)m.set(y,{y,p,w,t:dl||""});
+  for(const [y,v] of Object.entries(pilgi.extra||{})){const [p,w]=String(v).split("|");if(!m.has(+y))m.set(+y,{y:+y,p:p||"",w:w||"",t:"",x:true})}
+  for(const [y,v] of Object.entries(pilgi.lines||{})){const r=m.get(+y);if(r&&typeof v==="string"&&v.trim())r.t=v.trim()}
+  return [...m.values()].sort((a,b)=>b.y-a.y)}
+const pgSrc=r=>[r.p,r.w?`「${r.w}」`:""].filter(Boolean).join(" ");
+function renderPg(){const box=$("#pgbox"),rows=pgRows(),has=rows.filter(r=>r.t);
+  if(!pgPick||!has.some(r=>r.y===pgPick))pgPick=has.length?has[Math.floor(Math.random()*has.length)].y:null;
+  const f=has.find(r=>r.y===pgPick);
+  box.innerHTML=`<div class="row" style="justify-content:space-between"><h2 style="font-size:24px">역대 수능 필적 확인 문구</h2><button class="btn ghost" data-close>닫기</button></div>
+  <p class="small" style="margin:0">수능 답안지 필적 확인란에 옮겨 적는 문장이에요. 2006학년도부터 해마다 시 한 구절이 쓰였어요.</p>
+  ${pgEdit?"":f?`<div class="pgf"><q>${esc(f.t)}</q><span>${f.y}학년도 · ${esc(pgSrc(f))}</span></div>${has.length>1?`<div class="row" style="justify-content:center"><button class="btn sm" data-pgnext>다른 해 문구 보기</button></div>`:""}`:""}
+  ${pgEdit?`<form class="stack" id="pgf" data-keep><div class="pgl">${rows.map(r=>`<label class="pgr"><span class="y">${r.y}학년도</span><span class="s" style="grid-column:2">${esc(pgSrc(r))}</span><input type="text" data-pgy="${r.y}" maxlength="60" value="${esc(r.t)}" placeholder="문구를 적어 주세요"></label>`).join("")}</div>
+    <div class="f">한꺼번에 붙여 넣기<textarea id="pgpaste" style="min-height:90px" placeholder="역대 문구 표를 통째로 붙여 넣으면 학년도별 칸에 자동으로 나눠 담아요. (예: 시행 연도 · 학년도 · 문구가 줄마다 이어진 표, 또는 ‘2024학년도 : 문구’ 형식)"></textarea><div class="row"><button class="btn sm" type="button" data-pgfill>칸에 나눠 담기</button><span class="small" id="pgfmsg"></span></div></div>
+    <div class="f">새 학년도 추가<div class="pgnew"><input type="number" id="pgny" min="2028" max="2100" placeholder="학년도"><input type="text" id="pgnp" maxlength="20" placeholder="시인"><input type="text" id="pgnw" maxlength="40" placeholder="작품"><input type="text" id="pgnt" maxlength="60" placeholder="문구"></div></div>
+    <div class="err" id="pgerr"></div><div class="row"><button class="btn primary" type="submit">저장</button><button class="btn ghost" type="button" data-pgedit="0">취소</button></div></form>`
+  :`<div class="pgl">${rows.map(r=>`<div class="pgr"><span class="y">${r.y}학년도</span><span class="t${r.t?"":" no"}">${r.t?esc(r.t):"문구 준비 중"}</span><span class="s">${esc(pgSrc(r))}</span></div>`).join("")}</div>
+  ${isTeacher?`<div class="row"><button class="btn sm" data-pgedit="1">문구 입력 · 수정</button><span class="small">저장하면 학생 화면에 바로 보여요.</span></div>`:""}`}`;
+}
 /* ---------- 그리기 ---------- */
 function tabs(){
   const t=$("#tabs");$("#logout").hidden=!me;{const w=$("#whotop"),nm=me?(isTeacher?TEACHER_NAME:(myMember&&myMember.name)||me.email||""):"";w.innerHTML=me&&inside()?av(me.uid,nm,26,ST())+`<span>${esc(nm)}</span>`:esc(nm);w.style.pointerEvents=me&&inside()?"":"none"}
@@ -937,11 +971,12 @@ async function uploadAll(list,priv,viewer){const ids=[];for(const data of list){
 const errMsg=(e,el)=>{const x=$(el);if(x)x.textContent=e&&e.code==="permission-denied"?"권한이 없어 저장하지 못했어요. (승인이 취소됐거나 입력값이 규칙에 맞지 않아요)":"저장하지 못했어요. 잠시 후 다시 시도해 주세요."};
 
 /* ---------- 데이터 구독 ---------- */
-function clearSubs(){subs.forEach(u=>u());subs=[];if(progUnsub){progUnsub();progUnsub=null}students={};klasses={};prog=[];if(qUnsub){qUnsub();qUnsub=null}if(ansUnsub){ansUnsub();ansUnsub=null}qs=[];qPub=[];qMine=[];drafts={};answers=[];members={};notices={};presence={};profs={};profAsked=new Set();smsSaved=null;mines={};minesLoaded=false;myRec=undefined;mineFilled=false;seen=null;lastNew=new Set();reqs=[];entry=null;qLoaded=false;myMember=undefined;myReq=undefined;myBlocked=undefined;blockedList={};imgCache={}}
+function clearSubs(){subs.forEach(u=>u());subs=[];if(progUnsub){progUnsub();progUnsub=null}students={};klasses={};prog=[];if(qUnsub){qUnsub();qUnsub=null}if(ansUnsub){ansUnsub();ansUnsub=null}qs=[];qPub=[];qMine=[];drafts={};answers=[];members={};notices={};pilgi={lines:{},extra:{}};presence={};profs={};profAsked=new Set();smsSaved=null;mines={};minesLoaded=false;myRec=undefined;mineFilled=false;seen=null;lastNew=new Set();reqs=[];entry=null;qLoaded=false;myMember=undefined;myReq=undefined;myBlocked=undefined;blockedList={};imgCache={}}
 function startBoard(){
   if(qUnsub)return;
   loadSeen();lastNew=new Set();touchPresence();
   subs.push(onSnapshot(collection(db,"notices"),s=>{notices={};s.docs.forEach(d=>notices[d.id]=d.data());render()},()=>{}));
+  subs.push(onSnapshot(doc(db,"board","pilgi"),s=>{const v=s.exists()?s.data():{};pilgi={lines:v.lines||{},extra:v.extra||{}};if($("#pgov").classList.contains("on")&&!pgEdit)renderPg()},()=>{}));
   const sortQ=()=>{const m=new Map();for(const x of [...qPub,...qMine])m.set(x.id,x);qs=[...m.values()].sort((a,b)=>ms(b.createdAt)-ms(a.createdAt));const first=!qLoaded;qLoaded=true;checkNew(first);render()};
   if(ST()){qUnsub=onSnapshot(query(collection(db,"questions"),orderBy("createdAt","desc"),limit(500)),s=>{qPub=s.docs.map(d=>({id:d.id,...d.data()}));qMine=[];sortQ()},()=>{qLoaded=true;render()});
     if(isTeacher)subs.push(onSnapshot(collection(db,"drafts"),s=>{drafts={};s.docs.forEach(d=>drafts[d.id]=d.data());render()},()=>{}));
@@ -1010,7 +1045,7 @@ function openCompose(){
 }
 const saveDraft=()=>{try{localStorage.setItem("qa-draft",JSON.stringify({t:$("#ft").value,b:$("#fb").value,s:form.subj,k:form.kind}))}catch(e){}};
 $("#ft").addEventListener("input",saveDraft);$("#fb").addEventListener("input",saveDraft);
-const close=()=>{$("#compose").classList.remove("on");$("#lb").classList.remove("on");if(form.target==="q")form.files=[];document.body.dataset.th=themeNow()};
+const close=()=>{$("#compose").classList.remove("on");$("#pgov").classList.remove("on");pgEdit=false;$("#lb").classList.remove("on");if(form.target==="q")form.files=[];document.body.dataset.th=themeNow()};
 const randCode=()=>{const a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",r=crypto.getRandomValues(new Uint32Array(8));return [...r].map(x=>a[x%a.length]).join("")};
 
 $("#qf").addEventListener("submit",async e=>{
@@ -1058,6 +1093,15 @@ document.addEventListener("submit",async e=>{
       document.activeElement&&document.activeElement.blur();render();
       if(e.target.id==="sinfo"){const o=$("#sok");if(o){o.textContent="저장했어요";setTimeout(()=>{if(o.isConnected)o.textContent=""},2000)}}
     }catch(err){errMsg(err,e.target.id==="pf"?"#gerr":"#serr")}
+    busy=false;return;
+  }
+  if(e.target.id==="pgf"){
+    e.preventDefault();if(busy||!isTeacher)return;const lines={},extra={...(pilgi.extra||{})};
+    document.querySelectorAll("[data-pgy]").forEach(i=>{const v=i.value.trim();if(v)lines[i.dataset.pgy]=v});
+    const ny=+$("#pgny").value,nt=$("#pgnt").value.trim();
+    if($("#pgny").value||nt){if(!(ny>=2028&&ny<=2100)||!nt){$("#pgerr").textContent="새 학년도는 연도(2028 이후)와 문구를 모두 적어 주세요.";return}
+      lines[ny]=nt;extra[ny]=$("#pgnp").value.trim().replace(/\|/g," ")+"|"+$("#pgnw").value.trim().replace(/\|/g," ")}
+    busy=true;try{await setDoc(doc(db,"board","pilgi"),{lines,extra,at:serverTimestamp()});pilgi={lines,extra};pgEdit=false;renderPg()}catch(err){$("#pgerr").textContent="저장하지 못했어요. 잠시 후 다시 시도해 주세요."}
     busy=false;return;
   }
   if(e.target.id==="rf"){
@@ -1117,6 +1161,16 @@ document.addEventListener("click",async e=>{
   else if(d.ask!==undefined)openCompose();
   else if(d.close!==undefined)close();
   else if(d.rc!==undefined){document.querySelectorAll("#rc button").forEach(b=>b.setAttribute("aria-pressed",b===t))}
+  else if(d.pg!==undefined){pgEdit=false;renderPg();$("#pgov").classList.add("on")}
+  else if(d.pgnext!==undefined){const h=pgRows().filter(r=>r.t&&r.y!==pgPick);if(h.length)pgPick=h[Math.floor(Math.random()*h.length)].y;renderPg()}
+  else if(d.pgfill!==undefined){const L=$("#pgpaste").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean),out={};
+    const clean=x=>x.replace(/\[\[?\d+\]?\]\([^)]*\)/g,"").replace(/\[\d+\]/g,"").replace(/^[‘'"“]+|[’'"”]+$/g,"").trim();
+    for(let i=0;i<L.length;i++){const m=/^(\d{4})\s*학년도\s*[:：]?\s*(.+)$/.exec(L[i]);
+      if(m){out[m[1]]=clean(m[2].replace(/\s*[\(（].*$/,""));continue}
+      if(/^\d{4}$/.test(L[i])&&/^\d{4}$/.test(L[i+1]||"")&&+L[i+1]===+L[i]+1&&L[i+2]&&!/^\d{4}$/.test(L[i+2])){out[L[i+1]]=clean(L[i+2]);i+=2}}
+    let n=0;for(const [y,v] of Object.entries(out)){const i=document.querySelector(`[data-pgy="${y}"]`);if(i&&v){i.value=v.slice(0,60);n++}}
+    $("#pgfmsg").textContent=n?`${n}개 학년도 칸에 담았어요. 확인하고 저장을 눌러 주세요.`:"학년도와 문구를 찾지 못했어요. 표를 그대로 붙여 넣어 주세요."}
+  else if(d.pgedit!==undefined){pgEdit=d.pgedit==="1"&&isTeacher;renderPg()}
   else if(d.rr!==undefined){const n=d.rr==="1";if(n!==regTA){regTA=n;schoolPick=null;$("#rs").value="";regMode()}}
   else if(d.rg!==undefined){document.querySelectorAll("#rg button").forEach(b=>b.setAttribute("aria-pressed",b===t))}
   else if(d.sp!==undefined){const x=(window.__slast||[])[+d.sp];if(x){schoolPick=x;const i=$("#rs");i.value=x.n;$("#slist").hidden=true;i.setAttribute("aria-expanded","false");$("#shint").textContent="✓ "+x.n+(x.r?" ("+x.r+")":"")}}
