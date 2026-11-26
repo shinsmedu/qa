@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-SIGKdxKc3sSc4LZ8LHNHWv/bNnrku5SpQD0NCKJIMSw=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://shinsmedu-qa.firebaseapp.com https://www.gstatic.com; frame-src https://shinsmedu-qa.firebaseapp.com https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-CnpD4fb6Uo1l3c6DCwTKFTyRl7jF+QPvW3Zt/oVHAK4=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://shinsmedu-qa.firebaseapp.com https://www.gstatic.com; frame-src https://shinsmedu-qa.firebaseapp.com https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#111111">
@@ -150,7 +150,11 @@ table.mt{width:100%;border-collapse:collapse;font-size:13px}
 .topr{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .who-top{font-size:12px;color:var(--bar-muted);display:inline-flex;align-items:center;gap:8px;text-decoration:none}
 .av{--s:28px;width:var(--s);height:var(--s);border-radius:50%;flex:none;display:inline-grid;place-items:center;overflow:hidden;background:#ececea;color:#555;font:600 calc(var(--s)*.42)/1 var(--ui);letter-spacing:0;vertical-align:middle}
-.av img{width:100%;height:100%;object-fit:cover;display:block}.av.staff{background:#111;color:#fff}
+.av img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
+/* 선생님 프로필: 가운데 마름모만 홀로그램. 질문 과목에 따라 색이 바뀜 */
+.av.staff{position:relative;color:#fff;background:#111}
+.av.staff .gem{position:absolute;left:50%;top:50%;width:calc(var(--s)*.085);height:calc(var(--s)*.085);transform:translate(-50%,-50%) rotate(45deg);background:var(--gem);background-size:350% 350%;animation:gem 4.5s ease-in-out infinite alternate}
+@media(prefers-reduced-motion:reduce){.av.staff .gem{animation:none}}
 .byline{display:inline-flex;align-items:center;gap:9px}.byline .org{font-size:11.5px;color:#888;font-weight:400;display:block;line-height:1.3}.byline .nm{display:block;line-height:1.3}
 .profbox{display:flex;flex-wrap:wrap;align-items:center;gap:24px 32px}.profbox .info{display:grid;gap:6px}.profbox .info b{font-size:22px;font-weight:600;letter-spacing:-.02em}
 .btn.bar{background:transparent;border-color:#444;color:#ddd}.btn.bar:hover{background:#222}
@@ -791,10 +795,10 @@ function smsForm(){
 }
 function smsRefresh(){const o=$("#smsout");if(o)o.innerHTML=smsOut()}
 /* ---------- 프로필 사진: 96px 원형용 JPEG 한 장을 profiles/{본인}에 저장. 학생 사진은 본인과 선생님만, 선생님 사진은 승인된 학생도 봄 ---------- */
-const SYM_SVG='<svg viewBox="0 0 120 120" width="62%" height="62%" aria-hidden="true"><path d="M14 62L50 26L74 50M46 70L70 94L106 58" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="miter" stroke-miterlimit="8"/><rect x="51" y="51" width="18" height="18" fill="#3fae7e" transform="rotate(45 60 60)"/></svg>';
+const symSvg=sw=>`<svg viewBox="0 0 120 120" width="62%" height="62%" aria-hidden="true"><path d="M14 62L50 26L74 50M46 70L70 94L106 58" fill="none" stroke="#fff" stroke-width="${sw}" stroke-linejoin="miter" stroke-miterlimit="8"/></svg><i class="gem"></i>`;
 function av(uid,name,size,staff){
   const p=profs[uid];if(uid&&!p&&!profAsked.has(uid)&&!isTeacher&&me)needProf(uid);
-  const inner=p&&p.img?`<img src="${esc(p.img)}" alt="">`:staff?SYM_SVG:esc([...(name||"?").trim()][0]||"?");
+  const inner=p&&p.img?`<img src="${esc(p.img)}" alt="">`:staff?symSvg(size>=80?5:size>=40?6.5:8):esc([...(name||"?").trim()][0]||"?");
   return `<span class="av${staff?" staff":""}" style="--s:${size|0}px" aria-hidden="true">${inner}</span>`;
 }
 async function needProf(uid){profAsked.add(uid);try{const d=await getDoc(doc(db,"profiles",uid));if(d.exists()){profs[uid]=d.data();render()}}catch(_){}}
