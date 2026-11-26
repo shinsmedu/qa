@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RdO7eUpwK9o6ZEwZWvFg9brFDHq3OaIDETzBtrnhDw8=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://shinsmedu-qa.firebaseapp.com https://www.gstatic.com; frame-src https://shinsmedu-qa.firebaseapp.com https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-D6fgDt1uxu6Ki4iVfqFbCfyMO5PL0wu9VusPtJC5zbY=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://shinsmedu-qa.firebaseapp.com https://www.gstatic.com; frame-src https://shinsmedu-qa.firebaseapp.com https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#111111">
@@ -160,6 +160,8 @@ table.mt{width:100%;border-collapse:collapse;font-size:13px}
 .foot .ig{margin-left:auto;text-decoration:none;font-weight:400;color:#9a9a9a}.foot .ig b{color:#777;font-weight:500}.foot .ig:hover{color:#777}.foot .ig:hover b{text-decoration:underline;text-underline-offset:3px}
 .policy{max-width:680px;display:grid;gap:30px;font-size:14.5px;line-height:1.9;color:#333;letter-spacing:0}
 .policy h3{font-size:17px;font-weight:600;margin:0 0 10px;color:#111;letter-spacing:-.01em}.policy p{margin:0 0 8px}.policy ul{margin:0;padding-left:20px}.policy li{margin:2px 0}
+#rf.ta .stu,#rf:not(.ta) .tao{display:none}
+.byline .aff{font-weight:400;color:#8a8a86;font-size:.86em;margin-left:6px}
 .agree{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.7;color:#333}.agree input{width:18px;height:18px;margin-top:3px;flex:none}.agree a{color:#111;font-weight:600}
 .byline{display:inline-flex;align-items:center;gap:9px}.byline .org{font-size:11.5px;color:#888;font-weight:400;display:block;line-height:1.3}.byline .nm{display:block;line-height:1.3}
 .profbox{display:flex;flex-wrap:wrap;align-items:center;gap:24px 32px}.profbox .info{display:grid;gap:6px}.profbox .info b{font-size:22px;font-weight:600;letter-spacing:-.02em}
@@ -389,7 +391,7 @@ body:not([data-th=""]) .intro::before{background:radial-gradient(closest-side,va
       <label class="f">제목<input type="text" id="ft" maxlength="80" placeholder="예: 수요·공급 곡선 이동이 헷갈려요" required></label>
       <label class="f">내용<textarea id="fb" maxlength="4000" placeholder="교재 이름·쪽수, 문제 번호, 내가 생각한 풀이를 같이 적으면 더 빨리 답할 수 있어요." required></textarea></label>
       <div class="files" id="ffiles"></div>
-      <p class="small" style="margin:0">🔒 내 질문과 답변은 <b style="color:#111">선생님과 나만</b> 볼 수 있어요. 다른 학생에게는 보이지 않아요.</p>
+      <p class="small" style="margin:0">🔒 내 질문과 답변은 <b style="color:#111">선생님·조교와 나만</b> 볼 수 있어요. 다른 학생에게는 보이지 않아요.</p>
       <div class="err" id="ferr"></div>
       <div class="row"><button class="btn primary" type="submit" id="fsend">질문 등록</button></div>
     </form>
@@ -409,11 +411,15 @@ if(window.top!==window.self){try{window.top.location.replace(window.self.locatio
 const SUBJ=["고1 통합사회","고1 한국사","수능 통합사회"];
 const KIND=["개념 질문","문제 풀이","공부법·시험","기타"];
 const CLS=["학원","과외"];
-const GRADE=["","1학년","2학년","3학년","졸업생(N수)"];
+const GRADE=["","1학년","2학년","3학년","졸업생(N수)","조교"];
+const UNIVS="서울대학교,연세대학교,고려대학교,서강대학교,성균관대학교,한양대학교,중앙대학교,경희대학교,한국외국어대학교,서울시립대학교,이화여자대학교,건국대학교,동국대학교,홍익대학교,국민대학교,숭실대학교,세종대학교,단국대학교,광운대학교,명지대학교,상명대학교,가톨릭대학교,숙명여자대학교,성신여자대학교,서울여자대학교,덕성여자대학교,동덕여자대학교,서울과학기술대학교,한성대학교,서경대학교,삼육대학교,성공회대학교,총신대학교,한국체육대학교,한국예술종합학교,서울교육대학교,경인교육대학교,인하대학교,아주대학교,인천대학교,가천대학교,경기대학교,한국항공대학교,한양대학교 ERICA,한국공학대학교,수원대학교,강남대학교,용인대학교,한신대학교,평택대학교,협성대학교,안양대학교,성결대학교,대진대학교,을지대학교,차의과학대학교,한경국립대학교,강원대학교,한림대학교,연세대학교 미래캠퍼스,강릉원주대학교,춘천교육대학교,상지대학교,가톨릭관동대학교,충남대학교,충북대학교,한국교원대학교,한국기술교육대학교,공주대학교,공주교육대학교,청주교육대학교,한밭대학교,한남대학교,대전대학교,배재대학교,목원대학교,우송대학교,건양대학교,순천향대학교,호서대학교,선문대학교,백석대학교,남서울대학교,나사렛대학교,단국대학교 천안캠퍼스,상명대학교 천안캠퍼스,고려대학교 세종캠퍼스,홍익대학교 세종캠퍼스,한국과학기술원(KAIST),청주대학교,서원대학교,충북보건과학대학교,세명대학교,중부대학교,한서대학교,전북대학교,전주대학교,원광대학교,군산대학교,우석대학교,전주교육대학교,전남대학교,조선대학교,광주과학기술원(GIST),광주교육대학교,호남대학교,광주대학교,동신대학교,목포대학교,순천대학교,목포해양대학교,경북대학교,영남대학교,계명대학교,대구대학교,대구가톨릭대학교,대구교육대학교,대구경북과학기술원(DGIST),포항공과대학교(POSTECH),한동대학교,금오공과대학교,안동대학교,경일대학교,대구한의대학교,동국대학교 WISE캠퍼스,부산대학교,부경대학교,동아대학교,한국해양대학교,부산교육대학교,동의대학교,경성대학교,부산외국어대학교,신라대학교,동서대학교,인제대학교,고신대학교,울산대학교,울산과학기술원(UNIST),경상국립대학교,창원대학교,경남대학교,진주교육대학교,제주대학교,한국방송통신대학교,육군사관학교,해군사관학교,공군사관학교,경찰대학".split(",");let regTA=false;
+function findUnivs(q){q=q.replace(/\s+/g,"").replace(/(대학교|대학|대)$/,"");if(!q)return[];const a=[],b=[];for(const n of UNIVS){const k=n.replace(/\s+/g,"");if(k.startsWith(q))a.push({n,r:""});else if(k.includes(q))b.push({n,r:""})}return [...a,...b].slice(0,8)}
+const S_HINT="전국 고등학교 2,401곳에서 찾아요. 목록에 없으면 그대로 입력해도 돼요.",U_HINT="대학교 이름을 검색해서 고르세요. 목록에 없으면 그대로 입력해도 돼요.";
+function regMode(){const f=$("#rf");if(!f)return;f.classList.toggle("ta",regTA);document.querySelectorAll("#rr button").forEach(b=>b.setAttribute("aria-pressed",String((b.dataset.rr==="1")===regTA)));const i=$("#rs");i.placeholder=regTA?"대학교 이름 검색 (예: 충남대)":"학교 이름 검색 (예: 한빛고)";$("#rslab").textContent=regTA?"대학교":"학교";$("#rplab").textContent=regTA?"전화번호":"학생 전화번호";$("#shint").textContent=regTA?U_HINT:S_HINT;$("#rpp").required=!regTA;$("#slist").hidden=true}
 const subjFor=g=>g===1?[0,1]:(g===3||g===4)?[2]:[0,1,2];
 const grpOf=g=>g===1?"고1 내신":(g===3||g===4)?"수능 대비":g===2?"고2":"";
-const mySubj=()=>isTeacher?[0,1,2]:subjFor((myMember&&myMember.grade)|0);
-const who=m=>[m.school,GRADE[m.grade|0]].filter(Boolean).join(" · ");
+const mySubj=()=>ST()?[0,1,2]:subjFor((myMember&&myMember.grade)|0);
+const who=m=>[m.school,m.dept,GRADE[m.grade|0]].filter(Boolean).join(" · ");
 let SCHOOLS=null,schoolPick=null,schoolLoad=null;
 function loadSchools(){if(SCHOOLS||schoolLoad)return schoolLoad;schoolLoad=(window.__SCHOOLS_TXT?Promise.resolve(window.__SCHOOLS_TXT):fetch("schools.txt").then(r=>r.ok?r.text():"")).then(t=>{SCHOOLS=[];for(const line of t.split("\n")){const i=line.indexOf(":");if(i<0)continue;const [sido,gu]=line.slice(0,i).split("/");for(const n of line.slice(i+1).split(",")){if(!n)continue;const full=n[0]==="!"?n.slice(1):n+"고등학교";SCHOOLS.push({n:full,b:n[0]==="!"?full:n,r:(sido+" "+(gu||"")).trim()})}}}).catch(()=>{SCHOOLS=[]});return schoolLoad}
 function findSchools(q){q=q.replace(/\s+/g,"").replace(/(고등학교|고교|고)$/,"");if(!q||!SCHOOLS)return[];const e=[],a=[],b=[];for(const x of SCHOOLS){const k=x.b.replace(/\s+/g,"");if(k===q)e.push(x);else if(k.startsWith(q))a.push(x);else if(k.includes(q)||x.r.replace(/\s+/g,"").includes(q))b.push(x)}return [...e,...a,...b].slice(0,8)}
@@ -425,6 +431,7 @@ let app0,auth,db;
 try{app0=initializeApp(firebaseConfig);auth=getAuth(app0);db=getFirestore(app0)}catch(e){}
 
 let me=null,isTeacher=false,ready=false,qLoaded=false,busy=false;
+const isTA=()=>!isTeacher&&!!(myMember&&myMember.status==="approved"&&myMember.role==="ta"),ST=()=>isTeacher||isTA();
 let myBlocked=undefined,blockedList={},myMember=undefined,myReq=undefined,members={},reqs=[],qs=[],answers=[],entry=null,imgCache={};
 let page="board",openId=null,armed=null;
 let subs=[],qUnsub=null,ansUnsub=null,drafts={},qPub=[],qMine=[];
@@ -468,17 +475,19 @@ function gateView(g){
   if(g==="signin")return intro("Members only","로그인해 주세요","신상명 선생님 수업 학생 전용 질문 게시판이에요. 구글 계정으로 로그인한 뒤, 입장 코드로 승인을 신청하세요.")+
     `<main class="gut"><div class="panel gate stack">${/KAKAOTALK|Instagram|FBAN|FBAV|NAVER|Line\/|DaumApps|everytimeApp/i.test(navigator.userAgent)?`<div class="banner" style="margin:0">지금은 앱 안의 브라우저로 열려 있어서 구글 로그인이 막혀요. 오른쪽 위 메뉴(⋮ 또는 공유)에서 <b>다른 브라우저로 열기</b>를 눌러 크롬이나 사파리에서 열어 주세요.</div>`:""}<div class="row"><button class="btn primary gbtn" data-login>Google 계정으로 로그인</button></div><div class="err" id="lerr"></div><p class="small" style="margin:0">로그인하면 이름·이메일이 선생님께만 전달돼요. 다른 학생에게는 보이지 않아요.</p></div></main>`;
   if(g==="banned")return intro("Restricted","이용이 제한됐어요","이 계정은 선생님이 게시판 이용을 제한했어요. 문의할 내용이 있으면 선생님께 직접 연락해 주세요.");
-  if(g==="pending")return intro("Waiting","승인 기다리는 중",`<b style="color:#111">${esc(myReq.name)}</b> 학생의 입장 요청이 선생님께 전달됐어요. 승인되면 이 화면이 바로 게시판으로 바뀌어요.`,`<p class="small" style="margin-top:14px">${esc(CLS[myReq.cls|0])} · ${esc(who(myReq))} · ${esc(me.email||"")}</p>`);
+  if(g==="pending")return intro("Waiting","승인 기다리는 중",`<b style="color:#111">${esc(myReq.name)}</b> ${(myReq.grade|0)===5?"조교":"학생"}의 입장 요청이 선생님께 전달됐어요. 승인되면 이 화면이 바로 게시판으로 바뀌어요.`,`<p class="small" style="margin-top:14px">${(myReq.grade|0)===5?"":esc(CLS[myReq.cls|0])+" · "}${esc(who(myReq))} · ${esc(me.email||"")}</p>`);
   const rej=g==="rejected";
   return intro("Members only",rej?"승인되지 않았어요":"입장 승인 신청",rej?"선생님이 요청을 승인하지 않았어요. 정보를 확인해 다시 신청하거나 선생님께 직접 문의해 주세요.":"수업 시간에 받은 입장 코드를 넣어야 신청할 수 있어요. 선생님이 확인 후 승인해 드려요.")+
-  `<main class="gut"><form class="panel stack gate" id="rf" autocomplete="off">
+  `<main class="gut"><form class="panel stack gate${regTA?" ta":""}" id="rf" autocomplete="off">
     <label class="f">입장 코드<input type="text" id="rcode" maxlength="40" required placeholder="선생님께 받은 코드" autocapitalize="characters" spellcheck="false"></label>
-    <div class="f">수업<div class="seg" id="rc">${CLS.map((c,i)=>`<button type="button" data-rc="${i}" aria-pressed="false">${c}</button>`).join("")}</div></div>
-    <div class="f">학교<div class="sbox"><input type="text" id="rs" maxlength="40" required placeholder="학교 이름 검색 (예: 한빛고)" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="slist"><div class="slist" id="slist" role="listbox" hidden></div></div><span class="hint" id="shint">전국 고등학교 2,401곳에서 찾아요. 목록에 없으면 그대로 입력해도 돼요.</span></div>
-    <div class="f">학년<div class="seg" id="rg">${[1,2,3,4].map(g=>`<button type="button" data-rg="${g}" aria-pressed="false">${GRADE[g]}</button>`).join("")}</div></div>
+    <div class="f">구분<div class="seg" id="rr"><button type="button" data-rr="0" aria-pressed="${!regTA}">학생</button><button type="button" data-rr="1" aria-pressed="${regTA}">조교</button></div></div>
+    <div class="f stu">수업<div class="seg" id="rc">${CLS.map((c,i)=>`<button type="button" data-rc="${i}" aria-pressed="false">${c}</button>`).join("")}</div></div>
+    <div class="f"><span id="rslab">학교</span><div class="sbox"><input type="text" id="rs" maxlength="40" required placeholder="학교 이름 검색 (예: 한빛고)" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="slist"><div class="slist" id="slist" role="listbox" hidden></div></div><span class="hint" id="shint">${regTA?U_HINT:S_HINT}</span></div>
+    <label class="f tao">학과<input type="text" id="rd" maxlength="30" placeholder="예: 사회교육과"></label>
+    <div class="f stu">학년<div class="seg" id="rg">${[1,2,3,4].map(g=>`<button type="button" data-rg="${g}" aria-pressed="false">${GRADE[g]}</button>`).join("")}</div></div>
     <label class="f">이름 (실명)<input type="text" id="rn" maxlength="20" required placeholder="홍길동"></label>
-    <label class="f">학생 전화번호<input type="tel" id="rp" maxlength="20" required inputmode="tel" autocomplete="tel" placeholder="010-0000-0000"></label>
-    <label class="f">학부모 전화번호<input type="tel" id="rpp" maxlength="20" required inputmode="tel" placeholder="010-0000-0000"></label>
+    <label class="f"><span id="rplab">학생 전화번호</span><input type="tel" id="rp" maxlength="20" required inputmode="tel" autocomplete="tel" placeholder="010-0000-0000"></label>
+    <label class="f stu">학부모 전화번호<input type="tel" id="rpp" maxlength="20" ${regTA?"":"required "}inputmode="tel" placeholder="010-0000-0000"></label>
     <label class="agree"><input type="checkbox" id="ragree"><span>[필수] 입력한 정보를 수업 관리와 질문 답변에 이용하는 데 동의합니다. <a href="#privacy" target="_blank" rel="noopener">개인정보 처리방침 보기</a></span></label>
     <div class="err" id="rerr"></div>
     <div class="row"><button class="btn primary" type="submit">승인 신청 보내기</button></div>
@@ -496,23 +505,23 @@ function boardView(mode){
   const base=mode==="mine"?qs.filter(q=>q.authorId===me.uid):qs,wk=Date.now()-7*864e5;
   const cnt=fn=>base.filter(fn).length;
   const waits=base.filter(q=>stOf(q)[0]==="wait"),oldest=waits.length?Math.floor((Date.now()-Math.min(...waits.map(q=>ms(q.createdAt))))/864e5):0;
-  const stats=`<div class="stats">${[[base.length,"전체 질문"],[waits.length,"답변 대기"],...(isTeacher&&waits.length?[[oldest+"일","가장 오래 기다린 질문"]]:[[cnt(q=>ms(q.createdAt)>wk),"이번 주"]])].map(([n,l])=>`<div><b>${n}</b><span>${l}</span></div>`).join("")}</div>`;
+  const stats=`<div class="stats">${[[base.length,"전체 질문"],[waits.length,"답변 대기"],...(ST()&&waits.length?[[oldest+"일","가장 오래 기다린 질문"]]:[[cnt(q=>ms(q.createdAt)>wk),"이번 주"]])].map(([n,l])=>`<div><b>${n}</b><span>${l}</span></div>`).join("")}</div>`;
   const tree=(items,key)=>`<div class="tree">${items.map(([v,l,n])=>`<button data-${key}="${v}" aria-pressed="${f[key]===v}"><span>${key==="subj"&&v!=="all"?`<i class="dot" style="background:var(--s${v})"></i>`:""}${l}</span><span class="n">${n}</span></button>`).join("")}</div>`;
   let list=filtered(base);
-  if(isTeacher&&f.st==="wait")list=[...list].sort((a,b)=>ms(a.createdAt)-ms(b.createdAt));
+  if(ST()&&f.st==="wait")list=[...list].sort((a,b)=>ms(a.createdAt)-ms(b.createdAt));
   let body;
   if(!qLoaded)body=`<div class="empty"><h2>불러오는 중</h2></div>`;
-  else if(!base.length)body=`<div class="empty"><h2>${mode==="mine"?"아직 올린 질문이 없어요":"아직 질문이 없어요"}</h2><p>${isTeacher?"학생들이 질문을 올리면 여기에 쌓여요.":"모르는 건 그날 바로 물어보세요. 사소한 질문도 환영이에요. 내 질문은 선생님만 볼 수 있어요."}</p></div>`;
+  else if(!base.length)body=`<div class="empty"><h2>${mode==="mine"?"아직 올린 질문이 없어요":"아직 질문이 없어요"}</h2><p>${ST()?"학생들이 질문을 올리면 여기에 쌓여요.":"모르는 건 그날 바로 물어보세요. 사소한 질문도 환영이에요. 내 질문은 선생님과 조교만 볼 수 있어요."}</p></div>`;
   else if(!list.length)body=`<div class="empty"><h2>조건에 맞는 질문이 없어요</h2><p>과목이나 상태, 검색어를 바꿔 보세요.</p></div>`;
   else body=`<div class="qlist">${list.map(q=>{const[sc,sl]=stOf(q);return `<button class="qcard sc${q.subject|0}${q.pinned?" pinned":""}" data-open="${esc(q.id)}">
-    <div class="qmeta">${q.pinned?'<span class="tag pin">고정</span>':""}<span class="tag subj s${q.subject|0}">${esc(SUBJ[q.subject|0])}</span><span class="tag">${esc(KIND[q.kind|0])}</span><span class="tag ${sc}">${sl}</span>${isNewQ(q)?`<span class="tag new">${newLabel(q)}</span>`:""}${isTeacher&&drafts[q.id]&&!drafts[q.id].done&&sc==="wait"?'<span class="tag ai">Claude 초안 있음</span>':""}${isTeacher&&sc==="wait"?(()=>{const wd=Math.floor((Date.now()-ms(q.createdAt))/864e5);return wd>=1?`<span class="tag late${wd>=3?" hot":""}">${wd}일째 대기</span>`:""})():""}<span class="sp"></span><time>${ago(q.createdAt)}</time></div>
+    <div class="qmeta">${q.pinned?'<span class="tag pin">고정</span>':""}<span class="tag subj s${q.subject|0}">${esc(SUBJ[q.subject|0])}</span><span class="tag">${esc(KIND[q.kind|0])}</span><span class="tag ${sc}">${sl}</span>${isNewQ(q)?`<span class="tag new">${newLabel(q)}</span>`:""}${isTeacher&&drafts[q.id]&&!drafts[q.id].done&&sc==="wait"?'<span class="tag ai">Claude 초안 있음</span>':""}${ST()&&sc==="wait"?(()=>{const wd=Math.floor((Date.now()-ms(q.createdAt))/864e5);return wd>=1?`<span class="tag late${wd>=3?" hot":""}">${wd}일째 대기</span>`:""})():""}<span class="sp"></span><time>${ago(q.createdAt)}</time></div>
     <div class="sheet"><h3>${esc(q.title)}</h3><p class="pv">${esc(q.body)}</p></div>
     <div class="qact"><span>${esc(nameOf(q))}</span><span class="sp"></span><span>답변 ${q.answerCount|0}</span>${(q.imageIds||[]).length?`<span>사진 ${q.imageIds.length}</span>`:""}</div></button>`}).join("")}</div>`;
-  return intro("Q&amp;A",isTeacher?"질문 게시판":"내 질문",isTeacher?"고1 내신 통합사회·한국사, 수능 통합사회":({"0,1":"고1 내신 통합사회·한국사","2":"수능 통합사회"}[mySubj().join()]||"고1 내신 통합사회·한국사, 수능 통합사회")+"<br>내 질문과 답변은 선생님과 나만 볼 수 있어요.",stats)+
+  return intro("Q&amp;A",ST()?"질문 게시판":"내 질문",ST()?"고1 내신 통합사회·한국사, 수능 통합사회":({"0,1":"고1 내신 통합사회·한국사","2":"수능 통합사회"}[mySubj().join()]||"고1 내신 통합사회·한국사, 수능 통합사회")+"<br>내 질문과 답변은 선생님·조교와 나만 볼 수 있어요.",stats)+
   `<main class="gut">${notifBanner()}${noticeBanners()}<div class="bank"><aside class="side">
-    <div><div class="sectitle">과목</div>${tree([["all","전체",base.length],...(isTeacher?[0,1,2]:mySubj()).map(i=>[String(i),SUBJ[i],cnt(q=>q.subject===i)])],"subj")}</div>
+    <div><div class="sectitle">과목</div>${tree([["all","전체",base.length],...mySubj().map(i=>[String(i),SUBJ[i],cnt(q=>q.subject===i)])],"subj")}</div>
     <div><div class="sectitle">상태</div>${tree([["all","모든 질문",base.length],["wait","답변 대기",cnt(q=>stOf(q)[0]==="wait")],["done","답변 완료",cnt(q=>stOf(q)[0]==="done")],["solved","해결 완료",cnt(q=>stOf(q)[0]==="solved")]],"st")}</div>
-  </aside><div><div class="listbar"><input type="search" id="q" placeholder="제목·내용 검색 (예: 시장 실패, 흥선 대원군)" aria-label="검색" value="${esc(f.q)}">${isTeacher?"":'<button class="btn primary" data-ask>질문하기</button>'}</div>${body}</div></div></main>`;
+  </aside><div><div class="listbar"><input type="search" id="q" placeholder="제목·내용 검색 (예: 시장 실패, 흥선 대원군)" aria-label="검색" value="${esc(f.q)}">${ST()?"":'<button class="btn primary" data-ask>질문하기</button>'}</div>${body}</div></div></main>`;
 }
 function detailView(q){
   const[sc,sl]=stOf(q),mine=q.authorId===me.uid;
@@ -524,11 +533,11 @@ function detailView(q){
     ${isTeacher||mine?`<div class="qact"><button class="btn sm" data-solve>${q.solved?"해결 표시 취소":"해결됐어요"}</button>${isTeacher?`<button class="btn sm" data-pin>${q.pinned?"고정 해제":"맨 위에 고정"}</button>`:""}<span class="sp"></span>${del("q")}</div>`:""}
   </article>
   <section class="answers"><div class="sectitle">답변 ${answers.length}</div>
-  ${answers.length?answers.map(a=>`<div class="ans${a.teacher?" t":""}"><div class="qmeta"><span class="who">${byline(a)}</span><span class="sp"></span><time>${ago(a.createdAt)}</time></div>
-    <div class="sheet"><p class="body">${esc(a.body)}</p>${imgs(a.imageIds)}</div>${isTeacher||a.authorId===me.uid?`<div class="qact"><span class="sp"></span>${del("a:"+esc(a.id))}</div>`:""}</div>`).join(""):`<div class="empty" style="padding:36px 28px"><p>${isTeacher?"아직 답변이 없어요. 아래에서 답변을 달아 주세요.":"선생님이 확인하면 여기에 답변이 달려요."}</p></div>`}
+  ${answers.length?answers.map(a=>`<div class="ans${a.teacher||a.ta?" t":""}"><div class="qmeta"><span class="who">${byline(a)}</span><span class="sp"></span><time>${ago(a.createdAt)}</time></div>
+    <div class="sheet"><p class="body">${esc(a.body)}</p>${imgs(a.imageIds)}</div>${isTeacher||a.authorId===me.uid?`<div class="qact"><span class="sp"></span>${del("a:"+esc(a.id))}</div>`:""}</div>`).join(""):`<div class="empty" style="padding:36px 28px"><p>${ST()?"아직 답변이 없어요. 아래에서 답변을 달아 주세요.":"선생님이 확인하면 여기에 답변이 달려요."}</p></div>`}
   ${isTeacher&&drafts[q.id]&&!drafts[q.id].done?`<div class="draft"><div class="qmeta"><span class="who">Claude 초안</span><span class="tag ai">검토 후 등록하세요</span><span class="sp"></span><time>${ago(drafts[q.id].at)}</time></div><div class="sheet"><p class="body">${esc(drafts[q.id].body)}</p></div><div class="qact"><button class="btn primary sm" data-usedraft>답변 칸에 넣고 고치기</button><span class="sp"></span><button class="btn ghost sm" data-deldraft>초안 지우기</button></div></div>`:""}
-  <form class="panel stack composer" id="af"><label class="f">${isTeacher?"선생님 답변":"추가 질문 · 댓글"}<textarea id="ab" maxlength="4000" placeholder="${isTeacher?"핵심 개념 → 풀이 순서 → 비슷한 기출 포인트":"이해 안 되는 부분을 더 물어보거나, 고맙다는 말도 좋아요"}" required></textarea></label>
-    <div class="files" id="afiles"></div><div class="err" id="aerr"></div><div class="row"><button class="btn primary" type="submit">${isTeacher?"답변 등록":"댓글 등록"}</button></div></form>
+  <form class="panel stack composer" id="af"><label class="f">${isTeacher?"선생님 답변":isTA()?"조교 답변":"추가 질문 · 댓글"}<textarea id="ab" maxlength="4000" placeholder="${ST()?"핵심 개념 → 풀이 순서 → 비슷한 기출 포인트":"이해 안 되는 부분을 더 물어보거나, 고맙다는 말도 좋아요"}" required></textarea></label>
+    <div class="files" id="afiles"></div><div class="err" id="aerr"></div><div class="row"><button class="btn primary" type="submit">${ST()?"답변 등록":"댓글 등록"}</button></div></form>
   </section></main>`;
 }
 
@@ -544,11 +553,12 @@ function adminView(){
     ${code?`<div class="row"><span class="code">${esc(code)}</span><button class="btn sm" data-copy>복사</button></div>`:`<p style="margin:0;color:var(--mark)">아직 입장 코드가 없어요. 코드를 만들기 전에는 아무도 신청할 수 없어요.</p>`}
     <div class="row"><button class="btn primary sm" data-newcode>${code?"새 코드로 바꾸기":"코드 만들기"}</button><input type="text" id="mycode" maxlength="40" placeholder="직접 정하기 (8자 이상)" style="max-width:240px"><button class="btn sm" data-setcode>저장</button></div>
     <div class="err" id="cerr"></div>
+    <p class="small" style="margin:0">조교는 가입 화면에서 ‘조교’를 고르고 대학교·학과를 적어 신청해요. <b>조교로 승인</b>을 누르면 바로 조교가 되고, 아래 ‘승인된 학생’에서 지정·해제할 수도 있어요. 조교는 질문을 보고 답변만 달 수 있고, 학생 관리·승인 관리·연락처·수강료는 볼 수 없어요.</p>
     <p class="small" style="margin:0">코드가 퍼졌다면 바로 바꾸세요. 이미 승인된 학생은 영향 없고, 새로 신청하는 학생만 새 코드가 필요해요.</p></section>
-  <section><div class="sectitle">승인 대기</div>${pend.length?`<div class="reqs">${pend.map(r=>`<div class="req"><div class="qmeta"><span class="tag subj">${esc(CLS[r.cls|0])}</span>${r.code&&classOfCode(r.code)?`<span class="tag kl">→ ${esc(klasses[classOfCode(r.code)].name)}</span>`:""}${members[r.id]?'<span class="tag wait">재신청</span>':""}<span class="sp"></span><time>${ago(r.at)}</time></div>
-    <div class="sheet"><b>${esc(r.name)}</b> <span class="small">· ${esc(who(r))}${r.region?" ("+esc(r.region)+")":""}</span><p class="small" style="margin:4px 0 0">${esc(r.email)}${r.phone?" · 학생 "+esc(r.phone):""}${r.parent?" · 학부모 "+esc(r.parent):""}</p>${r.msg?`<p class="small" style="margin:6px 0 0;color:#555">“${esc(r.msg)}”</p>`:""}</div>
-    <div class="qact"><button class="btn primary sm" data-approve="${esc(r.id)}">승인</button><button class="btn danger sm" data-reject="${esc(r.id)}">거절</button><span class="sp"></span>${banBtn(r.id)}</div></div>`).join("")}</div>`:`<div class="empty" style="padding:36px 28px"><p>새 입장 신청이 없어요.</p></div>`}</section>
-  <section><div class="sectitle">승인된 학생 ${approved.length}</div>${approved.length?`<table class="mt stk"><thead><tr><th>이름</th><th>학교 · 학년</th><th>수업</th><th>이메일</th><th>승인일</th><th>질문</th><th></th></tr></thead><tbody>${approved.map(([id,m])=>`<tr><td data-l="이름">${esc(m.name)}</td><td data-l="학교·학년">${esc(who(m))}</td><td data-l="수업">${esc(CLS[m.cls|0])}</td><td data-l="이메일">${esc(m.email)}</td><td class="c" data-l="승인일">${day(m.at)}</td><td class="c" data-l="질문">${qn(id)}</td><td style="text-align:right">${armed==="x:"+id?`<button class="btn danger sm" data-revoke="${esc(id)}">정말 취소할까요?</button>`:`<button class="btn ghost sm" data-arm="x:${esc(id)}">승인 취소</button>`} ${banBtn(id)}</td></tr>`).join("")}</tbody></table>`:`<div class="empty" style="padding:36px 28px"><p>아직 승인한 학생이 없어요.</p></div>`}</section>
+  <section><div class="sectitle">승인 대기</div>${pend.length?`<div class="reqs">${pend.map(r=>`<div class="req"><div class="qmeta">${(r.grade|0)===5?'<span class="tag kl">조교 신청</span>':`<span class="tag subj">${esc(CLS[r.cls|0])}</span>`}${r.code&&classOfCode(r.code)?`<span class="tag kl">→ ${esc(klasses[classOfCode(r.code)].name)}</span>`:""}${members[r.id]?'<span class="tag wait">재신청</span>':""}<span class="sp"></span><time>${ago(r.at)}</time></div>
+    <div class="sheet"><b>${esc(r.name)}</b> <span class="small">· ${esc(who(r))}${r.region?" ("+esc(r.region)+")":""}</span><p class="small" style="margin:4px 0 0">${esc(r.email)}${r.phone?((r.grade|0)===5?" · 전화 ":" · 학생 ")+esc(r.phone):""}${r.parent?" · 학부모 "+esc(r.parent):""}</p>${r.msg?`<p class="small" style="margin:6px 0 0;color:#555">“${esc(r.msg)}”</p>`:""}</div>
+    <div class="qact"><button class="btn primary sm" data-approve="${esc(r.id)}">${(r.grade|0)===5?"조교로 승인":"승인"}</button><button class="btn danger sm" data-reject="${esc(r.id)}">거절</button><span class="sp"></span>${banBtn(r.id)}</div></div>`).join("")}</div>`:`<div class="empty" style="padding:36px 28px"><p>새 입장 신청이 없어요.</p></div>`}</section>
+  <section><div class="sectitle">승인된 학생 ${approved.length}</div>${approved.length?`<table class="mt stk"><thead><tr><th>이름</th><th>학교 · 학년</th><th>수업</th><th>이메일</th><th>승인일</th><th>질문</th><th></th></tr></thead><tbody>${approved.map(([id,m])=>`<tr><td data-l="이름">${esc(m.name)}${m.role==="ta"?' <span class="tag kl">조교</span>':""}</td><td data-l="학교·학년">${esc(who(m))}</td><td data-l="수업">${m.role==="ta"?"-":esc(CLS[m.cls|0])}</td><td data-l="이메일">${esc(m.email)}</td><td class="c" data-l="승인일">${day(m.at)}</td><td class="c" data-l="질문">${qn(id)}</td><td style="text-align:right"><button class="btn sm" data-ta="${esc(id)}">${m.role==="ta"?"조교 해제":"조교로 지정"}</button> ${armed==="x:"+id?`<button class="btn danger sm" data-revoke="${esc(id)}">정말 취소할까요?</button>`:`<button class="btn ghost sm" data-arm="x:${esc(id)}">승인 취소</button>`} ${banBtn(id)}</td></tr>`).join("")}</tbody></table>`:`<div class="empty" style="padding:36px 28px"><p>아직 승인한 학생이 없어요.</p></div>`}</section>
   ${rej.length?`<section><div class="sectitle">거절 · 취소 ${rej.length}</div><table class="mt stk"><thead><tr><th>이름</th><th>학교 · 학년</th><th>이메일</th><th>처리일</th><th></th></tr></thead><tbody>${rej.map(([id,m])=>`<tr><td data-l="이름">${esc(m.name)}</td><td data-l="학교·학년">${esc(who(m))}</td><td data-l="이메일">${esc(m.email)}</td><td class="c" data-l="처리일">${day(m.at)}</td><td style="text-align:right"><button class="btn ok sm" data-approve="${esc(id)}">다시 승인</button> ${banBtn(id)}</td></tr>`).join("")}</tbody></table></section>`:""}
   <section><div class="sectitle">차단된 사람 ${ban.length}</div>${ban.length?`<table class="mt stk"><thead><tr><th>이름</th><th>학교 · 학년</th><th>이메일</th><th>차단일</th><th></th></tr></thead><tbody>${ban.map(([id,m])=>`<tr><td data-l="이름">${esc(m.name)}</td><td data-l="학교·학년">${esc(who(m))}</td><td data-l="이메일">${esc(m.email)}</td><td class="c" data-l="차단일">${day(m.at)}</td><td style="text-align:right;white-space:nowrap"><button class="btn sm" data-unban="${esc(id)}">차단 해제</button> ${armed==="d:"+id?`<button class="btn danger sm" data-purge="${esc(id)}">질문·기록까지 모두 지울까요?</button>`:`<button class="btn ghost sm" data-arm="d:${esc(id)}">완전 삭제</button>`}</td></tr>`).join("")}</tbody></table>`:`<div class="empty" style="padding:36px 28px"><p>차단한 사람이 없어요. 문제가 있는 사람은 위 목록에서 ‘차단’을 누르면 바로 게시판에서 막히고, 다시 신청할 수도 없어요.</p></div>`}
     <div class="err" id="berr"></div>
@@ -577,7 +587,7 @@ function sugFolder(xs){
 const allFolders=()=>[...new Set(Object.values(students).filter(x=>x.state==="done"&&x.folder).map(x=>x.folder))].sort((a,b)=>b.localeCompare(a,"ko"));
 const folderList=id=>`<datalist id="${id}">${allFolders().map(f=>`<option value="${esc(f)}"></option>`).join("")}</datalist>`;
 const pick=new Set();
-const personOf=id=>{const m=members[id];if(m&&m.status==="approved")return m;const s=students[id];return s&&s.manual?{name:s.name||"학생",school:s.school||"",grade:s.grade|0,cls:s.cls|0,region:"",email:"",manual:true}:null};
+const personOf=id=>{const m=members[id];if(m&&m.status==="approved"&&m.role!=="ta")return m;const s=students[id];return s&&s.manual?{name:s.name||"학생",school:s.school||"",grade:s.grade|0,cls:s.cls|0,region:"",email:"",manual:true}:null};
 const kList=()=>Object.entries(klasses).sort((a,b)=>(a[1].name||"").localeCompare(b[1].name||"","ko"));
 const kTags=s=>(s.classes||[]).filter(k=>klasses[k]).map(k=>`<span class="tag kl k${klasses[k].subj??-1}">${esc(klasses[k].name)}</span>`).join(" ");
 function noticeForm(){
@@ -700,8 +710,8 @@ function studentView(id){
 const seenKey=()=>"qa-seen-"+(me?me.uid:"");
 function loadSeen(){try{seen=JSON.parse(localStorage.getItem(seenKey())||"null")}catch(_){seen=null}}
 function saveSeen(){try{localStorage.setItem(seenKey(),JSON.stringify(seen))}catch(_){}}
-const isNewQ=q=>{if(!seen)return false;const v=seen[q.id];if(v===undefined)return isTeacher||(q.answerCount|0)>0;return(q.answerCount|0)>v};
-const newLabel=q=>isTeacher?(seen&&seen[q.id]===undefined?"새 질문":"새 댓글"):"새 답변";
+const isNewQ=q=>{if(!seen)return false;const v=seen[q.id];if(v===undefined)return ST()||(q.answerCount|0)>0;return(q.answerCount|0)>v};
+const newLabel=q=>ST()?(seen&&seen[q.id]===undefined?"새 질문":"새 댓글"):"새 답변";
 const unreadCount=()=>qs.filter(isNewQ).length;
 function markSeen(q){if(!seen||!q)return;const v=q.answerCount|0;if(seen[q.id]!==v){seen[q.id]=v;saveSeen()}}
 async function notifyUser(title,body,hash){
@@ -714,7 +724,7 @@ function checkNew(first){
   if(!seen){seen={};for(const q of qs)seen[q.id]=q.answerCount|0;saveSeen()}
   const now=new Set(qs.filter(isNewQ).map(q=>q.id));
   if(!first)for(const id of now)if(!lastNew.has(id)&&!(page==="q"&&openId===id&&!document.hidden)){const q=qs.find(x=>x.id===id);
-    notifyUser(isTeacher?(seen[id]===undefined?"새 질문이 올라왔어요":"학생이 추가 질문을 남겼어요"):"선생님 답변이 달렸어요",q?q.title:"","q-"+id)}
+    notifyUser(ST()?(seen[id]===undefined?"새 질문이 올라왔어요":"학생이 추가 질문을 남겼어요"):"선생님 답변이 달렸어요",q?q.title:"","q-"+id)}
   lastNew=now;const n=now.size;document.title=(n?`(${n}) `:"")+"신상명 Q&A 게시판";
 }
 const notifState=()=>!("Notification" in window)?"none":Notification.permission;
@@ -727,7 +737,7 @@ function notifBanner(){
   const st=notifState();
   if(st==="granted"&&(isStandalone()||!installEvt))return"";
   let msg,btn="";
-  if(st==="default"){msg=isTeacher?"새 질문이 올라오면 알림을 받을까요?":"선생님 답변이 달리면 알림을 받을까요?";btn='<button class="btn primary sm" data-nbon>알림 켜기</button>'}
+  if(st==="default"){msg=ST()?"새 질문이 올라오면 알림을 받을까요?":"선생님 답변이 달리면 알림을 받을까요?";btn='<button class="btn primary sm" data-nbon>알림 켜기</button>'}
   else if(st==="none"&&isIOS()&&!isStandalone()){msg="아이폰·아이패드는 공유 버튼 → ‘홈 화면에 추가’로 앱처럼 설치하면 알림을 받을 수 있어요."}
   else if(installEvt&&!isStandalone()){msg="이 게시판을 앱처럼 설치하면 더 빨리 들어올 수 있어요.";btn='<button class="btn primary sm" data-install>앱 설치</button>'}
   else if(st==="denied")msg="알림이 꺼져 있어요. 브라우저 설정에서 이 사이트의 알림을 허용하면 받을 수 있어요.";
@@ -740,7 +750,7 @@ const liveNotice=n=>!n.until||n.until>=todayISO();
 const hiddenNotice=id=>{try{return localStorage.getItem("qa-nh-"+id)==="1"}catch(_){return false}};
 function noticeBanners(){
   const mine=(myMember&&myMember.classes)||[];
-  const list=Object.entries(notices).filter(([id,n])=>liveNotice(n)&&(isTeacher||!(n.cls||[]).length||(n.cls||[]).some(c=>mine.includes(c)))&&(isTeacher||!hiddenNotice(id))).sort((a,b)=>ms(b[1].at)-ms(a[1].at));
+  const list=Object.entries(notices).filter(([id,n])=>liveNotice(n)&&(ST()||!(n.cls||[]).length||(n.cls||[]).some(c=>mine.includes(c)))&&(isTeacher||!hiddenNotice(id))).sort((a,b)=>ms(b[1].at)-ms(a[1].at));
   if(!list.length)return"";
   return `<div class="notices">${list.map(([id,n])=>`<div class="notice"><b>공지</b><p>${esc(n.text).replace(/\n/g,"<br>")}</p>${isTeacher?`<span class="small">${(n.cls||[]).length?(n.cls||[]).map(c=>klasses[c]?esc(klasses[c].name):"(삭제된 반)").join(", "):"전체"}${n.until?" · "+n.until.slice(5).replace("-","/")+"까지":""}</span>`:`<button class="btn ghost sm" data-nhide="${esc(id)}" aria-label="공지 닫기">닫기</button>`}</div>`).join("")}</div>`;
 }
@@ -810,28 +820,28 @@ function av(uid,name,size,staff){
   return `<span class="av${staff?" staff":""}" style="--s:${size|0}px" aria-hidden="true">${inner}</span>`;
 }
 async function needProf(uid){profAsked.add(uid);try{const d=await getDoc(doc(db,"profiles",uid));if(d.exists()){profs[uid]=d.data();render()}}catch(_){}}
-const byline=(a,size)=>a.teacher?`<span class="byline">${av(a.authorId,TEACHER_NAME,size||34,true)}<span><span class="org">${ORG}</span><span class="nm">${esc(TEACHER_NAME)}</span></span></span>`:`<span class="byline">${av(a.authorId,a.authorName,size||30,false)}<span class="nm">${esc(nameOf(a))}</span></span>`;
+const byline=(a,size)=>a.ta&&!a.teacher?`<span class="byline">${av(a.authorId,a.authorName,size||34,true)}<span><span class="org">${ORG}</span><span class="nm">${esc(a.authorName||"")} 조교${me&&a.authorId===me.uid?" (나)":""}${a.aff?`<span class="aff">${esc(a.aff)}</span>`:""}</span></span></span>`:a.teacher?`<span class="byline">${av(a.authorId,TEACHER_NAME,size||34,true)}<span><span class="org">${ORG}</span><span class="nm">${esc(TEACHER_NAME)}</span></span></span>`:`<span class="byline">${av(a.authorId,a.authorName,size||30,false)}<span class="nm">${esc(nameOf(a))}</span></span>`;
 function shrinkAvatar(file){return new Promise((res,rej)=>{const im=new Image(),u=URL.createObjectURL(file);
   im.onload=()=>{const n=96,c=document.createElement("canvas");c.width=c.height=n;const x=c.getContext("2d"),m=Math.min(im.naturalWidth,im.naturalHeight);
     x.fillStyle="#fff";x.fillRect(0,0,n,n);x.drawImage(im,(im.naturalWidth-m)/2,(im.naturalHeight-m)/2,m,m,0,0,n,n);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",.82))};
   im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error("img"))};im.src=u})}
 function profileView(){
   const name=isTeacher?TEACHER_NAME:(myMember&&myMember.name)||"",has=!!(profs[me.uid]&&profs[me.uid].img);
-  const sub=isTeacher?ORG:myMember?[myMember.school,GRADE[myMember.grade|0]].filter(Boolean).join(" · "):"";
-  return intro("Profile","프로필","프로필 사진을 정할 수 있어요. 사진은 항상 동그랗게 보여요."+(isTeacher?" 선생님 사진은 답변 옆에 학생들에게 보여요.":" 내 사진은 나와 선생님만 볼 수 있어요."),"")+
-  `<main class="gut stack" style="gap:36px"><section class="panel"><div class="profbox">${av(me.uid,name,120,isTeacher)}
+  const sub=isTeacher?ORG:isTA()?[ORG+" · 조교",myMember.school,myMember.dept].filter(Boolean).join(" · "):myMember?[myMember.school,GRADE[myMember.grade|0]].filter(Boolean).join(" · "):"";
+  return intro("Profile","프로필","프로필 사진을 정할 수 있어요. 사진은 항상 동그랗게 보여요."+(isTeacher?" 선생님 사진은 답변 옆에 학생들에게 보여요.":isTA()?" 조교 사진은 답변 옆에 학생들에게 보여요.":" 내 사진은 나와 선생님·조교만 볼 수 있어요."),"")+
+  `<main class="gut stack" style="gap:36px"><section class="panel"><div class="profbox">${av(me.uid,name,120,ST())}
     <div class="info"><b>${esc(name)}</b><span class="small">${esc(sub)}</span>
       <div class="row" style="margin-top:8px"><label class="btn primary sm" style="cursor:pointer">사진 고르기<input type="file" id="avfile" accept="image/*" hidden></label>${has?'<button class="btn ghost sm" data-avdel>기본 이미지로</button>':""}<span class="small" id="avmsg"></span></div></div></div></section>
-  ${isTeacher?`<section><div class="sectitle">답변에 이렇게 보여요</div><div class="panel">${byline({teacher:true,authorId:me.uid})}</div></section>`:""}</main>`;
+  ${ST()?`<section><div class="sectitle">답변에 이렇게 보여요</div><div class="panel">${byline(isTeacher?{teacher:true,authorId:me.uid}:{ta:true,authorId:"",authorName:name,aff:[myMember.school,myMember.dept].filter(Boolean).join(" ")})}</div></section>`:""}</main>`;
 }
 /* ---------- 개인정보 처리방침 (로그인하지 않아도 볼 수 있음) ---------- */
 const POLICY_DATE="2026년 11월 27일",POLICY_MAIL="shinsmedu@gmail.com";
 function privacyView(){
   return intro("Privacy","개인정보 처리방침",`${ORG}가 학생과 학부모의 정보를 어떻게 다루는지 안내합니다. ${POLICY_DATE}부터 적용됩니다.`,"")+
   `<main class="gut"><div class="policy">
-  <section><h3>1. 수집하는 정보</h3><ul><li>가입할 때: 구글 계정 이메일, 이름, 학교, 학년, 학생 전화번호, 학부모 전화번호</li><li>이용하는 동안: 질문·답변·댓글, 첨부한 사진, 마지막 접속 시각, 프로필 사진(선택)</li><li>선생님이 기록하는 정보: 반, 수업 진도, 수강료 납부 내역, 수업 메모</li></ul><p>주민등록번호와 같은 민감한 정보는 수집하지 않습니다.</p></section>
+  <section><h3>1. 수집하는 정보</h3><ul><li>가입할 때: 구글 계정 이메일, 이름, 학교, 학년, 학생 전화번호, 학부모 전화번호 (조교는 이메일, 이름, 대학교, 학과, 전화번호)</li><li>이용하는 동안: 질문·답변·댓글, 첨부한 사진, 마지막 접속 시각, 프로필 사진(선택)</li><li>선생님이 기록하는 정보: 반, 수업 진도, 수강료 납부 내역, 수업 메모</li></ul><p>주민등록번호와 같은 민감한 정보는 수집하지 않습니다.</p></section>
   <section><h3>2. 이용 목적</h3><p>수업 학생인지 확인하고, 질문에 답변하고, 진도와 수강료를 관리하고, 수업과 관련해 학생·학부모에게 연락하는 데에만 이용합니다. 광고에 이용하거나 다른 곳에 제공하지 않습니다.</p></section>
-  <section><h3>3. 열람 범위</h3><ul><li>질문과 답변은 질문한 학생 본인과 선생님만 볼 수 있습니다. 다른 학생에게는 보이지 않습니다.</li><li>전화번호, 수강료, 메모는 선생님만 볼 수 있습니다.</li><li>학생의 프로필 사진은 본인과 선생님만 볼 수 있습니다.</li></ul></section>
+  <section><h3>3. 열람 범위</h3><ul><li>질문과 답변은 질문한 학생 본인과 선생님, 선생님이 지정한 조교만 볼 수 있습니다. 다른 학생에게는 보이지 않습니다.</li><li>전화번호, 수강료, 메모는 선생님만 볼 수 있습니다.</li><li>학생의 프로필 사진은 본인과 선생님, 조교만 볼 수 있습니다.</li></ul></section>
   <section><h3>4. 보관 기간</h3><p>수강하는 동안 보관하며, <b>수강이 끝난 뒤 1년</b>이 지나면 삭제합니다. 그 전이라도 삭제를 요청하시면 바로 삭제합니다. 본인이 작성한 질문·댓글·프로필 사진은 게시판에서 직접 삭제할 수 있습니다.</p></section>
   <section><h3>5. 이용하는 외부 서비스</h3><ul><li><b>Google Firebase</b>: 로그인과 데이터 저장에 이용합니다. 데이터는 서울에 있는 Google 서버에 저장됩니다.</li><li><b>GitHub Pages</b>: 사이트 화면을 제공하는 데 이용합니다. 접속할 때 IP 주소 등 접속 기록이 GitHub(미국)에 남을 수 있습니다.</li><li><b>Claude (Anthropic, 미국)</b>: 선생님이 답변 초안을 준비할 때 이용하는 AI입니다. 질문 내용과 첨부 사진, 과목, 학교 이름이 전달될 수 있습니다. 전화번호와 수강료 정보는 전달하지 않습니다. 답변은 선생님이 직접 확인한 뒤 등록합니다.</li></ul></section>
   <section><h3>6. 정보의 열람·정정·삭제 요청</h3><p>학생과 학부모는 언제든지 본인 정보의 열람, 정정, 삭제를 요청할 수 있습니다. 아래 연락처로 문의해 주시기 바랍니다.</p><ul><li>담당: 신상명</li><li>이메일: <a href="mailto:${POLICY_MAIL}">${POLICY_MAIL}</a></li></ul><p class="small" style="margin-top:10px">개인정보 침해로 도움이 필요하시면 개인정보침해신고센터(국번 없이 118)에 문의하실 수 있습니다.</p></section>
@@ -868,12 +878,12 @@ const classOfCode=code=>{const e=Object.entries(klasses).find(([,k])=>k.code&&k.
 
 /* ---------- 그리기 ---------- */
 function tabs(){
-  const t=$("#tabs");$("#logout").hidden=!me;{const w=$("#whotop"),nm=me?(isTeacher?TEACHER_NAME:(myMember&&myMember.name)||me.email||""):"";w.innerHTML=me&&inside()?av(me.uid,nm,26,isTeacher)+`<span>${esc(nm)}</span>`:esc(nm);w.style.pointerEvents=me&&inside()?"":"none"}
+  const t=$("#tabs");$("#logout").hidden=!me;{const w=$("#whotop"),nm=me?(isTeacher?TEACHER_NAME:(myMember&&myMember.name)||me.email||""):"";w.innerHTML=me&&inside()?av(me.uid,nm,26,ST())+`<span>${esc(nm)}</span>`:esc(nm);w.style.pointerEvents=me&&inside()?"":"none"}
   if(!inside()){t.innerHTML="";return}
   const n=isTeacher?pendingReqs().length:0;
   const un=unreadCount(),ub=un?`<span class="badge">${un}</span>`:"";
   const items=[["board","질문 게시판"+ub]];
-  if(isTeacher)items.push(["students","학생 관리"],["admin","승인 관리"+(n?`<span class="badge">${n}</span>`:"")]);else{items[0]=["board","내 질문"+ub];items.push(["rec","내 기록"])}
+  if(isTeacher)items.push(["students","학생 관리"],["admin","승인 관리"+(n?`<span class="badge">${n}</span>`:"")]);else if(!isTA()){items[0]=["board","내 질문"+ub];items.push(["rec","내 기록"])}
   t.innerHTML=items.map(([k,l])=>`<a href="#${k}" ${page===k||(k==="students"&&page==="stu")?'aria-current="page"':""}>${l}</a>`).join("");
 }
 function themeNow(){
@@ -894,7 +904,7 @@ function render(){
   if(page==="admin"&&isTeacher)app.innerHTML=adminView();
   else if(page==="students"&&isTeacher)app.innerHTML=studentsView();
   else if(page==="stu"&&isTeacher)app.innerHTML=studentView(openSid);
-  else if(page==="rec"&&!isTeacher)app.innerHTML=recView();
+  else if(page==="rec"&&!ST())app.innerHTML=recView();
   else if(page==="profile")app.innerHTML=profileView();
   else if(page==="q"){const q=qs.find(x=>x.id===openId);app.innerHTML=q?detailView(q):(qLoaded?`<main class="gut"><button class="btn" data-back>← 목록으로</button><div class="empty" style="margin-top:22px"><h2>삭제됐거나 없는 질문이에요</h2></div></main>`:intro("Loading","불러오는 중",""));
     if(q){markSeen(q);if(document.title.startsWith("("))checkNew(true);tabs();files("#afiles","a");fillImgs();if(keepA!==null){$("#ab").value=keepA;$("#ab").focus()}}}
@@ -933,8 +943,9 @@ function startBoard(){
   loadSeen();lastNew=new Set();touchPresence();
   subs.push(onSnapshot(collection(db,"notices"),s=>{notices={};s.docs.forEach(d=>notices[d.id]=d.data());render()},()=>{}));
   const sortQ=()=>{const m=new Map();for(const x of [...qPub,...qMine])m.set(x.id,x);qs=[...m.values()].sort((a,b)=>ms(b.createdAt)-ms(a.createdAt));const first=!qLoaded;qLoaded=true;checkNew(first);render()};
-  if(isTeacher){qUnsub=onSnapshot(query(collection(db,"questions"),orderBy("createdAt","desc"),limit(500)),s=>{qPub=s.docs.map(d=>({id:d.id,...d.data()}));qMine=[];sortQ()},()=>{qLoaded=true;render()});
-    subs.push(onSnapshot(collection(db,"drafts"),s=>{drafts={};s.docs.forEach(d=>drafts[d.id]=d.data());render()},()=>{}));}
+  if(ST()){qUnsub=onSnapshot(query(collection(db,"questions"),orderBy("createdAt","desc"),limit(500)),s=>{qPub=s.docs.map(d=>({id:d.id,...d.data()}));qMine=[];sortQ()},()=>{qLoaded=true;render()});
+    if(isTeacher)subs.push(onSnapshot(collection(db,"drafts"),s=>{drafts={};s.docs.forEach(d=>drafts[d.id]=d.data());render()},()=>{}));
+    else subs.push(onSnapshot(doc(db,"profiles",me.uid),s=>{if(s.exists())profs[me.uid]=s.data();else delete profs[me.uid];render()},()=>{}));}
   else{subs.push(onSnapshot(doc(db,"profiles",me.uid),s=>{if(s.exists())profs[me.uid]=s.data();else delete profs[me.uid];render()},()=>{}));
     subs.push(onSnapshot(doc(db,"mine",me.uid),s=>{myRec=s.exists()?s.data():null;render()},()=>{myRec=null;render()}));
     qUnsub=onSnapshot(query(collection(db,"questions"),where("authorId","==",me.uid)),s=>{qMine=s.docs.map(d=>({id:d.id,...d.data()}));qPub=[];sortQ()},()=>{qLoaded=true;render()});}
@@ -976,7 +987,7 @@ if(auth){
       subs.push(onSnapshot(collection(db,"classes"),s=>{klasses={};s.docs.forEach(d=>klasses[d.id]=d.data());render()},()=>{}));
       sync();
     }else{
-      subs.push(onSnapshot(doc(db,"members",u.uid),s=>{myMember=s.exists()?s.data():null;sync()},()=>{myMember=null;sync()}));
+      subs.push(onSnapshot(doc(db,"members",u.uid),s=>{const r0=myMember&&myMember.role;myMember=s.exists()?s.data():null;if(qUnsub&&((myMember&&myMember.role)||"")!==(r0||""))stopBoard();sync()},()=>{myMember=null;sync()}));
       subs.push(onSnapshot(doc(db,"requests",u.uid),s=>{myReq=s.exists()?s.data():null;sync()},()=>{myReq=null;sync()}));
       subs.push(onSnapshot(doc(db,"blocked",u.uid),s=>{myBlocked=s.exists();sync()},()=>{myBlocked=false;sync()}));
     }
@@ -1054,18 +1065,19 @@ document.addEventListener("submit",async e=>{
     const code=$("#rcode").value.replace(/\s/g,"").toUpperCase(),name=$("#rn").value.trim(),school=$("#rs").value.trim();
     const pc=document.querySelector("#rc [aria-pressed=true]"),pg=document.querySelector("#rg [aria-pressed=true]");
     if(!code){$("#rerr").textContent="입장 코드를 적어 주세요.";return}
-    if(!pc){$("#rerr").textContent="학원인지 과외인지 골라 주세요.";return}
-    if(!school){$("#rerr").textContent="학교를 적어 주세요.";return}
-    if(!pg){$("#rerr").textContent="학년을 골라 주세요.";return}
+    if(!regTA&&!pc){$("#rerr").textContent="학원인지 과외인지 골라 주세요.";return}
+    if(!school){$("#rerr").textContent=regTA?"대학교를 적어 주세요.":"학교를 적어 주세요.";return}
+    if(!regTA&&!pg){$("#rerr").textContent="학년을 골라 주세요.";return}
+    const dept=regTA?$("#rd").value.trim():"";if(regTA&&!dept){$("#rerr").textContent="학과를 적어 주세요.";return}
     if(!name){$("#rerr").textContent="이름을 적어 주세요.";return}
     const fmtTel=v=>{const d=v.replace(/\D/g,"");return d.length===11?d.replace(/(\d{3})(\d{4})(\d{4})/,"$1-$2-$3"):d.length===10?d.replace(/(\d{3})(\d{3,4})(\d{4})/,"$1-$2-$3"):v.trim()};
     const phone=fmtTel($("#rp").value),parent=fmtTel($("#rpp").value);
-    if(!/^[0-9-]{9,20}$/.test(phone)){$("#rerr").textContent="학생 전화번호를 숫자로 적어 주세요.";return}
-    if(!/^[0-9-]{9,20}$/.test(parent)){$("#rerr").textContent="학부모 전화번호를 숫자로 적어 주세요.";return}
+    if(!/^[0-9-]{9,20}$/.test(phone)){$("#rerr").textContent=(regTA?"":"학생 ")+"전화번호를 숫자로 적어 주세요.";return}
+    if(!regTA&&!/^[0-9-]{9,20}$/.test(parent)){$("#rerr").textContent="학부모 전화번호를 숫자로 적어 주세요.";return}
     if(!$("#ragree").checked){$("#rerr").textContent="개인정보 수집·이용에 동의해야 신청할 수 있어요.";return}
-    const cls=+pc.dataset.rc,grade=+pg.dataset.rg,region=schoolPick&&schoolPick.n===school?schoolPick.r:"";
+    const cls=regTA?0:+pc.dataset.rc,grade=regTA?5:+pg.dataset.rg,region=regTA?"":schoolPick&&schoolPick.n===school?schoolPick.r:"";
     busy=true;
-    try{await setDoc(doc(db,"requests",me.uid),{code,name,school,region,grade,cls,phone,parent,email:me.email,at:serverTimestamp()});document.activeElement&&document.activeElement.blur();render()}
+    try{await setDoc(doc(db,"requests",me.uid),{code,name,school,region,grade,cls,phone,...(regTA?{dept}:{parent}),email:me.email,at:serverTimestamp()});document.activeElement&&document.activeElement.blur();render()}
     catch(err){$("#rerr").textContent=err&&err.code==="permission-denied"?"입장 코드가 맞지 않아요. 선생님께 받은 코드를 다시 확인해 주세요.":"신청하지 못했어요. 잠시 후 다시 시도해 주세요."}
     busy=false;return;
   }
@@ -1074,8 +1086,8 @@ document.addEventListener("submit",async e=>{
   busy=true;e.target.querySelector("[type=submit]").disabled=true;
   try{
     const anon=false,ids=await uploadAll(form.target==="a"?form.files:[],true,q.authorId);
-    await addDoc(collection(db,"questions",q.id,"answers"),{body:b,authorId:me.uid,authorName:anon?"익명 학생":(isTeacher?TEACHER_NAME:myMember.name),teacher:isTeacher,anon,imageIds:ids,createdAt:serverTimestamp()});
-    const up={answerCount:increment(1),lastAt:serverTimestamp()};if(isTeacher&&q.status!=="answered")up.status="answered";
+    await addDoc(collection(db,"questions",q.id,"answers"),{body:b,authorId:me.uid,authorName:anon?"익명 학생":(isTeacher?TEACHER_NAME:myMember.name),teacher:isTeacher,...(isTA()?{ta:true,aff:[myMember.school,myMember.dept].filter(Boolean).join(" ").slice(0,80)}:{}),anon,imageIds:ids,createdAt:serverTimestamp()});
+    const up={answerCount:increment(1),lastAt:serverTimestamp()};if(ST()&&q.status!=="answered")up.status="answered";
     await updateDoc(doc(db,"questions",q.id),up);
     if(isTeacher&&drafts[q.id]&&!drafts[q.id].done)setDoc(doc(db,"drafts",q.id),{done:true,final:b,used:draftUsed.has(q.id),doneAt:serverTimestamp(),qtitle:q.title||"",qbody:q.body||"",subject:q.subject|0,kind:q.kind|0},{merge:true}).catch(()=>{});
     form.files=[];$("#ab").value="";$("#ab").blur();render();
@@ -1105,8 +1117,9 @@ document.addEventListener("click",async e=>{
   else if(d.ask!==undefined)openCompose();
   else if(d.close!==undefined)close();
   else if(d.rc!==undefined){document.querySelectorAll("#rc button").forEach(b=>b.setAttribute("aria-pressed",b===t))}
+  else if(d.rr!==undefined){const n=d.rr==="1";if(n!==regTA){regTA=n;schoolPick=null;$("#rs").value="";regMode()}}
   else if(d.rg!==undefined){document.querySelectorAll("#rg button").forEach(b=>b.setAttribute("aria-pressed",b===t))}
-  else if(d.sp!==undefined){const x=(window.__slast||[])[+d.sp];if(x){schoolPick=x;const i=$("#rs");i.value=x.n;$("#slist").hidden=true;i.setAttribute("aria-expanded","false");$("#shint").textContent="✓ "+x.n+" ("+x.r+")"}}
+  else if(d.sp!==undefined){const x=(window.__slast||[])[+d.sp];if(x){schoolPick=x;const i=$("#rs");i.value=x.n;$("#slist").hidden=true;i.setAttribute("aria-expanded","false");$("#shint").textContent="✓ "+x.n+(x.r?" ("+x.r+")":"")}}
   else if(d.fs!==undefined){form.subj=+d.fs;segs();saveDraft()}
   else if(d.fk!==undefined){form.kind=+d.fk;segs();saveDraft()}
   else if(d.img){const v=imgCache[d.img];if(v){const lb=$("#lb");lb.querySelector("img").src=v;lb.classList.add("on")}}
@@ -1131,7 +1144,7 @@ document.addEventListener("click",async e=>{
     catch(err){t.disabled=false;errMsg(err,"#xerr")}}
   else if(d.sopen){location.hash="s-"+d.sopen}
   else if(d.sk!==undefined){sf.k=d.sk;armed=null;render()}
-  else if(d.nbon!==undefined){try{const r=await Notification.requestPermission();if(r==="granted")notifyUser("알림이 켜졌어요",isTeacher?"새 질문이 오면 알려 드릴게요.":"선생님 답변이 달리면 알려 드릴게요.","board")}catch(_){}render()}
+  else if(d.nbon!==undefined){try{const r=await Notification.requestPermission();if(r==="granted")notifyUser("알림이 켜졌어요",ST()?"새 질문이 오면 알려 드릴게요.":"선생님 답변이 달리면 알려 드릴게요.","board")}catch(_){}render()}
   else if(d.nbhide!==undefined){try{localStorage.setItem("qa-nb-hide","1")}catch(_){}render()}
   else if(d.install!==undefined){if(installEvt){installEvt.prompt();try{await installEvt.userChoice}catch(_){}installEvt=null;render()}}
   else if(d.nhide){try{localStorage.setItem("qa-nh-"+d.nhide,"1")}catch(_){}render()}
@@ -1200,18 +1213,19 @@ document.addEventListener("click",async e=>{
       $("#berr").textContent="";
     }catch(err){t.disabled=false;errMsg(err,"#berr")}}
   else if(d.unblock){const id=d.unblock;armed=null;try{await deleteDoc(doc(db,"blocked",id))}catch(err){render()}}
+  else if(d.ta){const m=members[d.ta];if(!m||m.status!=="approved")return;t.disabled=true;try{await updateDoc(doc(db,"members",d.ta),{role:m.role==="ta"?"":"ta"})}catch(err){t.disabled=false}}
   else if(d.approve||d.reject||d.revoke||d.ban||d.unban){
     const id=d.approve||d.reject||d.revoke||d.ban||d.unban,r=reqs.find(x=>x.id===id)||{},old=members[id]||{};armed=null;t.disabled=true;
-    try{await setDoc(doc(db,"members",id),{status:d.approve?"approved":d.ban?"banned":"rejected",name:r.name||old.name||"학생",school:r.school||old.school||"",grade:(r.grade??old.grade??0)|0,region:r.region||old.region||"",cls:(r.cls??old.cls??0)|0,email:r.email||old.email||"",classes:(students[id]||{}).classes||old.classes||[],at:serverTimestamp()});
+    try{await setDoc(doc(db,"members",id),{status:d.approve?"approved":d.ban?"banned":"rejected",name:r.name||old.name||"학생",school:r.school||old.school||"",grade:(r.grade??old.grade??0)|0,region:r.region||old.region||"",...((r.dept||old.dept)?{dept:r.dept||old.dept}:{}),cls:(r.cls??old.cls??0)|0,email:r.email||old.email||"",classes:(students[id]||{}).classes||old.classes||[],...(d.approve&&(old.role==="ta"||(r.grade|0)===5)?{role:"ta"}:{}),at:serverTimestamp()});
       const autoK=d.approve&&r.code?classOfCode(r.code):null;if(autoK){const cur=(students[id]||{}).classes||[];if(!cur.includes(autoK))await setClasses(id,[...cur,autoK])}
-      if(d.approve&&(r.phone||r.parent)){const st=students[id]||{};await setDoc(doc(db,"students",id),{phone:st.phone||r.phone||"",parent:st.parent||r.parent||"",at:serverTimestamp()},{merge:true})}}catch(err){t.disabled=false}
+      if(d.approve&&(r.grade|0)!==5&&(r.phone||r.parent)){const st=students[id]||{};await setDoc(doc(db,"students",id),{phone:st.phone||r.phone||"",parent:st.parent||r.parent||"",at:serverTimestamp()},{merge:true})}}catch(err){t.disabled=false}
   }
   else if(d.del){
     const q=qs.find(x=>x.id===openId);armed=null;if(!q)return;
     try{
       if(d.del==="q"){await deleteDoc(doc(db,"questions",q.id));if(isTeacher)deleteDoc(doc(db,"drafts",q.id)).catch(()=>{});for(const i of q.imageIds||[])deleteDoc(doc(db,"images",i)).catch(()=>{});location.hash="board"}
       else{const aid=d.del.slice(2),a=answers.find(x=>x.id===aid);await deleteDoc(doc(db,"questions",q.id,"answers",aid));
-        const up={answerCount:increment(-1)};if(isTeacher)up.status=answers.some(x=>x.id!==aid&&x.teacher)?"answered":"wait";
+        const up={answerCount:increment(-1)};if(ST())up.status=answers.some(x=>x.id!==aid&&(x.teacher||x.ta))?"answered":"wait";
         await updateDoc(doc(db,"questions",q.id),up).catch(()=>{});for(const i of (a&&a.imageIds)||[])deleteDoc(doc(db,"images",i)).catch(()=>{})}
     }catch(err){render()}
   }
@@ -1229,7 +1243,7 @@ document.addEventListener("change",async e=>{
   if(e.target.id!=="avfile"||!me||profBusy)return;const f=e.target.files&&e.target.files[0],m=$("#avmsg");if(!f)return;
   if(!/^image\//.test(f.type)){if(m)m.textContent="사진 파일만 올릴 수 있어요.";return}
   profBusy=true;if(m)m.textContent="올리는 중…";
-  try{const img=await shrinkAvatar(f);await setDoc(doc(db,"profiles",me.uid),{img,staff:isTeacher,at:serverTimestamp()})}
+  try{const img=await shrinkAvatar(f);await setDoc(doc(db,"profiles",me.uid),{img,staff:ST(),at:serverTimestamp()})}
   catch(_){const m2=$("#avmsg");if(m2)m2.textContent="사진을 올리지 못했어요. 다른 사진으로 해 보세요."}
   profBusy=false;
 });
@@ -1249,7 +1263,7 @@ setInterval(()=>{if(isTeacher&&auth&&Date.now()-lastAct>2*3600e3){lastAct=Date.n
 document.addEventListener("input",async e=>{if(e.target.id==="q"){f.q=e.target.value;render()}
   else if(e.target.id==="sq"){sf.q=e.target.value;render()}
   else if(e.target.id==="smstext"){sms.text=e.target.value;smsRefresh()}
-  else if(e.target.id==="rs"){schoolPick=null;$("#shint").textContent="전국 고등학교 2,401곳에서 찾아요. 목록에 없으면 그대로 입력해도 돼요.";await loadSchools();const v=e.target.value,r=findSchools(v),L=$("#slist");window.__slast=r;
+  else if(e.target.id==="rs"){schoolPick=null;$("#shint").textContent=regTA?U_HINT:S_HINT;if(!regTA)await loadSchools();const v=e.target.value,r=regTA?findUnivs(v):findSchools(v),L=$("#slist");window.__slast=r;
     L.innerHTML=r.map((x,i)=>`<button type="button" role="option" data-sp="${i}"><b>${esc(x.n)}</b><span>${esc(x.r)}</span></button>`).join("")+(v.trim()&&!r.length?`<div class="snone">검색 결과가 없어요. 그대로 입력하면 돼요.</div>`:"");
     L.hidden=!v.trim();e.target.setAttribute("aria-expanded",String(!L.hidden))}});
 document.addEventListener("focusin",e=>{if(e.target.id==="rs")loadSchools()});
