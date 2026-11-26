@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-CnpD4fb6Uo1l3c6DCwTKFTyRl7jF+QPvW3Zt/oVHAK4=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://shinsmedu-qa.firebaseapp.com https://www.gstatic.com; frame-src https://shinsmedu-qa.firebaseapp.com https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RdO7eUpwK9o6ZEwZWvFg9brFDHq3OaIDETzBtrnhDw8=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://shinsmedu-qa.firebaseapp.com https://www.gstatic.com; frame-src https://shinsmedu-qa.firebaseapp.com https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#111111">
@@ -155,6 +155,12 @@ table.mt{width:100%;border-collapse:collapse;font-size:13px}
 .av.staff{position:relative;color:#fff;background:#111}
 .av.staff .gem{position:absolute;left:50%;top:50%;width:calc(var(--s)*.085);height:calc(var(--s)*.085);transform:translate(-50%,-50%) rotate(45deg);background:var(--gem);background-size:350% 350%;animation:gem 4.5s ease-in-out infinite alternate}
 @media(prefers-reduced-motion:reduce){.av.staff .gem{animation:none}}
+.foot{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;padding-block:26px 34px;border-top:1px solid #ececea;font-size:12.5px;color:#8a8a8a;background:#fff}
+.foot a{color:#555;font-weight:600;text-decoration:underline;text-underline-offset:3px}.foot a:hover{color:#111}
+.foot .ig{margin-left:auto;text-decoration:none;font-weight:400;color:#9a9a9a}.foot .ig b{color:#777;font-weight:500}.foot .ig:hover{color:#777}.foot .ig:hover b{text-decoration:underline;text-underline-offset:3px}
+.policy{max-width:680px;display:grid;gap:30px;font-size:14.5px;line-height:1.9;color:#333;letter-spacing:0}
+.policy h3{font-size:17px;font-weight:600;margin:0 0 10px;color:#111;letter-spacing:-.01em}.policy p{margin:0 0 8px}.policy ul{margin:0;padding-left:20px}.policy li{margin:2px 0}
+.agree{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.7;color:#333}.agree input{width:18px;height:18px;margin-top:3px;flex:none}.agree a{color:#111;font-weight:600}
 .byline{display:inline-flex;align-items:center;gap:9px}.byline .org{font-size:11.5px;color:#888;font-weight:400;display:block;line-height:1.3}.byline .nm{display:block;line-height:1.3}
 .profbox{display:flex;flex-wrap:wrap;align-items:center;gap:24px 32px}.profbox .info{display:grid;gap:6px}.profbox .info b{font-size:22px;font-weight:600;letter-spacing:-.02em}
 .btn.bar{background:transparent;border-color:#444;color:#ddd}.btn.bar:hover{background:#222}
@@ -372,6 +378,7 @@ body:not([data-th=""]) .intro::before{background:radial-gradient(closest-side,va
   <div class="topr"><nav class="tabs" id="tabs" aria-label="메뉴"></nav><a class="who-top" id="whotop" href="#profile" aria-label="프로필"></a><button class="btn bar sm" id="logout" hidden>로그아웃</button></div>
 </header>
 <div id="app"><section class="intro gut"><div class="eyebrow">Loading</div><h2>불러오는 중</h2><div class="accent-line"></div><p>잠시만 기다려 주세요.</p></section></div>
+<footer class="foot gut"><span>© 신상명 통합사회 연구소</span><a href="#privacy">개인정보 처리방침</a><a class="ig" href="https://www.instagram.com/byshinsm/" target="_blank" rel="noopener noreferrer">인스타그램 <b>@byshinsm</b></a></footer>
 
 <div class="ov" id="compose" role="dialog" aria-modal="true" aria-labelledby="ct">
   <div class="modal stack">
@@ -472,6 +479,7 @@ function gateView(g){
     <label class="f">이름 (실명)<input type="text" id="rn" maxlength="20" required placeholder="홍길동"></label>
     <label class="f">학생 전화번호<input type="tel" id="rp" maxlength="20" required inputmode="tel" autocomplete="tel" placeholder="010-0000-0000"></label>
     <label class="f">학부모 전화번호<input type="tel" id="rpp" maxlength="20" required inputmode="tel" placeholder="010-0000-0000"></label>
+    <label class="agree"><input type="checkbox" id="ragree"><span>[필수] 입력한 정보를 수업 관리와 질문 답변에 이용하는 데 동의합니다. <a href="#privacy" target="_blank" rel="noopener">개인정보 처리방침 보기</a></span></label>
     <div class="err" id="rerr"></div>
     <div class="row"><button class="btn primary" type="submit">승인 신청 보내기</button></div>
     <p class="small" style="margin:0">${esc(me.email||"")} 계정으로 신청해요. 보낸 정보는 선생님만 볼 수 있어요.</p>
@@ -816,6 +824,20 @@ function profileView(){
       <div class="row" style="margin-top:8px"><label class="btn primary sm" style="cursor:pointer">사진 고르기<input type="file" id="avfile" accept="image/*" hidden></label>${has?'<button class="btn ghost sm" data-avdel>기본 이미지로</button>':""}<span class="small" id="avmsg"></span></div></div></div></section>
   ${isTeacher?`<section><div class="sectitle">답변에 이렇게 보여요</div><div class="panel">${byline({teacher:true,authorId:me.uid})}</div></section>`:""}</main>`;
 }
+/* ---------- 개인정보 처리방침 (로그인하지 않아도 볼 수 있음) ---------- */
+const POLICY_DATE="2026년 11월 27일",POLICY_MAIL="shinsmedu@gmail.com";
+function privacyView(){
+  return intro("Privacy","개인정보 처리방침",`${ORG}가 학생과 학부모의 정보를 어떻게 다루는지 안내합니다. ${POLICY_DATE}부터 적용됩니다.`,"")+
+  `<main class="gut"><div class="policy">
+  <section><h3>1. 수집하는 정보</h3><ul><li>가입할 때: 구글 계정 이메일, 이름, 학교, 학년, 학생 전화번호, 학부모 전화번호</li><li>이용하는 동안: 질문·답변·댓글, 첨부한 사진, 마지막 접속 시각, 프로필 사진(선택)</li><li>선생님이 기록하는 정보: 반, 수업 진도, 수강료 납부 내역, 수업 메모</li></ul><p>주민등록번호와 같은 민감한 정보는 수집하지 않습니다.</p></section>
+  <section><h3>2. 이용 목적</h3><p>수업 학생인지 확인하고, 질문에 답변하고, 진도와 수강료를 관리하고, 수업과 관련해 학생·학부모에게 연락하는 데에만 이용합니다. 광고에 이용하거나 다른 곳에 제공하지 않습니다.</p></section>
+  <section><h3>3. 열람 범위</h3><ul><li>질문과 답변은 질문한 학생 본인과 선생님만 볼 수 있습니다. 다른 학생에게는 보이지 않습니다.</li><li>전화번호, 수강료, 메모는 선생님만 볼 수 있습니다.</li><li>학생의 프로필 사진은 본인과 선생님만 볼 수 있습니다.</li></ul></section>
+  <section><h3>4. 보관 기간</h3><p>수강하는 동안 보관하며, <b>수강이 끝난 뒤 1년</b>이 지나면 삭제합니다. 그 전이라도 삭제를 요청하시면 바로 삭제합니다. 본인이 작성한 질문·댓글·프로필 사진은 게시판에서 직접 삭제할 수 있습니다.</p></section>
+  <section><h3>5. 이용하는 외부 서비스</h3><ul><li><b>Google Firebase</b>: 로그인과 데이터 저장에 이용합니다. 데이터는 서울에 있는 Google 서버에 저장됩니다.</li><li><b>GitHub Pages</b>: 사이트 화면을 제공하는 데 이용합니다. 접속할 때 IP 주소 등 접속 기록이 GitHub(미국)에 남을 수 있습니다.</li><li><b>Claude (Anthropic, 미국)</b>: 선생님이 답변 초안을 준비할 때 이용하는 AI입니다. 질문 내용과 첨부 사진, 과목, 학교 이름이 전달될 수 있습니다. 전화번호와 수강료 정보는 전달하지 않습니다. 답변은 선생님이 직접 확인한 뒤 등록합니다.</li></ul></section>
+  <section><h3>6. 정보의 열람·정정·삭제 요청</h3><p>학생과 학부모는 언제든지 본인 정보의 열람, 정정, 삭제를 요청할 수 있습니다. 아래 연락처로 문의해 주시기 바랍니다.</p><ul><li>담당: 신상명</li><li>이메일: <a href="mailto:${POLICY_MAIL}">${POLICY_MAIL}</a></li></ul><p class="small" style="margin-top:10px">개인정보 침해로 도움이 필요하시면 개인정보침해신고센터(국번 없이 118)에 문의하실 수 있습니다.</p></section>
+  <section><p class="small">내용이 변경되면 게시판 공지로 미리 알려 드립니다. 시행일: ${POLICY_DATE}</p></section>
+  </div></main>`;
+}
 /* ---------- 학생 '내 기록' : 진도(날짜·과목·범위)와 반 이름만 mine/{학생}에 따로 복사. 메모·수강료·연락처는 복사하지 않음 ---------- */
 const mineProg=list=>[...list].sort((a,b)=>a.date<b.date?1:-1).slice(0,60).map(g=>({date:String(g.date||""),subj:g.subj|0,range:String(g.range||"").slice(0,200)}));
 const klassNames=arr=>(arr||[]).filter(k=>klasses[k]).map(k=>klasses[k].name);
@@ -865,6 +887,7 @@ function themeNow(){
 }
 function render(){
   tabs();const g=gate(),app=$("#app"),ae=document.activeElement;document.body.dataset.pg=inside()?page:"gate";document.body.dataset.th=themeNow();
+  if(page==="privacy"){document.body.dataset.pg="privacy";app.innerHTML=privacyView();return}
   if(!inside()){if(!(ae&&ae.closest&&ae.closest("#rf")))app.innerHTML=gateView(g);return}
   const keepA=ae&&ae.id==="ab"?ae.value:null,keepQ=ae&&(ae.id==="q"||ae.id==="sq"),keepQid=ae&&ae.id,keepC=ae&&ae.id==="mycode"?ae.value:null;
   if(ae&&ae.closest&&ae.closest("[data-keep]")&&ae.tagName!=="BUTTON")return;
@@ -929,7 +952,7 @@ function watchProg(){
 }
 function route(){
   const h=location.hash.slice(1),m=/^q-([A-Za-z0-9]{1,40})$/.exec(h),ms2=/^s-([A-Za-z0-9]{1,128})$/.exec(h);
-  const np=m?"q":ms2?"stu":(["board","mine","rec","profile","admin","students"].includes(h)?h:"board"),nid=m?m[1]:null,sid=ms2?ms2[1]:null;
+  const np=m?"q":ms2?"stu":(["board","mine","rec","profile","privacy","admin","students"].includes(h)?h:"board"),nid=m?m[1]:null,sid=ms2?ms2[1]:null;
   if(np===page&&nid===openId&&sid===openSid){render();return}
   page=np;openId=nid;openSid=sid;armed=null;if(form.target==="a")form.files=[];
   watchAnswers();watchProg();render();window.scrollTo(0,0);
@@ -1039,6 +1062,7 @@ document.addEventListener("submit",async e=>{
     const phone=fmtTel($("#rp").value),parent=fmtTel($("#rpp").value);
     if(!/^[0-9-]{9,20}$/.test(phone)){$("#rerr").textContent="학생 전화번호를 숫자로 적어 주세요.";return}
     if(!/^[0-9-]{9,20}$/.test(parent)){$("#rerr").textContent="학부모 전화번호를 숫자로 적어 주세요.";return}
+    if(!$("#ragree").checked){$("#rerr").textContent="개인정보 수집·이용에 동의해야 신청할 수 있어요.";return}
     const cls=+pc.dataset.rc,grade=+pg.dataset.rg,region=schoolPick&&schoolPick.n===school?schoolPick.r:"";
     busy=true;
     try{await setDoc(doc(db,"requests",me.uid),{code,name,school,region,grade,cls,phone,parent,email:me.email,at:serverTimestamp()});document.activeElement&&document.activeElement.blur();render()}
