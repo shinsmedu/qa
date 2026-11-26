@@ -10,6 +10,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="신상명 Q&amp;A">
 <link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <meta name="robots" content="noindex,nofollow">
 <title>신상명 Q&amp;A 게시판</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -232,7 +233,6 @@ button.qcard.sc0:hover{box-shadow:inset 4px 0 0 var(--s0),0 12px 32px #0000000f}
 html[data-h=a] .top{background:rgba(255,255,255,.92);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);color:#111;border-bottom:1px solid #ececea;box-shadow:none}
 html[data-h=a] .brand{color:#111}
 html[data-h=a] .brand .mark{background:#111;color:#fff}
-html[data-h=a] .brand .mark::after{content:"";position:absolute;right:-3px;top:-3px;width:11px;height:11px;border-radius:50%;background:var(--grad);border:2px solid #fff}
 html[data-h=a] .brand .bt em{color:#8a8a8a}
 html[data-h=a] .brand small{color:#9a9a9a;border-color:#e0e0de}
 html[data-h=a] .tabs a{color:#888}html[data-h=a] .tabs a:hover{color:#111}
@@ -352,7 +352,7 @@ body:not([data-th=""]) .intro::before{background:radial-gradient(closest-side,va
 </head>
 <body>
 <header class="top gut">
-  <a class="brand" href="#board" aria-label="신상명 Q&amp;A 홈"><span class="mark" aria-hidden="true">Q</span><span class="bt"><b>신상명</b><em>Q&amp;A</em></span></a>
+  <a class="brand" href="#board" aria-label="신상명 Q&amp;A 홈"><span class="mark" aria-hidden="true"><svg viewBox="0 0 120 120" width="29" height="29"><path d="M14 62L50 26L74 50M46 70L70 94L106 58" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="miter" stroke-miterlimit="8"/><rect x="51" y="51" width="18" height="18" fill="#3fae7e" transform="rotate(45 60 60)"/></svg></span><span class="bt"><b>신상명</b><em>Q&amp;A</em></span></a>
   <div class="dday" id="dday" hidden><span class="dl"><i class="lg">2028학년도 대학수학능력시험 사회탐구 시험</i><i class="sm">2028 수능 사회탐구</i><i class="xs">수능</i></span><span class="dv"><b id="ddn"></b><span class="dt" id="ddt" aria-hidden="true"></span></span></div>
   <div class="topr"><nav class="tabs" id="tabs" aria-label="메뉴"></nav><span class="who-top" id="whotop"></span><button class="btn bar sm" id="logout" hidden>로그아웃</button></div>
 </header>
